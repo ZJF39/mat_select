@@ -54,6 +54,12 @@ def export(body: ExportBody):
         body.scope, body.format, body.include_work_data,
         ids=body.ids, task_id=body.task_id, dbg=dbg,
     )
+    # 契约 §4.4：「→ 文件流(Content-Disposition)；若 format=md 且无文件需求可返回 {content:string}」。
+    # `include_work_data=False` 的 md 导出即「只要文本、不要文件」的场景
+    # （06 屏「复制为 Markdown」直接取 content 塞剪贴板），故返回 JSON 文本而非文件流；
+    # 其余组合（含 md + include_work_data=true 的下载场景）保持文件流语义。
+    if body.format == "md" and not body.include_work_data:
+        return {"content": blob.decode("utf-8"), "filename": filename}
     ascii_name = filename.encode("ascii", "ignore").decode() or "MatSelect_export"
     return Response(
         content=blob,

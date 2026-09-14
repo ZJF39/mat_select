@@ -43,6 +43,22 @@ export class ApiError extends Error {
 
 type Query = Record<string, string | number | boolean | undefined | null | (string | number)[]>
 
+/** POST /api/export 请求体（契约 §4.4） */
+export interface ExportBody {
+  scope: 'all' | 'filtered' | 'selected' | 'shortlist'
+  format: 'json' | 'xlsx' | 'md'
+  include_work_data: boolean
+  ids?: string[]
+  task_id?: number
+  dbg?: { q?: string; category_ids?: number[]; processes?: string[]; temp_min?: number }
+}
+
+/** md 且无文件需求时后端返回的文本形态（契约 §4.4） */
+export interface ExportTextResult {
+  content: string
+  filename?: string
+}
+
 function qs(params?: Query): string {
   if (!params) return ''
   const sp = new URLSearchParams()
@@ -186,14 +202,9 @@ export const api = {
 
   /* 导出 / 导入 */
   exportUrl: '/api/export',
-  exportMaterials: (body: {
-    scope: 'all' | 'filtered' | 'selected' | 'shortlist'
-    format: 'json' | 'xlsx' | 'md'
-    include_work_data: boolean
-    ids?: string[]
-    task_id?: number
-    dbg?: { q?: string; category_ids?: number[]; processes?: string[]; temp_min?: number }
-  }) => post<string | Blob>('/export', body),
+  exportMaterials: (body: ExportBody) => post<ExportTextResult | Blob>('/export', body),
+  /** 契约 §4.4：md 且无文件需求时返回 { content, filename } 文本（06 屏复制为 Markdown） */
+  exportMarkdownText: (body: ExportBody) => post<ExportTextResult>('/export', body),
   parseImport: (file: File) => {
     const fd = new FormData()
     fd.append('file', file)
@@ -212,18 +223,8 @@ export const api = {
   runBackup: () => post<{ ok: boolean; last_backup_at: string; location: string }>('/backup/run'),
 }
 
-/** 触发浏览器下载（导出接口返回文件流时使用） */
-export async function downloadExport(body: Parameters<typeof api.exportMaterials>[0]) {
-  const res = await fetch(api.exportUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) throw new ApiError('EXPORT_FAILED', '导出失败，请重试', res.status)
-  const cd = res.headers.get('content-disposition') ?? ''
-  const m = /filename\*?=(?:UTF-8'')?"?([^\";]+)"?/i.exec(cd)
-  const filename = m ? decodeURIComponent(m[1]) : 'MatSelect_导出.bin'
-  const blob = await res.blob()
+/** 触发浏览器下载 */
+function saveBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
@@ -232,5 +233,27 @@ export async function downloadExport(body: Parameters<typeof api.exportMaterials
   a.click()
   a.remove()
   URL.revokeObjectURL(url)
+}
+
+/** 触发浏览器下载（导出接口返回文件流时使用） */
+export async function downloadExport(body: ExportBody) {
+  const res = await fetch(api.exportUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) throw new ApiError('EXPORT_FAILED', '导出失败，请重试', res.status)
+  // 契约 §4.4：format=md 且无文件需求时后端返回 { content, filename }（文本），
+  // 需在前端组装成文件再下载；其余组合后端返回文件流。
+  if (body.format === 'md' && !body.include_work_data) {
+    const data = (await res.json()) as { content: string; filename?: string }
+    const filename = data.filename || 'MatSelect_导出.md'
+    saveBlob(new Blob([data.content], { type: 'text/markdown;charset=utf-8' }), filename)
+    return filename
+  }
+  const cd = res.headers.get('content-disposition') ?? ''
+  const m = /filename\*?=(?:UTF-8'')?"?([^\";]+)"?/i.exec(cd)
+  const filename = m ? decodeURIComponent(m[1]) : 'MatSelect_导出.bin'
+  saveBlob(await res.blob(), filename)
   return filename
 }

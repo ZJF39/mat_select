@@ -97,13 +97,14 @@ export default function ShortlistPage() {
         await downloadExport({ scope: 'shortlist', format: 'xlsx', include_work_data: false, task_id: taskId })
         toast('对比表已导出', 'success')
       } else {
-        const text = (await api.exportMaterials({
+        // 契约 §4.4：format=md 且无文件需求时返回 { content, filename } 文本
+        const data = await api.exportMarkdownText({
           scope: 'shortlist',
           format: 'md',
           include_work_data: false,
           task_id: taskId,
-        })) as unknown as string
-        await navigator.clipboard.writeText(String(text))
+        })
+        await navigator.clipboard.writeText(data.content)
         toast('已复制为 Markdown', 'success')
       }
     } catch {
