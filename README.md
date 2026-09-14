@@ -26,6 +26,25 @@ release\MatSelect.exe        双击即可
   ——**不要单独复制 `.db` 文件**，WAL 模式下最新写入可能还在 `-wal` 里。详见 `docs/BUILD-EXE.md`。
 - **重新打包**：见 `docs/BUILD-EXE.md`（含完整 PyInstaller 命令与三项路径改动说明）。
 
+### 1.0.1 用外部大模型扩充材料数据（应用本身不接大模型）
+
+本应用单机离线、不调用任何大模型。若想借外部大模型（ChatGPT / DeepSeek / Kimi 等）
+帮你批量整理材料，用 `docs/prompts/` 里的提示词包：
+
+```
+docs/prompts/01-生成新材料.md          # 从零生成（自包含，含字段规格与字典）
+docs/prompts/02-字典对齐与检索优化.md  # 已有数据术语归一（提升检索/推荐命中率）
+docs/prompts/03-质量自检与修复.md      # 导入前质检
+```
+
+```powershell
+# 大模型产出的 JSON → 校验并转成可导入材料包（自动算校验和）
+& "...\python.exe" tools\make_pack.py 你的文件.json -o 材料包.json
+# 然后在应用「数据分享」页导入
+```
+
+详见 `docs/prompts/README.md`（含可立即试跑的示例文件）。
+
 ### 1.1 后端（FastAPI + SQLite）
 
 ```powershell

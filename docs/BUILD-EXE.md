@@ -38,6 +38,30 @@ cd ..
 
 产物：`release\MatSelect.exe`（单文件）。
 
+## 1.1 另一个 exe：材料包工具（配合提示词包使用）
+
+给最终用户在大模型产出 JSON 后转成可导入材料包用。**用户无需安装 Python。**
+
+```powershell
+& $PY -m PyInstaller --noconfirm --clean --onefile --console `
+  --name MatSelectPackTool `
+  --distpath release --workpath build_pyi --specpath build_pyi `
+  --paths backend `
+  --hidden-import app.services.io_service `
+  --exclude-module tkinter --exclude-module matplotlib `
+  tools\make_pack.py
+```
+
+产物：`release\MatSelectPackTool.exe`（**15.8 MB**）。
+
+> 注意：`make_pack.py` 里对 `app.services.io_service` 的导入是**函数内延迟导入**，
+> PyInstaller 静态分析看不到，**必须**显式 `--hidden-import app.services.io_service`，
+> 否则运行时会报 `无法加载后端校验和算法`。
+
+用法：把 JSON 文件**拖到 exe 上**，或
+`MatSelectPackTool.exe 输入.json -o 输出.json [--check] [--no-pause]`。
+打包态下结束会等待回车（避免双击时窗口一闪而过）；脚本调用请加 `--no-pause`。
+
 ## 2. 使用方式
 
 双击 `MatSelect.exe` 即可：控制台显示访问地址，并自动打开浏览器。

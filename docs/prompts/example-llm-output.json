@@ -1,0 +1,90 @@
+{
+  "pack_version": 1,
+  "exported_by": "由 <模型名> 生成的候选数据",
+  "materials": [
+    {
+      "name": "PBT+GF30（30%玻纤增强聚对苯二甲酸丁二醇酯）",
+      "short_name": "PBT+GF30",
+      "category_path": ["热塑性塑料", "工程塑料"],
+      "grade_type": "工程塑料",
+      "aliases": ["PBT-GF30", "PBT+30%GF", "玻纤增强PBT", "Polybutylene Terephthalate GF30"],
+      "description": "PBT+GF30 是汽车电气件的主力材料，广泛用于保险丝座与连接器壳体，兼顾尺寸稳定与阻燃性。",
+      "density_min": 1.50,
+      "density_max": 1.53,
+      "tensile_strength_min": 110,
+      "tensile_strength_max": 140,
+      "elastic_modulus_min": 8.0,
+      "elastic_modulus_max": 10.0,
+      "elongation_min": 2.5,
+      "elongation_max": 4.0,
+      "notch_impact_min": 7,
+      "notch_impact_max": 11,
+      "hdt_min": 205,
+      "hdt_max": 215,
+      "service_temp_min": -40,
+      "service_temp_max": 140,
+      "service_temp_limit": 140,
+      "features": ["尺寸稳定", "阻燃", "耐化学性好", "低成本", "高强度"],
+      "cautions": [
+        { "type": "耐水解", "content": "长期湿热环境易水解，需确认使用湿度与温度组合" },
+        { "type": "成型", "content": "玻纤取向导致各向异性，浇口位置需评估翘曲" }
+      ],
+      "applications": ["熔断器底座", "连接器", "继电器底座", "端子"],
+      "price_min": 22,
+      "price_max": 28,
+      "price_unit": "元/kg",
+      "price_note": "随原料行情波动，以最新报价为准",
+      "molding_process": ["注射成型"],
+      "certifications": { "ul94": "V-0", "ul_yellow_card": null, "rohs": true, "reach": true, "iatf": null },
+      "limitations": [
+        "长期使用温度超过 140 °C 后力学性能快速衰减，不适用于发动机舱高温区",
+        "缺口敏感，结构上应避免尖角与薄壁突变"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "ADC12（压铸铝合金）",
+      "short_name": "ADC12",
+      "category_path": ["金属", "铝合金"],
+      "grade_type": "金属材料",
+      "aliases": ["ADC12铝合金", "压铸铝", "AlSi11Cu3", "Die-cast aluminium ADC12"],
+      "description": "ADC12 压铸铝合金用于 ECU壳体、支架等需要散热与刚性的结构件，成型效率高、可做复杂薄壁。",
+      "density_min": 2.65,
+      "density_max": 2.70,
+      "tensile_strength_min": 230,
+      "tensile_strength_max": 310,
+      "elastic_modulus_min": 70,
+      "elastic_modulus_max": 75,
+      "elongation_min": 1.0,
+      "elongation_max": 3.0,
+      "notch_impact_min": 2,
+      "notch_impact_max": 6,
+      "hdt_min": 150,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": ["导热好", "高刚性", "尺寸稳定", "导电"],
+      "cautions": [
+        { "type": "腐蚀", "content": "含铜相易发生电化学腐蚀，需做表面处理或避免与异种金属直接接触" },
+        { "type": "气孔", "content": "压铸件内部可能存在气孔，不宜用于气密性要求高的腔体" }
+      ],
+      "applications": ["ECU壳体", "支架", "散热件", "外壳"],
+      "price_min": 19,
+      "price_max": 24,
+      "price_unit": "元/kg",
+      "price_note": "随铝锭行情波动，以最新报价为准",
+      "molding_process": ["压铸", "机加工"],
+      "certifications": { "ul94": null, "ul_yellow_card": null, "rohs": true, "reach": true, "iatf": "IATF 16949（体系，非材料证书）" },
+      "limitations": [
+        "压铸件不可焊接修复，设计变更需改模",
+        "延伸率低（1~3%），不适用于需要塑性变形的结构"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    }
+  ]
+}
