@@ -19,7 +19,7 @@ def pack_checksum(materials):
 
 # 参与完整率统计的字段（排除契约明确的可选字段 ul_yellow_card / iatf）
 COMPLETENESS_FIELDS = [
-    "name", "short_name", "category_path", "grade_type", "aliases", "description",
+    "name", "uid", "short_name", "category_path", "category_id", "grade_type", "aliases", "description",
     "density_min", "density_max",
     "tensile_strength_min", "tensile_strength_max",
     "elastic_modulus_min", "elastic_modulus_max",

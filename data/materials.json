@@ -2,11 +2,13 @@
   "materials": [
     {
       "name": "PP（均聚聚丙烯）",
+      "uid": "5ea3c97edad2400a9b095c62307cc788",
       "short_name": "PP-H",
       "category_path": [
         "热塑性塑料",
         "通用塑料"
       ],
+      "category_id": 2,
       "grade_type": "通用塑料",
       "aliases": [
         "PP-H",
@@ -82,11 +84,13 @@
     },
     {
       "name": "PE-HD（高密度聚乙烯）",
+      "uid": "72dcd846678941f9b649366e144c8cc9",
       "short_name": "PE-HD",
       "category_path": [
         "热塑性塑料",
         "通用塑料"
       ],
+      "category_id": 2,
       "grade_type": "通用塑料",
       "aliases": [
         "PE-HD",
@@ -159,11 +163,13 @@
     },
     {
       "name": "ABS（丙烯腈-丁二烯-苯乙烯）",
+      "uid": "047da997f42b4da2bbc97b3c1ec33bea",
       "short_name": "ABS",
       "category_path": [
         "热塑性塑料",
         "通用塑料"
       ],
+      "category_id": 2,
       "grade_type": "通用塑料",
       "aliases": [
         "ABS",
@@ -238,11 +244,13 @@
     },
     {
       "name": "PVC（聚氯乙烯，硬）",
+      "uid": "a980e91abc3b41328096c769bbf7d5b3",
       "short_name": "PVC",
       "category_path": [
         "热塑性塑料",
         "通用塑料"
       ],
+      "category_id": 2,
       "grade_type": "通用塑料",
       "aliases": [
         "PVC",
@@ -318,11 +326,13 @@
     },
     {
       "name": "PMMA（聚甲基丙烯酸甲酯）",
+      "uid": "e9643dad938b470b8243a36c101bb46a",
       "short_name": "PMMA",
       "category_path": [
         "热塑性塑料",
         "通用塑料"
       ],
+      "category_id": 2,
       "grade_type": "通用塑料",
       "aliases": [
         "PMMA",
@@ -394,11 +404,13 @@
     },
     {
       "name": "PS（聚苯乙烯，通用）",
+      "uid": "3209d4037a674357ac7ebc3c00b37e0b",
       "short_name": "PS",
       "category_path": [
         "热塑性塑料",
         "通用塑料"
       ],
+      "category_id": 2,
       "grade_type": "通用塑料",
       "aliases": [
         "PS",
@@ -469,11 +481,13 @@
     },
     {
       "name": "PA6（聚酰胺6）",
+      "uid": "5c6fa934ec604748ba0cd082dcf42de1",
       "short_name": "PA6",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PA6",
@@ -544,11 +558,13 @@
     },
     {
       "name": "PA66（聚酰胺66）",
+      "uid": "f6e50cf52b8a40a59034aa24b3f51f6f",
       "short_name": "PA66",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PA66",
@@ -618,11 +634,13 @@
     },
     {
       "name": "PA66+GF30（30%玻纤增强尼龙66）",
+      "uid": "e6194303d3b6475d8d2cd469796b2004",
       "short_name": "PA66-GF30",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PA66+GF30",
@@ -697,11 +715,13 @@
     },
     {
       "name": "PA6+GF30（30%玻纤增强尼龙6）",
+      "uid": "9e776f830bfd4c2883645dde5eeb6130",
       "short_name": "PA6-GF30",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PA6+GF30",
@@ -771,11 +791,13 @@
     },
     {
       "name": "PBT（聚对苯二甲酸丁二醇酯）",
+      "uid": "ca26f856ce3b4f53af19a7a4f1a31c06",
       "short_name": "PBT",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PBT",
@@ -844,11 +866,13 @@
     },
     {
       "name": "PBT+GF30（30%玻纤增强PBT）",
+      "uid": "e211a77c3d0f43eba4960dfa6e507557",
       "short_name": "PBT-GF30",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PBT+GF30",
@@ -918,11 +942,13 @@
     },
     {
       "name": "POM（聚甲醛，共聚）",
+      "uid": "e1c8b483fda444e6a768ce60db9571bb",
       "short_name": "POM",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "POM",
@@ -992,11 +1018,13 @@
     },
     {
       "name": "PC（聚碳酸酯）",
+      "uid": "02d30547c6bf4939a3619a3350a08074",
       "short_name": "PC",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PC",
@@ -1066,11 +1094,13 @@
     },
     {
       "name": "PC-ABS（PC/ABS合金）",
+      "uid": "3779bdffdd3b425baab750c18a929138",
       "short_name": "PC-ABS",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PC-ABS",
@@ -1136,11 +1166,13 @@
     },
     {
       "name": "mPPO（改性聚苯醚）",
+      "uid": "39872b911aef46aeabdd3ecb8e25296c",
       "short_name": "mPPO",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "mPPO",
@@ -1210,11 +1242,13 @@
     },
     {
       "name": "PET（聚对苯二甲酸乙二醇酯）",
+      "uid": "c5f30691180d426c96f3d0711d102ac3",
       "short_name": "PET",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PET",
@@ -1284,11 +1318,13 @@
     },
     {
       "name": "PA46（聚酰胺46）",
+      "uid": "e742bd44654c41458284fa07c90d0982",
       "short_name": "PA46",
       "category_path": [
         "热塑性塑料",
         "工程塑料"
       ],
+      "category_id": 3,
       "grade_type": "工程塑料",
       "aliases": [
         "PA46",
@@ -1358,11 +1394,13 @@
     },
     {
       "name": "PPS（聚苯硫醚）",
+      "uid": "0e4e69293dc1441cbfef2489fb0b3a44",
       "short_name": "PPS",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PPS",
@@ -1431,11 +1469,13 @@
     },
     {
       "name": "PPS+GF40（40%玻纤增强PPS）",
+      "uid": "6525ea0e598143948dbe52c8617a38c0",
       "short_name": "PPS-GF40",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PPS+GF40",
@@ -1506,11 +1546,13 @@
     },
     {
       "name": "PEEK（聚醚醚酮）",
+      "uid": "f05bdfdb16eb40eb8e029c28bce60de1",
       "short_name": "PEEK",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PEEK",
@@ -1574,11 +1616,13 @@
     },
     {
       "name": "PEI（聚醚酰亚胺）",
+      "uid": "30140d50af0048e4bfa5022168772c40",
       "short_name": "PEI",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PEI",
@@ -1648,11 +1692,13 @@
     },
     {
       "name": "PES（聚醚砜）",
+      "uid": "582e1e663a344f059c75ed9ac012dafe",
       "short_name": "PES",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PES",
@@ -1716,11 +1762,13 @@
     },
     {
       "name": "LCP（液晶聚合物）",
+      "uid": "312fd3dfaadc4a8ca9efe46823b5306a",
       "short_name": "LCP",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "LCP",
@@ -1789,11 +1837,13 @@
     },
     {
       "name": "PA9T（聚酰胺9T）",
+      "uid": "f1d90f087e924bb2b68ae0a1e58c3edf",
       "short_name": "PA9T",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PA9T",
@@ -1858,11 +1908,13 @@
     },
     {
       "name": "PPA（半芳香族聚酰胺）",
+      "uid": "8dc40c812555434488369f43888c9702",
       "short_name": "PPA",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PPA",
@@ -1932,11 +1984,13 @@
     },
     {
       "name": "PSU（聚砜）",
+      "uid": "8ba5775fb0f9401a97b74c727610cef5",
       "short_name": "PSU",
       "category_path": [
         "热塑性塑料",
         "特种工程塑料"
       ],
+      "category_id": 4,
       "grade_type": "特种工程塑料",
       "aliases": [
         "PSU",
@@ -2005,11 +2059,13 @@
     },
     {
       "name": "酚醛PF（酚醛树脂）",
+      "uid": "19b1217bb29b40db9e8263aad9ad09e1",
       "short_name": "PF",
       "category_path": [
         "热固性塑料",
         "通用热固性"
       ],
+      "category_id": 6,
       "grade_type": "热固性塑料",
       "aliases": [
         "PF",
@@ -2086,11 +2142,13 @@
     },
     {
       "name": "环氧EP（环氧树脂）",
+      "uid": "991de27de30b4a98976120813183f50e",
       "short_name": "EP",
       "category_path": [
         "热固性塑料",
         "通用热固性"
       ],
+      "category_id": 6,
       "grade_type": "热固性塑料",
       "aliases": [
         "EP",
@@ -2161,11 +2219,13 @@
     },
     {
       "name": "不饱和聚酯UP",
+      "uid": "6fc8e7c8a0c245159bf5c668caa114f5",
       "short_name": "UP",
       "category_path": [
         "热固性塑料",
         "通用热固性"
       ],
+      "category_id": 6,
       "grade_type": "热固性塑料",
       "aliases": [
         "UP",
@@ -2235,11 +2295,13 @@
     },
     {
       "name": "SMC（片状模塑料）",
+      "uid": "ec8de8fbdfaf4bcea2c2e88f0657f80e",
       "short_name": "SMC",
       "category_path": [
         "热固性塑料",
         "增强塑料"
       ],
+      "category_id": 7,
       "grade_type": "热固性塑料",
       "aliases": [
         "SMC",
@@ -2308,11 +2370,13 @@
     },
     {
       "name": "BMC（团状模塑料）",
+      "uid": "6a998a3a0e164e7a9491e9a63c7f46da",
       "short_name": "BMC",
       "category_path": [
         "热固性塑料",
         "增强塑料"
       ],
+      "category_id": 7,
       "grade_type": "热固性塑料",
       "aliases": [
         "BMC",
@@ -2382,11 +2446,13 @@
     },
     {
       "name": "冷轧钢SPCC",
+      "uid": "2191a6286b93414aa9719e02188ceccd",
       "short_name": "SPCC",
       "category_path": [
         "金属",
         "钢材"
       ],
+      "category_id": 9,
       "grade_type": "金属材料",
       "aliases": [
         "SPCC",
@@ -2457,11 +2523,13 @@
     },
     {
       "name": "镀锌钢（镀锌钢板）",
+      "uid": "7638b4b241df45bfad773d82c71f239a",
       "short_name": "GI",
       "category_path": [
         "金属",
         "钢材"
       ],
+      "category_id": 9,
       "grade_type": "金属材料",
       "aliases": [
         "镀锌钢",
@@ -2531,11 +2599,13 @@
     },
     {
       "name": "不锈钢304",
+      "uid": "b2d5f23846df4558b6600423a882aab6",
       "short_name": "SUS304",
       "category_path": [
         "金属",
         "钢材"
       ],
+      "category_id": 9,
       "grade_type": "金属材料",
       "aliases": [
         "304",
@@ -2606,11 +2676,13 @@
     },
     {
       "name": "铝合金6061",
+      "uid": "8051636d89e649cba6b00a6699a1cba8",
       "short_name": "AL6061",
       "category_path": [
         "金属",
         "铝合金"
       ],
+      "category_id": 10,
       "grade_type": "金属材料",
       "aliases": [
         "6061",
@@ -2681,11 +2753,13 @@
     },
     {
       "name": "压铸铝ADC12",
+      "uid": "1e1a38c69a2b48d4bf2e9c76e055e166",
       "short_name": "ADC12",
       "category_path": [
         "金属",
         "铝合金"
       ],
+      "category_id": 10,
       "grade_type": "金属材料",
       "aliases": [
         "ADC12",
@@ -2756,11 +2830,13 @@
     },
     {
       "name": "黄铜H62",
+      "uid": "a24b65a57fd547dd969faf160a9b9e22",
       "short_name": "H62",
       "category_path": [
         "金属",
         "铜合金"
       ],
+      "category_id": 11,
       "grade_type": "金属材料",
       "aliases": [
         "H62",
@@ -2831,11 +2907,13 @@
     },
     {
       "name": "磷青铜（锡磷青铜）",
+      "uid": "2c957a8eb7fa41318065e4c625b0f323",
       "short_name": "PB",
       "category_path": [
         "金属",
         "铜合金"
       ],
+      "category_id": 11,
       "grade_type": "金属材料",
       "aliases": [
         "磷青铜",
@@ -2901,11 +2979,13 @@
     },
     {
       "name": "锌合金（Zamak）",
+      "uid": "7ddcab4286534d32bdcd95e38fb870ba",
       "short_name": "Zamak",
       "category_path": [
         "金属",
         "锌合金"
       ],
+      "category_id": 12,
       "grade_type": "金属材料",
       "aliases": [
         "锌合金",
@@ -2976,11 +3056,13 @@
     },
     {
       "name": "TPE（热塑性弹性体）",
+      "uid": "5b74b7d5a8d745a38e7631252e36ec60",
       "short_name": "TPE",
       "category_path": [
         "弹性体",
         "热塑性弹性体"
       ],
+      "category_id": 14,
       "grade_type": "弹性体",
       "aliases": [
         "TPE",
@@ -3056,11 +3138,13 @@
     },
     {
       "name": "TPU（热塑性聚氨酯）",
+      "uid": "fdfb158d0abd43909bc7408a0f915635",
       "short_name": "TPU",
       "category_path": [
         "弹性体",
         "热塑性弹性体"
       ],
+      "category_id": 14,
       "grade_type": "弹性体",
       "aliases": [
         "TPU",
@@ -3130,11 +3214,13 @@
     },
     {
       "name": "SEBS（苯乙烯-乙烯-丁烯-苯乙烯）",
+      "uid": "9c9a6f1064684641bc9dc78b21d08777",
       "short_name": "SEBS",
       "category_path": [
         "弹性体",
         "热塑性弹性体"
       ],
+      "category_id": 14,
       "grade_type": "弹性体",
       "aliases": [
         "SEBS",
@@ -3205,11 +3291,13 @@
     },
     {
       "name": "硅橡胶VMQ（甲基乙烯基硅橡胶）",
+      "uid": "851a1ffd0cce43ffa24eaa813f1e35f5",
       "short_name": "VMQ",
       "category_path": [
         "弹性体",
         "橡胶"
       ],
+      "category_id": 15,
       "grade_type": "弹性体",
       "aliases": [
         "VMQ",
@@ -3280,11 +3368,13 @@
     },
     {
       "name": "EPDM（三元乙丙橡胶）",
+      "uid": "d2a0e2476ae348e482a57d23416f0bdf",
       "short_name": "EPDM",
       "category_path": [
         "弹性体",
         "橡胶"
       ],
+      "category_id": 15,
       "grade_type": "弹性体",
       "aliases": [
         "EPDM",
@@ -3354,11 +3444,13 @@
     },
     {
       "name": "NBR（丁腈橡胶）",
+      "uid": "be2be216b8084216821d8ccdce5b2f8c",
       "short_name": "NBR",
       "category_path": [
         "弹性体",
         "橡胶"
       ],
+      "category_id": 15,
       "grade_type": "弹性体",
       "aliases": [
         "NBR",
@@ -3428,11 +3520,13 @@
     },
     {
       "name": "氟橡胶FKM",
+      "uid": "3ad324e57aa84fc895ad9c60590059c8",
       "short_name": "FKM",
       "category_path": [
         "弹性体",
         "橡胶"
       ],
+      "category_id": 15,
       "grade_type": "弹性体",
       "aliases": [
         "FKM",
@@ -3502,11 +3596,13 @@
     },
     {
       "name": "PA66+GF50（50%玻纤增强尼龙66）",
+      "uid": "d1970fd333af4aeeb30bcc2305556d26",
       "short_name": "PA66-GF50",
       "category_path": [
         "复合材料",
         "增强复合材料"
       ],
+      "category_id": 17,
       "grade_type": "复合材料",
       "aliases": [
         "PA66+GF50",
@@ -3581,11 +3677,13 @@
     },
     {
       "name": "PBT+GB30（30%玻璃珠增强PBT）",
+      "uid": "887ea5d647264220af1cd6fee75992d9",
       "short_name": "PBT-GB30",
       "category_path": [
         "复合材料",
         "增强复合材料"
       ],
+      "category_id": 17,
       "grade_type": "复合材料",
       "aliases": [
         "PBT+GB30",
@@ -3655,11 +3753,13 @@
     },
     {
       "name": "CFRP（碳纤维增强塑料）",
+      "uid": "ba90466d18a1412db8fe13908995ae96",
       "short_name": "CFRP",
       "category_path": [
         "复合材料",
         "增强复合材料"
       ],
+      "category_id": 17,
       "grade_type": "复合材料",
       "aliases": [
         "CFRP",
