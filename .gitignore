@@ -16,25 +16,26 @@ npm-debug.log*
 # ---- 数据与运行时产物（数据库本体不入库，种子 JSON 入库） ----
 data/*.db
 data/*.db-journal
+data/*.db-shm
+data/*.db-wal
 data/backups/
 data/exports/
+
+# ---- 日志 ----
 *.log
 
-# ---- 本地草稿 / 临时诊断文件（按项目惯例不入版本控制） ----
+# ---- 临时 / 草稿 / 诊断文件（不入版本控制） ----
 *.tmp
 *.bak
 _tmp/
 .tmp/
+.gitmessage.txt
 .gitmessage.tmp
-_git_baseline.log
-_gitmsg.txt
-_gitcheck2.json
-_check_git.py
 install_status*.txt
-_piperr.txt
-_pip_install.log
-_npm_install.log
-docs/plan/_gitcheck.txt
+count_idx_tmp.py
+# 根目录与 tools/ 下的下划线草稿文件
+/_*
+/tools/_*
 
 # ---- 编辑器 / 系统 ----
 .idea/
@@ -42,51 +43,8 @@ docs/plan/_gitcheck.txt
 .DS_Store
 Thumbs.db
 
-_pip_install.log
-_npm_install.log
-install_status*.txt
-_piperr.txt
-
-# ---- 临时诊断 / 草稿文件（不入版本控制） ----
-_gitdbg.txt
-_gitstate.json
-_merge_msg.txt
-_gitmsg.txt
-_r1.txt
-_r2.txt
-_state.txt
-_git_baseline.log
-_gitcheck2.json
-_check_git.py
-install_status*.txt
-tools/_commit_check.txt
-
-# ---- 临时诊断 / 草稿文件（不入版本控制） ----
-_gitdbg.txt
-_gitstate.json
-_merge_msg.txt
-_gitmsg.txt
-_r1.txt
-_r2.txt
-_state.txt
-_git_baseline.log
-_gitcheck2.json
-_check_git.py
-install_status*.txt
-tools/_commit_check.txt
-.gitmessage.txt
-_install_status.txt
-_state.txt
-.gitmessage.txt
-_install_status.txt
-_state.txt
-
 # ---- 工作区内部数据（记忆/技能等，非交付物） ----
 .workbuddy/
 
-# ---- 临时扫描/诊断输出 ----
-_*.txt
-*.log
-
-_*.py
-count_idx_tmp.py
+# ---- 例外：Python 包标记文件必须入库（否则被上面的 _* 规则误伤） ----
+!__init__.py
