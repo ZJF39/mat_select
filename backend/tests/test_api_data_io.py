@@ -35,6 +35,19 @@ def _export_package(seeded_client, fmt="json"):
     return pkg, text
 
 
+def _reseal(pkg):
+    """重算 material_count 与 checksum（契约 §4.6(a)）。
+
+    checksum 覆盖 `materials`（canonical JSON），所以任何对包内材料的修改都必须
+    同步重算，否则包自身不自洽 → parse 端按 E2 规则返回 IMPORT_REJECTED
+    （该行为本身由 test_import_reject_bad_checksum_no_halfwrite 覆盖）。
+    本函数用于构造「合法但内容不同」的测试包。
+    """
+    pkg["material_count"] = len(pkg.get("materials") or [])
+    pkg["checksum"] = pack_checksum(pkg["materials"])
+    return pkg
+
+
 def _write_tmp_json(pkg):
     fd, path = tempfile.mkstemp(suffix=".json", prefix="matselect_import_")
     with os.fdopen(fd, "w", encoding="utf-8") as f:
@@ -98,7 +111,7 @@ def test_import_overwrite_policy_updates(seeded_client):
     target = pkg["materials"][0]
     target_uid = target["uid"]
     target["price_max"] = 999  # 制造差异
-    path = _write_tmp_json(pkg)
+    path = _write_tmp_json(_reseal(pkg))
     try:
         token = _import_parse(seeded_client, path).json()["token"]
         rc = seeded_client.post("/api/import/commit",
@@ -112,16 +125,29 @@ def test_import_overwrite_policy_updates(seeded_client):
 
 
 def test_import_duplicate_policy_creates_new(seeded_client):
-    """P0 | E2 冲突-duplicate：换 uid 导入 → 新增一条（总数+1）。"""
+    """P0 | E2 冲突-duplicate：同名但换 uid 导入 → 另存副本，新增一条（总数+1）。
+
+    PRD E2 冲突判定：先按 uid 匹配，**无 uid 命中时按「名称+简称」兜底**；
+    冲突策略 duplicate = 另存副本（更名后新建）。
+    故此处构造**单条**且 uid 全新、名称与本机一致的包：
+    uid 不命中 → 走同名额兜底 → 冲突 → duplicate → 新增 1 条副本（不覆盖、不跳过）。
+    """
     before = seeded_client.get("/api/materials").json()["total"]
     pkg, _ = _export_package(seeded_client, fmt="json")
-    pkg["materials"][0]["uid"] = "dup-" + uuid.uuid4().hex  # 换 uid → 视作新料
-    path = _write_tmp_json(pkg)
+    pkg["materials"] = [pkg["materials"][0]]        # 只留一条，使「冲突数」唯一且可断言
+    pkg["materials"][0]["uid"] = "dup-" + uuid.uuid4().hex  # 换 uid → 触发同名额兜底冲突
+    path = _write_tmp_json(_reseal(pkg))
     try:
-        token = _import_parse(seeded_client, path).json()["token"]
+        preview = _import_parse(seeded_client, path).json()
+        assert preview.get("conflicted") == 1, \
+            f"期望预览为 1 条冲突，实际 conflicted={preview.get('conflicted')}：{preview.get('details')}"
+        token = preview["token"]
         rc = seeded_client.post("/api/import/commit",
                                  json={"token": token, "conflict_policy": "duplicate"})
         assert rc.status_code == 200, f"commit 期望 200，实际 {rc.status_code}：{rc.text}"
+        res = rc.json()
+        assert res.get("added") == 1 and res.get("updated") == 0, \
+            f"duplicate 期望新增 1 条且不覆盖，实际 {res}"
         after = seeded_client.get("/api/materials").json()["total"]
         assert after == before + 1, f"duplicate 期望总数+1（{before}→{after}）"
     finally:

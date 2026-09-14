@@ -52,7 +52,9 @@ def test_flow_shortlist_no_duplicate(seeded_client):
     # 第二次：要么 200 幂等（仍是 1 条），要么 409 CONFLICT；绝不允许出现 2 条
     assert r2.status_code in (200, 409), f"期望 200/409，实际 {r2.status_code}：{r2.text}"
     lst = seeded_client.get(f"/api/tasks/{task_id}/shortlist").json()["items"]
-    same = [it for it in lst if it.get("material_uid") == uid]
+    # 契约 §4.2 / 原型 §4：待选项响应体是 `ShortlistItem { id, material: MaterialCard, score, ... }`，
+    # 材料 uid 位于嵌套的 material 上（`material_uid` 只是 POST 请求体字段名）。
+    same = [it for it in lst if (it.get("material") or {}).get("uid") == uid]
     assert len(same) == 1, f"期望同材料仅 1 条，实际 {len(same)} 条"
 
 

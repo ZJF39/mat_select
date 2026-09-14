@@ -24,7 +24,12 @@ DIM_ALIASES = {
 
 
 def _extract_dims(result):
-    """从 Recommendation 解析 5 维得分（兼容 {dim:number} 与 {dim:{score,max}} 两种形状）。"""
+    """从 Recommendation 解析 5 维得分。
+
+    契约 §4.2 载荷为 `breakdown: Record<string, ScoreBreakdown>`，而原型 §4
+    `ScoreBreakdown` 定义为 `{ got, max }`，故取分优先读 `got`；
+    同时兼容早期 `{ score }` / `{ achieved }` 写法与直接给数值的形状。
+    """
     bd = result.get("breakdown") or result.get("score_breakdown")
     if not isinstance(bd, dict):
         return None
@@ -35,7 +40,9 @@ def _extract_dims(result):
             if a in bd:
                 v = bd[a]
                 if isinstance(v, dict):
-                    val = v.get("score") if "score" in v else v.get("achieved")
+                    val = v.get("got")
+                    if val is None:
+                        val = v.get("score") if "score" in v else v.get("achieved")
                 else:
                     val = v
                 break
@@ -59,7 +66,9 @@ def _post_fail_feedback(client, task_id, uid, reason_text):
         "result": "fail",
         "reason_text": reason_text,
         "reason_tags": ["价格与实际不符"],
-        "materials": [uid],
+        # 契约 §4.2 与原型 §4 `FeedbackPayload` 的字段名均为 `material_uids`（非 materials），
+        # 键名不符时后端按契约忽略该字段 → 材料级反馈不会入库 → 降权永远不生效。
+        "material_uids": [uid],
     }
     r = client.post(f"/api/tasks/{task_id}/feedback", json=payload)
     assert r.status_code == 200, f"回评期望 200，实际 {r.status_code}：{r.text}"
@@ -142,7 +151,7 @@ def test_recommend_score_floor(seeded_client):
 # 5 维分解之和与总分一致
 # ---------------------------------------------------------------------------
 def test_recommend_breakdown_sum_consistent(seeded_client):
-    """P0 | §4 可解释：5 维分解之和（减反馈修正）≈ 总分（允许±1 取整误差）。"""
+    """P0 | §4 可解释：5 维分解之和 + 反馈修正 ≈ 总分（允许±1 取整误差）。"""
     r = seeded_client.post("/api/recommend/run",
                             json={"constraints": {"process": "注塑", "temp_limit": 150}})
     assert r.status_code == 200, f"期望 200，实际 {r.status_code}：{r.text}"
@@ -157,8 +166,11 @@ def test_recommend_breakdown_sum_consistent(seeded_client):
         assert len(five) == 5, f"期望解析出 5 个维度，实际 {dims}"
         fb = dims.get("feedback") or 0
         s = sum(five)
-        assert abs(s - fb - score) <= 1.0, \
-            f"期望 5维之和({s}) - 反馈({fb}) ≈ 总分({score})，偏差超 1"
+        # 契约 §4.2 / 原型 §4：`feedback_penalty` 口径为「0 或负值」，
+        # 即分解中已作为负项给出，故恒等式是 Σ五维 + feedback_penalty ≈ 总分
+        # （本用例无历史反馈，fb 恒为 0；写成 + 号可兼容降权生效时的取值）。
+        assert abs(s + fb - score) <= 1.0, \
+            f"期望 5维之和({s}) + 反馈修正({fb}) ≈ 总分({score})，偏差超 1"
 
 
 # ---------------------------------------------------------------------------

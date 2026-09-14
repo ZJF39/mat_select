@@ -150,8 +150,16 @@ def test_material_update_and_diff(seeded_client):
     revs = rv.json().get("items", [])
     assert len(revs) >= 2, f"期望至少 2 个版本，实际 {len(revs)}"
 
-    # diff：v1 -> v2（against）
-    a, b = revs[0]["version"], revs[1]["version"]
+    # diff 取「本次编辑版」与其**紧邻上一版**（契约 §4.5 DiffPayload / 仓库 update_material 注记）。
+    # 注意：version 是全局递增的快照 id，且本 session 各用例共享同一个库，
+    # 先前的用例（如 E2 overwrite 导入）也会在同一材料上留下「编辑」快照，
+    # 因此不能固定取 revs[0]/revs[1]，否则 diff 到的可能是两次内容相同的版本。
+    versions = sorted({v["version"] for v in revs})
+    b = upd["new_version"]
+    prior = [v for v in versions if v < b]
+    assert b == versions[-1], f"期望本次编辑产生最新版本 {versions[-1]}，实际 new_version={b}"
+    assert prior, f"期望存在上一版用于 diff，实际 versions={versions}"
+    a = prior[-1]
     rd = seeded_client.get(f"/api/materials/{uid}/revisions/{a}/diff",
                            params={"against": b})
     assert rd.status_code == 200, f"期望 200，实际 {rd.status_code}：{rd.text}"
@@ -164,6 +172,12 @@ def test_material_update_and_diff(seeded_client):
     for row in rows:
         assert row.get("type") in valid_types, \
             f"期望 type ∈ {valid_types}，实际 {row}"
+
+    # 自清理：上述编辑把 service_temp_limit(145) 与 service_temp_max(140) 拉开，
+    # 破坏了种子数据不变量（见 test_field_consistency_temp_limit_eq_max）；
+    # 各用例共享同一库，故恢复至最早版本，避免污染后续用例（不借助放宽断言）。
+    rr = seeded_client.post(f"/api/materials/{uid}/revisions/{versions[0]}/restore")
+    assert rr.status_code == 200, f"期望恢复 200，实际 {rr.status_code}：{rr.text}"
 
 
 def test_material_feedback_get_delete(seeded_client):
@@ -180,15 +194,45 @@ def test_material_feedback_get_delete(seeded_client):
 # ---------------------------------------------------------------------------
 # 分类树（四态 + 两级）
 # ---------------------------------------------------------------------------
+def _flatten_tree(nodes):
+    """摊平分类树。
+
+    契约 §4.1：`GET /api/categories → { items: CategoryNode[] }（两级，含 count）`，
+    CategoryNode 带 `children?: CategoryNode[]`（见原型 §4 TS 定义），
+    即 items 是**一级节点数组**、二级节点嵌在 `children` 里，而非扁平数组。
+    """
+    out = []
+    for n in nodes or []:
+        out.append(n)
+        out.extend(_flatten_tree(n.get("children")))
+    return out
+
+
 def test_categories_two_level_with_count(seeded_client):
-    """P0 | F1 分类树：两级结构，含 count，子节点归属于父。"""
+    """P0 | F1 分类树：两级嵌套结构，含 count，子节点归属于父。"""
     r = seeded_client.get("/api/categories")
     assert r.status_code == 200, f"期望 200，实际 {r.status_code}"
-    nodes = r.json().get("items", [])
-    assert any(n.get("parent_id") is None for n in nodes), "期望存在一级分类"
-    assert any(n.get("parent_id") is not None for n in nodes), "期望存在二级分类"
-    for n in nodes:
-        assert "count" in n, f"期望每个分类含 count，实际节点={n}"
+    roots = r.json().get("items", [])
+    assert roots, "期望存在分类节点"
+    assert all(n.get("parent_id") is None for n in roots), \
+        f"期望 items 顶层均为一级分类，实际 {[n.get('parent_id') for n in roots]}"
+    nodes = _flatten_tree(roots)
+    assert all("count" in n for n in nodes), \
+        f"期望每个分类节点含 count，实际 {[n.get('name') for n in nodes if 'count' not in n]}"
+
+    root_ids = {n["id"] for n in roots}
+    second = [n for n in nodes if n.get("parent_id") is not None]
+    assert second, "期望存在二级分类"
+    assert all(n["parent_id"] in root_ids for n in second), "期望二级分类均直接归属于一级分类"
+    assert not any(n.get("children") for n in second), "期望分类树仅两级（契约 §4.1）"
+
+    # count 语义：叶子 = 直接归属材料数；父节点 = 自身直接归属 + 全部子节点之和
+    for n in roots:
+        kids = n.get("children") or []
+        assert n["count"] >= sum(c["count"] for c in kids), \
+            f"期望父分类 count 覆盖其子分类，实际 {n['name']}={n['count']}，" \
+            f"子节点={[c['count'] for c in kids]}"
+    assert sum(n["count"] for n in roots) >= 1, "期望种子库存在已归类材料"
 
 
 def test_category_create_rename_conflict(seeded_client):
@@ -205,15 +249,26 @@ def test_category_create_rename_conflict(seeded_client):
 # 字段级数据一致性（契约 §4.6 / 矩阵「数据一致性」）
 # ---------------------------------------------------------------------------
 def test_field_consistency_temp_limit_eq_max(seeded_client):
-    """P0 | 数据一致性：service_temp_limit == service_temp_max 且 min<=max。"""
-    items = seeded_client.get("/api/materials").json()["items"]
-    for m in items:
-        assert m["service_temp_limit"] == m["service_temp_max"], \
+    """P0 | 数据一致性：service_temp_limit == service_temp_max（口径不随视图变化）。
+
+    契约 §4.6 / 原型 §4 类型定义：列表卡片 `MaterialCard` 只带 `service_temp_limit`
+    与 `density_min|max`、`price_min|max` 等对比列字段，温度区间 `service_temp_min/max`
+    属于详情字段 `MaterialDetail`。因此本用例分两层校验：
+    ① 卡片按 05 屏对比列口径提供 service_temp_limit / density_min / price_min；
+    ② 「长期使用温度上限 == 温度区间上限」这一数据一致性不变量在详情接口上成立。
+    """
+    items = seeded_client.get("/api/materials", params={"page_size": 8}).json()["items"]
+    assert len(items) >= 2, f"期望种子库返回至少 2 条材料，实际 {len(items)}"
+    for it in items:
+        assert "service_temp_limit" in it and "density_min" in it and "price_min" in it, \
+            f"期望卡片含 05 屏对比列字段（service_temp_limit/density_min/price_min），实际键={sorted(it)}"
+        d = seeded_client.get(f"/api/materials/{it['uid']}").json()
+        assert d["service_temp_limit"] == d["service_temp_max"], \
             (f"期望 service_temp_limit==service_temp_max，"
-             f"{m['name']}: limit={m['service_temp_limit']} max={m['service_temp_max']}")
-        assert m["service_temp_min"] <= m["service_temp_max"], \
+             f"{d['name']}: limit={d['service_temp_limit']} max={d['service_temp_max']}")
+        assert d["service_temp_min"] <= d["service_temp_max"], \
             (f"期望 service_temp_min<=service_temp_max，"
-             f"{m['name']}: min={m['service_temp_min']} max={m['service_temp_max']}")
+             f"{d['name']}: min={d['service_temp_min']} max={d['service_temp_max']}")
 
 
 # ---------------------------------------------------------------------------

@@ -33,17 +33,26 @@ def test_settings_weights_shape(seeded_client):
 
 
 def test_settings_weights_put_updates(seeded_client):
-    """P1 | 10 屏 权重：PUT 修改某维权重后 GET 回显一致，合计仍归一化。"""
+    """P1 | 10 屏 权重：PUT 修改某维权重后相对高低保持，合计仍归一化。"""
     cur = seeded_client.get("/api/settings/weights").json()
+    key0 = cur["dims"][0]["key"]
+    before0 = cur["dims"][0]["weight"]
     dims = [{"key": d["key"], "weight": d["weight"]} for d in cur["dims"]]
     # 把第一个维度权重调高 5 个百分点（按百分比口径）
     dims[0]["weight"] = (dims[0]["weight"] + 5) if dims[0]["weight"] > 1 else (dims[0]["weight"] + 0.05)
     rp = seeded_client.put("/api/settings/weights", json={"dims": dims})
     assert rp.status_code == 200, f"期望 200，实际 {rp.status_code}：{rp.text}"
     new = rp.json()
-    assert new["dims"][0]["weight"] == dims[0]["weight"], "期望回显更新后的权重"
     s = new.get("sum")
     assert abs(s - 100) <= 1 or abs(s - 1.0) <= 0.01, f"PUT 后合计应仍归一化，实际 sum={s}"
+    got = {d["key"]: d["weight"] for d in new["dims"]}
+    assert set(got) == {d["key"] for d in cur["dims"]}, \
+        f"期望维度集合不变，实际 {sorted(got)}"
+    # 契约 §5「权重可配（自动归一化）」：提交合计≠100 的权重会被整体等比缩放，
+    # 所以不能要求「逐维原值回显」；归一化后的正确不变量是
+    # 「提交中被调高的维度，缩放后仍严格高于自己的原值」。
+    assert got[key0] > before0, \
+        f"期望 {key0} 归一化后高于原值 {before0}，实际 {got.get(key0)}"
 
 
 def test_settings_feedback_get_delete(seeded_client):
