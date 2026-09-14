@@ -76,15 +76,24 @@ def create_material(payload: dict) -> dict:
 
 
 def update_material(uid: str, payload: dict) -> tuple[dict, int]:
-    """更新材料（直接生效，无审核）。返回 (详情, 新版本号)。"""
-    if material_repo.get_material(uid) is None:
+    """更新材料（直接生效，无审核）。返回 (详情, 新版本号)。
+
+    PUT 语义（契约 §4.2 `PUT /api/materials/{uid}` body = MaterialUpsert）：
+    以**提交体中出现的键**为准合并，未出现的字段保持库中原值。
+    编辑表单未渲染的字段、以及残缺材料包（overwrite 策略）都不会再静默清空数据；
+    显式传 `null` 仍表示「清空该字段」。
+    """
+    existing = material_repo.get_material(uid)
+    if existing is None:
         raise not_found("材料不存在")
     data = dict(payload)
-    if not (data.get("name") or "").strip():
+    if "name" in data and not str(data.get("name") or "").strip():
         raise validation_error("材料名称不能为空")
-    _validate_ranges(data)
+    # 区间校验针对「合并后的最终值」，避免只提交 min 或 max 之一时绕过校验
+    _validate_ranges({**existing, **data})
     new_version = material_repo.update_material(uid, data)
-    write_log("编辑材料", data.get("name") or "", {"uid": uid, "version": new_version})
+    name = str(data.get("name") or existing.get("name") or "")
+    write_log("编辑材料", name, {"uid": uid, "version": new_version})
     return get_detail(uid), new_version
 
 

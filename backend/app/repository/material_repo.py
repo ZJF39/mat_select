@@ -239,10 +239,18 @@ def get_material_id(uid: str):
 
 
 # ---------------- 写入 ----------------
-def _values_from_upsert(data: dict) -> dict:
+def _values_from_upsert(data: dict, only_present: bool = False) -> dict:
+    """把提交体规整成「列 → 入库值」字典。
+
+    `only_present=True` 时只输出提交体中**显式出现**的列（PUT 编辑用）：
+    提交体是 `MaterialUpsert`，前端未渲染或被裁剪的字段不应被静默清空；
+    显式传 `null` 仍会写入 null（用户清空意图不受影响）。
+    """
     vals = {}
     for c in MATERIAL_COLS:
         if c in ("id", "uid", "created_at", "updated_at"):
+            continue
+        if only_present and c not in data:
             continue
         if c in ARRAY_COLS:
             vals[c] = json_dumps(data.get(c, []) or [])
@@ -293,19 +301,28 @@ def ensure_baseline(uid: str):
     return _snapshot(uid, "基线", snapshot=get_material(uid))
 
 
-def update_material(uid: str, data: dict) -> int:
+def update_material(uid: str, data: dict, partial: bool = True) -> int:
     """更新材料并**写一份新快照**，返回新版本号（即新快照 id）。
 
     版本语义（PRD D3「每次变更留快照」）：一次编辑 = 一个新版本。
     v1 = 基线（若是种子/导入材料则在此刻补建）；v2/v3… = 每次编辑后的状态。
     因此 `diff(uid, new_version-1, new_version)` 即「上一版 → 本次」。
+
+    `partial=True`（默认）按提交体出现的键合并，避免 PUT 时未提交字段被清空；
+    材料包导入（overwrite 策略）同样依赖该行为，避免残缺包抹掉本地已补全的字段。
     """
     mid = get_material_id(uid)
     if mid is None:
         from app.core.errors import not_found
         raise not_found("材料不存在")
     ensure_baseline(uid)
-    vals = _values_from_upsert(data)
+    vals = _values_from_upsert(data, only_present=partial)
+    if not vals:
+        # 空提交体不产生「无变更版本」，直接返回当前最新版本号
+        row = query_one(
+            "SELECT id FROM material_revision WHERE material_id=? ORDER BY id DESC LIMIT 1", (mid,)
+        )
+        return row["id"] if row else 0
     set_clause = ", ".join(f"{c}=?" for c in vals.keys()) + ", updated_at=?"
     params = [vals[c] for c in vals.keys()] + [now_iso()]
     execute(f"UPDATE material SET {set_clause} WHERE uid=?", params + [uid])
