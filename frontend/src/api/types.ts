@@ -34,6 +34,9 @@ export interface MaterialCard extends Categorization {
   aliases: string[]
   density_min: number | null
   density_max: number | null
+  /** 对比表（05 屏）需要横向展示拉伸强度，故卡片载荷也带该字段 */
+  tensile_strength_min?: number | null
+  tensile_strength_max?: number | null
   service_temp_limit: number | null
   price_min: number | null
   price_max: number | null

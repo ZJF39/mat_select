@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ShortlistItem as ShortlistItemT, ShortlistTag } from '../api/types'
 import { ShortlistItem } from './ShortlistItem'
+import { Chip } from './Chip'
 import { EmptyState } from './EmptyState'
 import { Skeleton } from './Skeleton'
 import { Icon } from '../icons'
@@ -81,7 +82,7 @@ export function ShortlistPanel({
     <aside className="ms-wb__panel" aria-label="待选材料面板">
       <div className="ms-wb__panel-head">
         <span className="ms-page-header__title" style={{ fontSize: 'var(--fs-body)' }}>待选材料</span>
-        <Chip size="18" tone="accent">{ordered.length}</Chip>
+        <Chip size="20" tone="accent">{ordered.length}</Chip>
         <button className="ms-link" style={{ marginLeft: 'auto', background: 'none', border: 'none', fontSize: 'var(--fs-small)' }} onClick={onExport}>
           导出对比表
         </button>

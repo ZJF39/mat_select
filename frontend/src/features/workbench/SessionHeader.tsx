@@ -1,5 +1,5 @@
-import { Icon } from '../../../icons'
-import { Chip } from '../../../components/Chip'
+import { Icon } from '../../icons'
+import { Chip } from '../../components/Chip'
 import { useNavigate } from 'react-router-dom'
 import './ui.css'
 

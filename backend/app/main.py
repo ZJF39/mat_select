@@ -13,7 +13,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi import APIRouter
 
@@ -78,6 +78,38 @@ async def lifespan(app: FastAPI):
     close_conn()
 
 
+def _mount_spa(app: FastAPI) -> None:
+    """挂载前端产物并实现 SPA history 回退。
+
+    为什么不能只用 `StaticFiles(html=True)`：它只对目录请求返回 index.html，
+    对未知路径一律 404。而前端用 `createBrowserRouter`（HTML5 history），
+    任何深链或浏览器刷新（如 /materials、/tasks/1、/settings）都会 404。
+
+    约定：
+    - `/assets/*` 交给 StaticFiles（带缓存语义的构建产物）
+    - 其余未知路径回退到 index.html，把路由交给前端
+    - **`/api/*` 未命中不回退**，仍返回统一错误体（否则前端会把 200 的 HTML 当接口响应）
+    """
+    dist = PROJECT_ROOT / "frontend" / "dist"
+    if not dist.exists():
+        print("[main] 未找到 frontend/dist，跳过 SPA 挂载（仅提供 API）。")
+        return
+
+    index = dist / "index.html"
+    assets = dist / "assets"
+    if assets.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets)), name="assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def spa_fallback(full_path: str):
+        if full_path.startswith("api/"):
+            raise ApiError("NOT_FOUND", "接口不存在", 404)
+        target = dist / full_path
+        if full_path and target.is_file():
+            return FileResponse(str(target))
+        return FileResponse(str(index))
+
+
 def create_app() -> FastAPI:
     # ⚠️ lifespan 必须显式传入：否则启动/关闭钩子不会执行，
     # 全新安装会因「未建表」在第一个请求时报 `no such table: material`。
@@ -94,10 +126,8 @@ def create_app() -> FastAPI:
     _register_routers(app)
     _register_exception_handlers(app)
 
-    # 前端产物存在则挂载（SPA 回退）。必须在 API 路由之后挂载。
-    dist = PROJECT_ROOT / "frontend" / "dist"
-    if dist.exists():
-        app.mount("/", StaticFiles(directory=str(dist), html=True), name="static")
+    # 静态资源与 SPA 回退必须在 API 路由之后挂载，避免抢路由。
+    _mount_spa(app)
 
     return app
 

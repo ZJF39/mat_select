@@ -1,4 +1,4 @@
-import { Icon } from '../../../icons'
+import { Icon } from '../../icons'
 import './ui.css'
 
 export interface ReviewBarProps {

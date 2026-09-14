@@ -9,6 +9,14 @@ import { Icon } from '../icons'
  * - 品牌 / 全局搜索（Ctrl+K 聚焦、输入即搜防抖 200ms、Enter 跳材料库、Esc 清空）
  * - 右侧：导入材料包 / 导出 快捷入口 + 本机备份状态
  */
+
+/** 全局搜索结果项（材料 / 任务 / 场景 三类统一形状，sub 可选） */
+interface SearchItem {
+  kind: string
+  label: string
+  sub?: string
+  to: string
+}
 export function TopBar() {
   const navigate = useNavigate()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -43,8 +51,8 @@ export function TopBar() {
     staleTime: 15_000,
   })
 
-  const flat = useMemo(() => {
-    if (!data) return [] as { kind: string; label: string; sub?: string; to: string }[]
+  const flat = useMemo<SearchItem[]>(() => {
+    if (!data) return []
     return [
       ...data.materials.map((m) => ({
         kind: '材料',

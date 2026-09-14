@@ -20,8 +20,11 @@ from app.repository.base import query_all
 
 CARD_FIELDS = (
     "uid", "name", "short_name", "category_id", "category_name", "category_path",
-    "grade_type", "aliases", "density_min", "density_max", "service_temp_limit",
-    "price_min", "price_max", "price_unit", "features", "molding_process", "archived",
+    "grade_type", "aliases", "density_min", "density_max",
+    # 对比表（05 屏）需要横向比对拉伸强度，故卡片载荷一并下发
+    "tensile_strength_min", "tensile_strength_max",
+    "service_temp_limit", "price_min", "price_max", "price_unit",
+    "features", "molding_process", "archived",
 )
 
 

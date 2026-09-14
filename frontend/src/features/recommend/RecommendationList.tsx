@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import type { Recommendation, Constraints } from '../../../api/types'
-import { RecommendationCard } from '../../../components/RecommendationCard'
-import { Notice } from '../../../components/Notice'
-import { Icon } from '../../../icons'
+import type { Recommendation, Constraints } from '../../api/types'
+import { RecommendationCard } from '../../components/RecommendationCard'
+import { Notice } from '../../components/Notice'
+import { Icon } from '../../icons'
 import './ui.css'
 
 export interface RecommendationListProps {
