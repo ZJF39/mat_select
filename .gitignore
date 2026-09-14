@@ -80,3 +80,10 @@ _state.txt
 .gitmessage.txt
 _install_status.txt
 _state.txt
+
+# ---- 工作区内部数据（记忆/技能等，非交付物） ----
+.workbuddy/
+
+# ---- 临时扫描/诊断输出 ----
+_*.txt
+*.log
