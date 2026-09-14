@@ -6,7 +6,6 @@
 """
 from __future__ import annotations
 
-import shutil
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -86,7 +85,12 @@ def backup_status() -> dict:
 
 
 def run_backup() -> dict:
-    """把 SQLite 单文件复制到 data/backups/matselect_YYYYMMDD_HHMMSS.db（PRD §6 数据安全）。"""
+    """把 SQLite 库导出为 data/backups/matselect_YYYYMMDD_HHMMSS.db（PRD §6 数据安全）。
+
+    WAL 模式下（connection.py 设置 journal_mode=WAL）直接复制主库文件会丢失
+    尚未 checkpoint 的已提交事务，使备份成为陈旧/不完整快照。故改用 SQLite
+    在线备份 API 生成**一致快照**，保证备份可独立打开且数据完整。
+    """
     from app.core.config import DB_PATH
 
     src = Path(DB_PATH)
@@ -95,11 +99,26 @@ def run_backup() -> dict:
     BACKUP_DIR.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(_TZ).strftime("%Y%m%d_%H%M%S")
     dst = BACKUP_DIR / f"matselect_{stamp}.db"
-    shutil.copy2(src, dst)
+    _sqlite_snapshot(src, dst)
     ts = datetime.now(_TZ).strftime("%Y-%m-%dT%H:%M:%S+08:00")
     set_meta("last_backup_at", ts)
     write_log("数据备份", dst.name)
     return {"ok": True, "last_backup_at": ts, "location": str(dst)}
+
+
+def _sqlite_snapshot(src: Path, dst: Path) -> None:
+    """使用 SQLite 在线备份 API 生成一致快照（WAL 安全，可独立打开）。"""
+    import sqlite3
+
+    src_conn = sqlite3.connect(str(src))
+    try:
+        dst_conn = sqlite3.connect(str(dst))
+        try:
+            src_conn.backup(dst_conn)
+        finally:
+            dst_conn.close()
+    finally:
+        src_conn.close()
 
 
 def health(material_count: int) -> dict:
