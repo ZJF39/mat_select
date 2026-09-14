@@ -209,6 +209,11 @@ def _extract_dimensions(text: str, reason_tags: List[str]) -> List[str]:
     for dim, kws in DIMENSION_KEYWORDS.items():
         if any(k.lower() in low for k in kws):
             dims.append(dim)
+    # 数值型温度表达（「需要耐 300 度以上」「180℃ 就失效」）：
+    # 关键词表的「耐温/高温」是连续词，覆盖不到数字夹在中间的中文写法，
+    # 漏判会把温度类盲区错误归到兜底的「材料信息缺失」（PRD C1 盲区看板维度失真）。
+    if "温度不符" not in dims and re.search(r"\d{2,4}\s*(?:°\s*c|℃|度|摄氏度)", low):
+        dims.append("温度不符")
     # 用户勾选的问题类型也映射到维度（① 无满足材料 ② 不相关 ③ 参数有误 ④ 价格不符 ⑤ 信息缺失 ⑥ 其他）
     tag_map = {
         "①": "材料信息缺失", "②": "材料信息缺失", "③": "参数准确性",
