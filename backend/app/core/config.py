@@ -6,18 +6,42 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 # 应用版本（同时写入 app_meta，供 /api/health 读取）
 # 契约 §3 冻结为 1.0.0（与前端 NavRail 版本号、里程碑 tag v1.0.0 一致）
 APP_VERSION = "1.0.0"
 
-# 项目根目录：backend/ 的上一级（MatSelect/）
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
+# ---------------------------------------------------------------------------
+# 路径解析（同时支持「源码运行」与「PyInstaller 打包运行」）
+#
+# 两类路径必须分开，否则打包后会出现「读到只读解包目录 / 写不进去」：
+#   BUNDLE_DIR（= PROJECT_ROOT）—— **只读**资源根：schema.sql、frontend/dist、
+#                                  data/*.json 种子；打包后在 sys._MEIPASS 内。
+#   APP_DIR                     —— **可写**根：SQLite 库、backups 目录；
+#                                  打包后是 exe 所在目录（不能写 _MEIPASS，
+#                                  onefile 退出时会清理该临时目录）。
+# 非打包运行时两者都等于项目根，与打包前行为完全一致。
+# ---------------------------------------------------------------------------
+FROZEN = bool(getattr(sys, "frozen", False))
 
-# 数据目录（SQLite 库、备份、种子数据）
-DATA_DIR = PROJECT_ROOT / "data"
+if FROZEN:
+    BUNDLE_DIR = Path(getattr(sys, "_MEIPASS", Path(sys.executable).resolve().parent))
+    APP_DIR = Path(sys.executable).resolve().parent
+else:
+    BUNDLE_DIR = Path(__file__).resolve().parents[3]
+    APP_DIR = BUNDLE_DIR
+
+# 项目根（只读资源根）：main.py 用它定位 frontend/dist
+PROJECT_ROOT = BUNDLE_DIR
+
+# 数据目录（SQLite 库、备份）；可用 MATSELECT_DATA_DIR 覆盖
+DATA_DIR = Path(os.environ.get("MATSELECT_DATA_DIR", str(APP_DIR / "data")))
 DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+# 只读种子数据目录：打包时 data/*.json 随 exe 分发，首次启动从这里读取
+SEED_DIR = BUNDLE_DIR / "data"
 
 # 数据库文件位置（MATSELECT_DB 可覆盖，便于多数据目录测试）
 DB_PATH = Path(os.environ.get("MATSELECT_DB", str(DATA_DIR / "matselect.db")))

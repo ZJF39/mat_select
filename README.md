@@ -8,6 +8,24 @@
 
 ## 1. 快速开始
 
+### 1.0 直接使用（Windows 免安装 exe，推荐给使用者）
+
+```
+release\MatSelect.exe        双击即可
+```
+
+启动后：控制台显示访问地址并**自动打开浏览器**；首次运行会在 exe 同级生成 `data\`（数据库 + 种子）。
+停止：控制台窗口按 `Ctrl+C` 或直接关闭窗口。
+
+```powershell
+.\release\MatSelect.exe --port 8200 --no-browser   # 指定端口 / 不自动开浏览器
+```
+
+- **数据位置**：`<exe 同级>\data\matselect.db`。把 exe 拷到任意目录都能独立运行。
+- **备份**：用设置页「立即备份」（生成 WAL 一致快照），或**退出程序后**整体复制 `data\` 目录
+  ——**不要单独复制 `.db` 文件**，WAL 模式下最新写入可能还在 `-wal` 里。详见 `docs/BUILD-EXE.md`。
+- **重新打包**：见 `docs/BUILD-EXE.md`（含完整 PyInstaller 命令与三项路径改动说明）。
+
 ### 1.1 后端（FastAPI + SQLite）
 
 ```powershell

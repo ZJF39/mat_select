@@ -48,3 +48,8 @@ Thumbs.db
 
 # ---- 例外：Python 包标记文件必须入库（否则被上面的 _* 规则误伤） ----
 !__init__.py
+
+# ---- PyInstaller 打包产物（可再生产物，不入库） ----
+release/
+build_pyi/
+*.spec

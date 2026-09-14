@@ -23,26 +23,53 @@ from app.db.connection import close_conn
 from app.db import init_db as _init_db
 
 
+# 显式路由模块清单（自动发现的**兜底**）。
+# 必要性：PyInstaller 打包后 Python 模块位于归档中，`pkgutil.iter_modules(app.api.__path__)`
+# 往往枚举不到任何模块，会导致**应用启动后 0 条业务路由**（接口全 404）。
+# 因此自动发现失败或结果为 0 时，按本清单逐个 importlib 导入。
+ROUTER_MODULES = (
+    "materials", "categories", "recommend", "tasks", "shortlist",
+    "feedback", "insights", "data_io", "settings", "system",
+)
+
+
+def _mount_module(app: FastAPI, mod_name: str) -> bool:
+    """导入 app.api.<mod_name> 并挂载其 router；成功返回 True。"""
+    try:
+        module = importlib.import_module(f"app.api.{mod_name}")
+    except Exception as e:  # noqa: BLE001
+        print(f"[main] 警告: 导入模块 app.api.{mod_name} 失败（{e}），已跳过。")
+        return False
+    router = getattr(module, "router", None)
+    if isinstance(router, APIRouter):
+        app.include_router(router, prefix="/api")
+        return True
+    print(f"[main] 警告: app.api.{mod_name} 未暴露 router，已跳过。")
+    return False
+
+
 def _register_routers(app: FastAPI) -> None:
-    """从 app.api 包自动发现并挂载所有 router。失败则警告后跳过。"""
+    """挂载所有业务 router：优先自动发现，失败则按显式清单兜底。"""
+    mounted = 0
+
     try:
         import app.api as api_pkg
-    except Exception as e:
-        print(f"[main] 警告: 无法导入 app.api 包（{e}），跳过路由自动发现。")
-        return
-    try:
+
         for mod in pkgutil.iter_modules(api_pkg.__path__):
-            mod_name = mod.name
-            try:
-                module = importlib.import_module(f"app.api.{mod_name}")
-            except Exception as e:
-                print(f"[main] 警告: 导入模块 app.api.{mod_name} 失败（{e}），已跳过。")
+            if mod.name.startswith("_") or mod.name == "routes":
                 continue
-            router = getattr(module, "router", None)
-            if isinstance(router, APIRouter):
-                app.include_router(router, prefix="/api")
-    except Exception as e:
-        print(f"[main] 警告: 路由自动发现过程出错（{e}），部分路由可能未挂载。")
+            if _mount_module(app, mod.name):
+                mounted += 1
+    except Exception as e:  # noqa: BLE001
+        print(f"[main] 警告: 路由自动发现失败（{e}）。")
+
+    if mounted == 0:
+        print("[main] 自动发现未挂载任何 router（打包运行常见），改用显式清单兜底。")
+        for mod_name in ROUTER_MODULES:
+            if _mount_module(app, mod_name):
+                mounted += 1
+
+    print(f"[main] 已挂载 {mounted} 个 router（前缀 /api）。")
 
 
 def _register_exception_handlers(app: FastAPI) -> None:

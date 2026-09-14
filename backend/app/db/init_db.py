@@ -27,6 +27,7 @@ from app.core.config import (
     DEFAULT_WEIGHTS,
     PENALTY_DIM_WEIGHTS,
     PENALTY_KEY,
+    SEED_DIR,
     WEIGHTS_KEY,
 )
 from app.db.connection import get_conn, json_dumps, new_uid, now_iso
@@ -136,16 +137,24 @@ _FALLBACK_CATEGORIES: list[tuple[str, list[str]]] = [
 # 种子文件读取
 # --------------------------------------------------------------------------- #
 def _load_json(filename: str) -> Any | None:
-    """读取 data/ 下的 JSON 种子文件；缺失或损坏返回 None（不抛异常）。"""
-    path = DATA_DIR / filename
-    if not path.exists():
-        print(f"[seed] 未找到 {path.name}，跳过")
-        return None
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except Exception as exc:  # noqa: BLE001
-        print(f"[seed] 解析 {path.name} 失败，跳过：{exc}")
-        return None
+    """读取 JSON 种子文件；缺失或损坏返回 None（不抛异常）。
+
+    查找顺序（打包运行时二者不同）：
+      1) 可写数据目录 `DATA_DIR`   —— 允许用户修改/替换种子
+      2) 只读种子目录 `SEED_DIR`   —— 打包时随 exe 分发的出厂种子
+    非打包运行时两者都指向 `<项目根>/data`，行为与打包前一致。
+    """
+    for base in (DATA_DIR, SEED_DIR):
+        path = base / filename
+        if not path.exists():
+            continue
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:  # noqa: BLE001
+            print(f"[seed] 解析 {path} 失败，跳过：{exc}")
+            return None
+    print(f"[seed] 未找到 {filename}（已查 {DATA_DIR} 与 {SEED_DIR}），跳过")
+    return None
 
 
 # --------------------------------------------------------------------------- #
