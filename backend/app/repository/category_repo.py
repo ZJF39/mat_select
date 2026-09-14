@@ -23,14 +23,20 @@ def list_tree():
         children = []
         for nid, n in nodes.items():
             if n["parent_id"] == pid:
+                kids = build(n["id"])
                 node = {
                     "id": n["id"],
                     "name": n["name"],
                     "parent_id": n["parent_id"],
                     "sort_order": n["sort_order"],
                     "created_at": n["created_at"],
-                    "count": counts.get(n["id"], 0),
-                    "children": build(n["id"]),
+                    # 计数语义 = 「该分类（含其子分类）下的在用材料数」：
+                    # 叶子节点即直接归属数；父节点须再累加子节点。
+                    # 材料实际只挂在二级分类上，若父节点只返回直接归属数会恒为 0，
+                    # 而前端把该值作为筛选选项计数展示（01/02 屏分类树与筛选器、
+                    # 10 屏分类管理），恒 0 会让分类筛选失去参考意义。
+                    "count": counts.get(n["id"], 0) + sum(c["count"] for c in kids),
+                    "children": kids,
                 }
                 children.append(node)
         children.sort(key=lambda x: (x["sort_order"], x["id"]))
