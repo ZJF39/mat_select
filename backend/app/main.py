@@ -79,7 +79,9 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="MatSelect", version=APP_VERSION)
+    # ⚠️ lifespan 必须显式传入：否则启动/关闭钩子不会执行，
+    # 全新安装会因「未建表」在第一个请求时报 `no such table: material`。
+    app = FastAPI(title="MatSelect", version=APP_VERSION, lifespan=lifespan)
 
     app.add_middleware(
         CORSMiddleware,

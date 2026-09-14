@@ -226,6 +226,14 @@ def get_material(uid: str):
     return _row_to_detail(row)
 
 
+def get_material_by_id(material_id: int):
+    """按自增 id 取详情（待选清单 / 回评需要由 material_id 反查卡片）。"""
+    row = query_one("SELECT * FROM material WHERE id=?", (int(material_id),))
+    if not row:
+        return None
+    return _row_to_detail(row)
+
+
 def get_material_id(uid: str):
     return scalar("SELECT id FROM material WHERE uid=?", (uid,))
 
@@ -258,20 +266,41 @@ def create_material(data: dict) -> str:
     return uid
 
 
+def ensure_baseline(uid: str):
+    """确保材料存在 v1 基线快照，返回基线版本 id。
+
+    必要性：种子导入（`init_db._seed_materials`）与材料包导入（`io_service`）
+    走的是裸 INSERT，不经过 `create_material`，因此这些材料**没有历史快照**；
+    若不补基线，首次编辑后 `new_version=1` 且「上一版」不存在，
+    会导致 PRD D3 的变更历史 / diff / 恢复功能对全部种子材料失效。
+    """
+    mid = get_material_id(uid)
+    if mid is None:
+        return None
+    row = query_one(
+        "SELECT id FROM material_revision WHERE material_id=? ORDER BY id LIMIT 1", (mid,)
+    )
+    if row:
+        return row["id"]
+    return _snapshot(uid, "基线", snapshot=get_material(uid))
+
+
 def update_material(uid: str, data: dict) -> int:
-    """先存旧值快照到 material_revision，再更新，返回 new_version（新快照 id）。"""
+    """更新材料并**写一份新快照**，返回新版本号（即新快照 id）。
+
+    版本语义（PRD D3「每次变更留快照」）：一次编辑 = 一个新版本。
+    v1 = 基线（若是种子/导入材料则在此刻补建）；v2/v3… = 每次编辑后的状态。
+    因此 `diff(uid, new_version-1, new_version)` 即「上一版 → 本次」。
+    """
     mid = get_material_id(uid)
     if mid is None:
         from app.core.errors import not_found
         raise not_found("材料不存在")
-    # 旧快照
-    old = get_material(uid)
-    _snapshot(uid, "编辑", snapshot=old)
+    ensure_baseline(uid)
     vals = _values_from_upsert(data)
     set_clause = ", ".join(f"{c}=?" for c in vals.keys()) + ", updated_at=?"
     params = [vals[c] for c in vals.keys()] + [now_iso()]
     execute(f"UPDATE material SET {set_clause} WHERE uid=?", params + [uid])
-    # 新快照（记录编辑后的状态）
     new = get_material(uid)
     return _snapshot(uid, "编辑", snapshot=new)
 
@@ -319,9 +348,8 @@ def restore_revision(uid: str, version: int) -> int:
     if snap is None:
         from app.core.errors import not_found
         raise not_found("版本不存在")
-    # 恢复前先记录当前状态
-    _snapshot(uid, "恢复前", snapshot=get_material(uid))
-    # 用历史快照覆盖
+    ensure_baseline(uid)
+    # 用历史快照覆盖当前内容
     data = {}
     for c in MATERIAL_COLS:
         if c in ("id", "uid", "created_at", "updated_at", "category_name", "category_path",
@@ -334,6 +362,7 @@ def restore_revision(uid: str, version: int) -> int:
     params = [vals[c] for c in vals.keys()] + [now_iso()]
     execute(f"UPDATE material SET {set_clause} WHERE uid=?", params + [uid])
     new = get_material(uid)
+    # 恢复产出一个新版本（不删历史），符合「恢复即一次变更」
     return _snapshot(uid, f"恢复至v{version}", snapshot=new)
 
 
@@ -368,6 +397,8 @@ DIFF_SPECS = [
     ("short_name", "简称", "scalar"),
     ("category_name", "分类", "scalar"),
     ("grade_type", "材料类型", "scalar"),
+    ("description", "概述", "scalar"),
+    ("aliases", "别名", "array"),
     ("density", "密度 (g/cm³)", "range"),
     ("tensile_strength", "拉伸强度 (MPa)", "range"),
     ("elastic_modulus", "弹性模量 (GPa)", "range"),
@@ -380,9 +411,12 @@ DIFF_SPECS = [
     ("cautions", "注意项", "array_obj"),
     ("applications", "典型应用", "array"),
     ("price", "参考价", "price"),
+    ("price_note", "价格备注", "scalar"),
     ("molding_process", "成型工艺", "array"),
     ("certifications", "认证合规", "object"),
     ("limitations", "失效模式", "array"),
+    ("source", "数据来源", "scalar"),
+    ("source_date", "来源日期", "scalar"),
     ("value_type", "数值类型", "scalar"),
 ]
 
