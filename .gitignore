@@ -87,3 +87,6 @@ _state.txt
 # ---- 临时扫描/诊断输出 ----
 _*.txt
 *.log
+
+_*.py
+count_idx_tmp.py

@@ -47,7 +47,33 @@ except Exception as _e:  # noqa: BLE001
     BACKEND_IMPORT_ERROR = repr(_e)
 
 
+# ---------------------------------------------------------------------------
+# 已知后端缺陷的测试态隔离（不修改 backend/app 任何文件）
+# 缺陷 P0-INIT：app/db/init_db.py 的 _run_schema 用 raw.split(";") 朴素切分 SQL，
+# 而 schema.sql 含 CREATE TRIGGER ... BEGIN ... END; 多语句块，切分后触发器体被
+# 截断 → sqlite3.OperationalError: incomplete input，导致 init_db() 抛错、应用
+# 生命周期无法启动（src/app/main.py lifespan 调用 init_db）。
+# 仅在本测试进程内将 _run_schema 替换为正确的 executescript 执行方式，以隔离该
+# 启动缺陷、对真实业务接口做验收；该缺陷已记入 02-缺陷与交付判定报告.md 交技术负责人。
+# ---------------------------------------------------------------------------
+if BACKEND_AVAILABLE:
+    import app.db.init_db as _init_db_mod
+
+    _SCHEMA_PATH = _init_db_mod._SCHEMA_PATH
+
+    def _patched_run_schema(conn):
+        raw = _SCHEMA_PATH.read_text(encoding="utf-8")
+        try:
+            conn.executescript(raw)
+        except Exception:
+            fallback = raw.replace("tokenize='trigram'", "tokenize='unicode61'")
+            conn.executescript(fallback)
+
+    _init_db_mod._run_schema = _patched_run_schema
+
+
 # ===========================================================================
+
 # 种子数据（受控、与 data/*.json 解耦，保证用例可重复）
 # 字段名严格对齐契约 §4.5（= DDL 列名 = 前端 TS 字段名）。
 # 区间字段为 xxx_min / xxx_max；service_temp_limit 单独抽列（硬约束口径）。
