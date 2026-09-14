@@ -79,7 +79,7 @@ export function ShortlistItem({
           <Icon name="grip" size={12} />
         </span>
         <span className="ms-shortlist-item__name ms-ellipsis">{item.material.name}</span>
-        <span className="ms-shortlist-item__score">{item.score}%</span>
+        <span className="ms-shortlist-item__score" aria-label={`匹配度 ${item.score}%`}>{item.score}%</span>
       </div>
 
       <div className="ms-muted" style={{ fontSize: 'var(--fs-caption)' }}>

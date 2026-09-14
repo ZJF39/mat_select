@@ -25,6 +25,8 @@ export default function ShortlistPage() {
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [newIds, setNewIds] = useState<number[]>([])
   const [busy, setBusy] = useState(false)
+  const [grabIndex, setGrabIndex] = useState<number | null>(null)
+  const [announce, setAnnounce] = useState('')
 
   const task = useQuery({
     queryKey: ['task', taskId],
@@ -90,6 +92,24 @@ export default function ShortlistPage() {
     reorder.mutate(next.map((i) => i.id))
   }
 
+  /** 键盘排序（K-03 对比表）：空格/回车提起 → ↑/↓ 移动 → Esc 取消 */
+  const onGripKeyDown = (index: number) => (e: React.KeyboardEvent) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault()
+      setGrabIndex((g) => (g === index ? null : index))
+      setAnnounce(grabIndex === index ? `已放下 ${items[index].material.name}` : `已提起 ${items[index].material.name}，用上下键移动`)
+    } else if (grabIndex === index && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+      e.preventDefault()
+      const to = e.key === 'ArrowUp' ? index - 1 : index + 1
+      move(index, to)
+      setGrabIndex(to)
+      setAnnounce(`已移动到第 ${to + 1} 位`)
+    } else if (grabIndex === index && e.key === 'Escape') {
+      setGrabIndex(null)
+      setAnnounce('已取消调整')
+    }
+  }
+
   const exportCompare = async (format: 'xlsx' | 'md') => {
     setBusy(true)
     try {
@@ -142,6 +162,9 @@ export default function ShortlistPage() {
       </SidePanel>
 
       <main className="ms-main">
+        <div className="sr-only" aria-live="polite" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden' }}>
+          {announce}
+        </div>
         <div className="ms-page-header">
           <div>
             <h1 className="ms-page-header__title">待选清单 · 对比表</h1>
@@ -221,7 +244,9 @@ export default function ShortlistPage() {
                       key={it.id}
                       item={it}
                       index={i}
+                      total={items.length}
                       dragging={dragIndex === i}
+                      grabbed={grabIndex === i}
                       newItem={newIds.includes(it.id)}
                       onDragStart={() => setDragIndex(i)}
                       onDragOver={(e) => e.preventDefault()}
@@ -230,6 +255,7 @@ export default function ShortlistPage() {
                         setDragIndex(null)
                       }}
                       onDragEnd={() => setDragIndex(null)}
+                      onGripKeyDown={onGripKeyDown(i)}
                       onNoteChange={(note) => update.mutate({ id: it.id, body: { user_note: note } })}
                       onTagChange={(tag) => update.mutate({ id: it.id, body: { tag } })}
                     />

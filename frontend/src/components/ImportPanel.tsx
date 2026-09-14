@@ -3,6 +3,7 @@ import type { ImportPreview, ImportDetail } from '../api/types'
 import { Chip } from './Chip'
 import { Icon } from '../icons'
 import { Notice } from './Notice'
+import { Skeleton } from './Skeleton'
 import './ui.css'
 
 export type ConflictPolicy = 'skip' | 'overwrite' | 'duplicate'
@@ -72,13 +73,38 @@ export function ImportPanel({ preview, parsing, committing, error, onFile, onCom
           <input ref={inputRef} type="file" accept=".json,application/json" style={{ display: 'none' }} onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
         </div>
 
-        {parsing && <Notice tone="info">正在解析材料包并本地校验…</Notice>}
-        {error && <Notice tone="danger">{error}</Notice>}
+        {parsing && (
+          <div className="ms-col" style={{ gap: 8 }} aria-busy="true" aria-live="polite">
+            <span className="ms-muted" style={{ fontSize: 'var(--fs-caption)' }}>正在解析材料包并本地校验…</span>
+            <Skeleton height={20} width="40%" />
+            <Skeleton height={52} />
+            <div className="ms-row ms-gap-3">
+              <Skeleton height={30} width={104} />
+              <Skeleton height={30} width={104} />
+              <Skeleton height={30} width={104} />
+              <Skeleton height={30} width={104} />
+            </div>
+          </div>
+        )}
+        {error && (
+          <Notice tone="danger">
+            <div className="ms-col" style={{ gap: 6 }}>
+              <span>{error}</span>
+              <button
+                className="ms-link"
+                style={{ background: 'none', border: 'none', alignSelf: 'flex-start' }}
+                onClick={() => (preview ? onCommit(policy) : inputRef.current?.click())}
+              >
+                重试
+              </button>
+            </div>
+          </Notice>
+        )}
         {!error && preview && !preview.checksum_ok && (
           <Notice tone="danger">校验和异常，建议不要导入，避免数据不一致。</Notice>
         )}
 
-        {preview && !error && (
+        {preview && (
           <>
             <div className="ms-data__section">
               <div className="ms-data__step-label">导入预览（确认后才会写库）</div>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Chip } from './Chip'
 import { Icon } from '../icons'
+import { Skeleton } from './Skeleton'
 import './ui.css'
 
 export type ExportScope = 'all' | 'filtered' | 'selected' | 'shortlist'
@@ -95,10 +96,14 @@ export function ExportPanel({ filteredCount, selectedCount, shortlistCount, tota
           </button>
         </div>
 
-        <div className="ms-info-block">
-          <span className="ms-mono" style={{ fontSize: 'var(--fs-small)', color: 'var(--text-3)' }}>
-            {fileName} · 约 {Math.max(1, Math.round((countText as number) * 8.2))} KB · {countText} 条材料 · 含校验和
-          </span>
+        <div className="ms-info-block" aria-busy={exporting || undefined}>
+          {exporting ? (
+            <Skeleton height={14} width="72%" />
+          ) : (
+            <span className="ms-mono" style={{ fontSize: 'var(--fs-small)', color: 'var(--text-3)' }}>
+              {fileName} · 约 {Math.max(1, Math.round((countText as number) * 8.2))} KB · {countText} 条材料 · 含校验和
+            </span>
+          )}
         </div>
 
         <div className="ms-row" style={{ justifyContent: 'flex-end' }}>

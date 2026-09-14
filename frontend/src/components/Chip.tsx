@@ -30,6 +30,8 @@ export interface ChipProps {
   onClick?: (e: React.MouseEvent) => void
   className?: string
   title?: string
+  /** 供不可见语义补全（如纯数字标签的「匹配度」前缀） */
+  ariaLabel?: string
 }
 
 /** 标签 Chip（原型 03 §3.1）：底 bg-sunken；选中/语义变体；可关闭。 */
@@ -43,6 +45,7 @@ export function Chip({
   onClick,
   className = '',
   title,
+  ariaLabel,
 }: ChipProps) {
   const cls = [
     'ms-chip',
@@ -76,13 +79,13 @@ export function Chip({
 
   if (onClick) {
     return (
-      <button type="button" className={cls} onClick={onClick} title={title} aria-pressed={selected}>
+      <button type="button" className={cls} onClick={onClick} title={title} aria-label={ariaLabel} aria-pressed={selected}>
         {content}
       </button>
     )
   }
   return (
-    <span className={cls} title={title}>
+    <span className={cls} title={title} aria-label={ariaLabel}>
       {content}
     </span>
   )

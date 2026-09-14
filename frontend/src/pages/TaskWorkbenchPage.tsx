@@ -41,6 +41,8 @@ export default function TaskWorkbenchPage() {
   const [confirmedResults, setConfirmedResults] = useState<Record<number, Recommendation[]>>({})
   const [relaxedNote, setRelaxedNote] = useState<Record<number, string[]>>({})
   const [runningId, setRunningId] = useState<number | null>(null)
+  const [runError, setRunError] = useState<Record<number, string>>({})
+  const [lastConstraints, setLastConstraints] = useState<Record<number, Constraints>>({})
   const [pendingText, setPendingText] = useState<string | null>(null)
   const [sendError, setSendError] = useState<string | null>(null)
   const [failedText, setFailedText] = useState<string | null>(null)
@@ -120,19 +122,31 @@ export default function TaskWorkbenchPage() {
         delete n[vars.msgId]
         return n
       })
+      setRunError((s) => {
+        const n = { ...s }
+        delete n[vars.msgId]
+        return n
+      })
       setRunningId(null)
       qc.invalidateQueries({ queryKey: ['messages', taskId] })
       qc.invalidateQueries({ queryKey: ['tasks'] })
       if (!res.results.length) toast('没有同时满足的材料，请按提示放宽或修改约束', 'danger')
       else toast(`已生成 ${res.results.length} 条推荐`, 'success')
     },
-    onError: (e) => {
+    onError: (e, vars) => {
       setRunningId(null)
+      setRunError((s) => ({ ...s, [vars.msgId]: e instanceof Error ? e.message : '生成推荐失败' }))
       toast(e instanceof Error ? e.message : '生成推荐失败', 'danger')
     },
   })
 
   const confirmConstraints = (msgId: number, c: Constraints) => {
+    setLastConstraints((s) => ({ ...s, [msgId]: c }))
+    setRunError((s) => {
+      const n = { ...s }
+      delete n[msgId]
+      return n
+    })
     setRunningId(msgId)
     runMutation.mutate({ msgId, constraints: c })
   }
@@ -272,7 +286,7 @@ export default function TaskWorkbenchPage() {
 
     const pending = pendingConstraints[msg.id]
     const resolved = confirmedResults[msg.id] ?? msg.results
-    const isPending = !!pending
+    const runErr = runError[msg.id]
 
     return (
       <div key={msg.id} className="ms-msg ms-msg--assistant">
@@ -368,17 +382,21 @@ export default function TaskWorkbenchPage() {
           </Notice>
         )}
 
-        {/* 推荐中 */}
+        {/* 推荐中：形状骨架（非居中 Spin），满足四态「加载态须为 Skeleton」 */}
         {runningId === msg.id && (
-          <div className="ms-col ms-gap-4" style={{ width: '100%' }}>
-            <div className="ms-msg__parsing">
-              <span className="ms-spin" />
+          <div className="ms-col ms-gap-3" style={{ width: '100%' }} aria-busy="true" aria-live="polite">
+            <span className="ms-muted" style={{ fontSize: 'var(--fs-caption)' }}>
               正在筛选并打分…
-            </div>
+            </span>
             <div className="ms-skel-card" style={{ height: 132 }}>
               <Skeleton height={18} width="45%" />
               <Skeleton height={12} width="70%" />
               <Skeleton height={12} width="60%" />
+              <Skeleton height={12} width="34%" />
+            </div>
+            <div className="ms-skel-card" style={{ height: 76 }}>
+              <Skeleton height={14} width="42%" />
+              <Skeleton height={12} width="58%" />
             </div>
           </div>
         )}
@@ -390,10 +408,17 @@ export default function TaskWorkbenchPage() {
           </Notice>
         )}
 
-        {/* 推荐结果（④ 之后才可能出现） */}
-        {!pending && runningId !== msg.id && resolved !== undefined && (
+        {/* 推荐结果（④ 之后才可能出现）· 含错误态接线（失败可就地重试） */}
+        {runningId !== msg.id && (runErr || (!pending && resolved !== undefined)) && (
           <RecommendationList
-            results={resolved}
+            results={resolved ?? []}
+            error={runErr ?? null}
+            onRetry={() =>
+              confirmConstraints(
+                msg.id,
+                lastConstraints[msg.id] ?? msg.constraints ?? { part_type: null, process: null, temp_limit: null, extra: [] },
+              )
+            }
             alreadyInShortlist={(uid) => shortlistItems.some((it) => it.material.uid === uid)}
             onAddShortlist={(uid) => addMutation.mutate(uid)}
             onAdopt={(uid) => addMutation.mutate(uid)}

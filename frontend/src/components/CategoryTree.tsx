@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { CategoryNode } from '../api/types'
 import { Icon } from '../icons'
@@ -18,6 +18,14 @@ export function CategoryTree({ nodes, selectedId, onSelect, showManage = true }:
   const [open, setOpen] = useState<Record<number, boolean>>(() =>
     Object.fromEntries(nodes.map((n) => [n.id, true])),
   )
+  const treeRef = useRef<HTMLDivElement>(null)
+
+  /** ↑/↓ 在当前展开树的可见行之间移动焦点（K-01） */
+  const moveFocus = (from: HTMLElement, dir: 1 | -1) => {
+    const items = Array.from(treeRef.current?.querySelectorAll<HTMLElement>('[role="treeitem"]') ?? [])
+    const i = items.indexOf(from)
+    items[i + dir]?.focus()
+  }
 
   const Row = ({
     node,
@@ -40,8 +48,12 @@ export function CategoryTree({ nodes, selectedId, onSelect, showManage = true }:
           tabIndex={0}
           onClick={() => onSelect?.(node.id)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') onSelect?.(node.id)
-            if (hasChildren && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+            if (e.key === 'Enter') {
+              onSelect?.(node.id)
+            } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+              e.preventDefault()
+              moveFocus(e.currentTarget, e.key === 'ArrowDown' ? 1 : -1)
+            } else if (hasChildren && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
               setOpen((s) => ({ ...s, [node.id]: e.key === 'ArrowRight' }))
             }
           }}
@@ -73,7 +85,7 @@ export function CategoryTree({ nodes, selectedId, onSelect, showManage = true }:
 
   return (
     <>
-      <div role="tree">
+      <div role="tree" ref={treeRef}>
         <div
           className={`ms-tree-row${selectedId == null ? ' ms-tree-row--active' : ''}`}
           style={{ paddingLeft: 10 }}
@@ -81,7 +93,14 @@ export function CategoryTree({ nodes, selectedId, onSelect, showManage = true }:
           aria-selected={selectedId == null}
           tabIndex={0}
           onClick={() => onSelect?.(null)}
-          onKeyDown={(e) => e.key === 'Enter' && onSelect?.(null)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onSelect?.(null)
+            } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+              e.preventDefault()
+              moveFocus(e.currentTarget, e.key === 'ArrowDown' ? 1 : -1)
+            }
+          }}
         >
           <span className="ms-tree-row__leaf-icon" />
           <span style={{ flex: 1 }}>全部分类</span>
@@ -92,6 +111,11 @@ export function CategoryTree({ nodes, selectedId, onSelect, showManage = true }:
         {nodes.map((n) => (
           <Row key={n.id} node={n} level={0} />
         ))}
+        {nodes.length === 0 && (
+          <div className="ms-muted" style={{ padding: 'var(--sp-3) 10px', fontSize: 'var(--fs-small)' }}>
+            暂无分类，可在「管理分类体系」中创建
+          </div>
+        )}
       </div>
       {showManage && (
         <div style={{ marginTop: 'var(--sp-4)', paddingLeft: 10 }}>

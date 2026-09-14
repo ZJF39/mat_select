@@ -7,6 +7,8 @@ import { Notice } from '../components/Notice'
 import { EmptyState } from '../components/EmptyState'
 import { Skeleton } from '../components/Skeleton'
 import { Icon } from '../icons'
+import { PromptDialog } from '../components/PromptDialog'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { toast, ToastHost } from '../components/Toast'
 import { formatTime } from '../utils/format'
 import './pages.css'
@@ -30,6 +32,11 @@ export default function SettingsPage() {
   const [draft, setDraft] = useState<Record<string, number>>({})
   const [newCatName, setNewCatName] = useState('')
   const [gapRange, setGapRange] = useState<'week' | 'month' | 'all'>('week')
+  // 破坏性 / 需输入的操作统一走自定义弹窗（不使用 window.prompt / confirm）
+  const [renameTarget, setRenameTarget] = useState<{ id: number; name: string } | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null)
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false)
 
   const weights = useQuery({ queryKey: ['weights'], queryFn: () => api.getWeights(), staleTime: 30_000 })
   const categories = useQuery({ queryKey: ['categories'], queryFn: () => api.listCategories(), staleTime: 60_000 })
@@ -208,7 +215,7 @@ export default function SettingsPage() {
                       软降权（材料仍保留在列表中并标注「因历史反馈降分」）
                     </div>
                     <div className="ms-row" style={{ justifyContent: 'flex-end', gap: 'var(--sp-4)' }}>
-                      <button className="ms-btn ms-btn--ghost" onClick={resetWeights}>
+                      <button className="ms-btn ms-btn--ghost" onClick={() => setResetConfirmOpen(true)}>
                         恢复默认权重
                       </button>
                       <button className="ms-btn ms-btn--primary" disabled={!dirty || saveWeights.isPending} onClick={() => saveWeights.mutate()}>
@@ -272,10 +279,7 @@ export default function SettingsPage() {
                             className="ms-icon-btn"
                             title="重命名"
                             aria-label={`重命名分类 ${n.name}`}
-                            onClick={() => {
-                              const name = window.prompt('重命名分类', n.name)
-                              if (name && name !== n.name) renameCategory.mutate({ id: n.id, name })
-                            }}
+                            onClick={() => setRenameTarget({ id: n.id, name: n.name })}
                           >
                             <Icon name="edit" size={13} />
                           </button>
@@ -283,7 +287,7 @@ export default function SettingsPage() {
                             className="ms-icon-btn ms-icon-btn--danger"
                             title="删除"
                             aria-label={`删除分类 ${n.name}`}
-                            onClick={() => deleteCategory.mutate(n.id)}
+                            onClick={() => setDeleteTarget({ id: n.id, name: n.name })}
                           >
                             <Icon name="trash" size={13} />
                           </button>
@@ -296,10 +300,7 @@ export default function SettingsPage() {
                               className="ms-icon-btn"
                               title="重命名"
                               aria-label={`重命名分类 ${c.name}`}
-                              onClick={() => {
-                                const name = window.prompt('重命名分类', c.name)
-                                if (name && name !== c.name) renameCategory.mutate({ id: c.id, name })
-                              }}
+                              onClick={() => setRenameTarget({ id: c.id, name: c.name })}
                             >
                               <Icon name="edit" size={13} />
                             </button>
@@ -307,7 +308,7 @@ export default function SettingsPage() {
                               className="ms-icon-btn ms-icon-btn--danger"
                               title="删除"
                               aria-label={`删除分类 ${c.name}`}
-                              onClick={() => deleteCategory.mutate(c.id)}
+                              onClick={() => setDeleteTarget({ id: c.id, name: c.name })}
                             >
                               <Icon name="trash" size={13} />
                             </button>
@@ -377,7 +378,20 @@ export default function SettingsPage() {
                     ))}
                   </div>
                 </div>
-                {gaps.isLoading ? (
+                {gaps.isError ? (
+                  <Notice tone="danger">
+                    <div className="ms-col" style={{ gap: 6 }}>
+                      <span>盲区数据加载失败：{gaps.error instanceof Error ? gaps.error.message : '未知错误'}</span>
+                      <button
+                        className="ms-link"
+                        style={{ background: 'none', border: 'none', alignSelf: 'flex-start' }}
+                        onClick={() => gaps.refetch()}
+                      >
+                        重试
+                      </button>
+                    </div>
+                  </Notice>
+                ) : gaps.isLoading ? (
                   <Skeleton height={60} />
                 ) : (gaps.data?.items ?? []).length === 0 ? (
                   <EmptyState icon="shield" title="本周没有失败回评" desc="说明推荐质量稳定；回评失败会在这里沉淀为可补的数据缺口" compact />
@@ -432,7 +446,7 @@ export default function SettingsPage() {
                   </div>
                 )}
                 <div className="ms-row" style={{ justifyContent: 'flex-end', marginTop: 'var(--sp-6)' }}>
-                  <button className="ms-btn ms-btn--danger" disabled={clearFeedback.isPending} onClick={() => clearFeedback.mutate()}>
+                  <button className="ms-btn ms-btn--danger" disabled={clearFeedback.isPending} onClick={() => setClearConfirmOpen(true)}>
                     <Icon name="trash" size={14} />
                     清空我的反馈
                   </button>
@@ -511,6 +525,72 @@ export default function SettingsPage() {
           </div>
         )}
       </main>
+
+      {/* 重命名分类（原型 03 §3.7：自定义输入弹窗，替代 window.prompt） */}
+      <PromptDialog
+        open={renameTarget != null}
+        title="重命名分类"
+        label="分类名称"
+        defaultValue={renameTarget?.name ?? ''}
+        confirmText="保存"
+        pending={renameCategory.isPending}
+        validate={(v) => (v.trim() === '' ? '分类名称不能为空' : null)}
+        onCancel={() => setRenameTarget(null)}
+        onSubmit={(v) => {
+          const name = v.trim()
+          if (renameTarget && name !== renameTarget.name) renameCategory.mutate({ id: renameTarget.id, name })
+          setRenameTarget(null)
+        }}
+      />
+
+      {/* 删除分类：破坏性操作需二次确认（05 §1.2） */}
+      <ConfirmDialog
+        open={deleteTarget != null}
+        title="删除分类"
+        tone="danger"
+        confirmText="删除"
+        pending={deleteCategory.isPending}
+        note="该分类下仍有材料时后端会拒绝删除"
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget) deleteCategory.mutate(deleteTarget.id)
+          setDeleteTarget(null)
+        }}
+      >
+        <span>确认删除分类「{deleteTarget?.name}」？删除一级分类会将其子类提升为顶级。</span>
+      </ConfirmDialog>
+
+      {/* 恢复默认权重：会覆盖当前草稿（02 §10） */}
+      <ConfirmDialog
+        open={resetConfirmOpen}
+        title="恢复默认权重"
+        confirmText="恢复默认"
+        note="需再点「保存配置」才会写入后端"
+        onCancel={() => setResetConfirmOpen(false)}
+        onConfirm={() => {
+          resetWeights()
+          setResetConfirmOpen(false)
+        }}
+      >
+        <span>将把五个维度的权重重置为默认值：温度 30 / 语义 25 / 成本 20 / 力学 15 / 工艺 10。</span>
+      </ConfirmDialog>
+
+      {/* 清空我的反馈：不可撤销 */}
+      <ConfirmDialog
+        open={clearConfirmOpen}
+        title="清空我的反馈"
+        tone="danger"
+        confirmText="清空"
+        pending={clearFeedback.isPending}
+        note="此操作不可撤销"
+        onCancel={() => setClearConfirmOpen(false)}
+        onConfirm={() => {
+          clearFeedback.mutate()
+          setClearConfirmOpen(false)
+        }}
+      >
+        <span>将删除本机全部负面反馈记录，已生效的软降权会一并解除且无法恢复。</span>
+      </ConfirmDialog>
     </>
   )
 }

@@ -65,7 +65,7 @@ export function RecommendationCard({
       >
         <span className="ms-rec-card__seq">{index}</span>
         <span className="ms-rec-card__name ms-ellipsis">{m.name}</span>
-        <Chip size="26" tone="success">匹配度 {pct(rec.score)}</Chip>
+        <Chip size="26" tone="success" ariaLabel={`匹配度 ${pct(rec.score)}`}>匹配度 {pct(rec.score)}</Chip>
         <div className="ms-rec-card__actions" onClick={(e) => e.stopPropagation()}>
           {onAdopt && (
             <button className="ms-btn ms-btn--sm ms-btn--secondary" onClick={onAdopt}>
@@ -89,7 +89,7 @@ export function RecommendationCard({
         <span className="ms-rec-card__name">{m.name}</span>
         {m.category_name && <Chip size="20" tone="accent">{m.category_name}</Chip>}
         <div className="ms-rec-card__actions">
-          <Chip size="26" tone="success">匹配度 {pct(rec.score)}</Chip>
+          <Chip size="26" tone="success" ariaLabel={`匹配度 ${pct(rec.score)}`}>匹配度 {pct(rec.score)}</Chip>
           {onAdopt && (
             <button className="ms-btn ms-btn--sm ms-btn--secondary" onClick={onAdopt}>
               标记采用
@@ -108,7 +108,7 @@ export function RecommendationCard({
           <Tooltip key={d.key} content={d.tip}>
             <span className="ms-breakdown__item">
               <span className="ms-breakdown__dim">{d.label}</span>
-              <span className="ms-breakdown__val">{d.got}/{d.max}</span>
+              <span className="ms-breakdown__val" aria-label={`${d.label} 得分 ${d.got}，满分 ${d.max}`}>{d.got}/{d.max}</span>
             </span>
           </Tooltip>
         ))}

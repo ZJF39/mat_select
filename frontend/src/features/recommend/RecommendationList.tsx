@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Recommendation, Constraints } from '../../api/types'
 import { RecommendationCard } from '../../components/RecommendationCard'
 import { Notice } from '../../components/Notice'
+import { Skeleton } from '../../components/Skeleton'
 import { Icon } from '../../icons'
 import './ui.css'
 
@@ -46,6 +47,23 @@ export function RecommendationList({
           {onRetry && <button className="ms-link" style={{ background: 'none', border: 'none', alignSelf: 'flex-start' }} onClick={onRetry}>重试</button>}
         </div>
       </Notice>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="ms-col" style={{ gap: 'var(--sp-5)' }}>
+        <div className="ms-skel-card" style={{ height: 104 }}>
+          <Skeleton height={18} width="45%" />
+          <Skeleton height={12} width="70%" />
+          <Skeleton height={12} width="58%" />
+          <Skeleton height={12} width="32%" />
+        </div>
+        <div className="ms-skel-card" style={{ height: 72 }}>
+          <Skeleton height={14} width="42%" />
+          <Skeleton height={12} width="62%" />
+        </div>
+      </div>
     )
   }
 

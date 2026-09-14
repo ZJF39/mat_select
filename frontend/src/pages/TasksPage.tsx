@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api/client'
 import { Notice } from '../components/Notice'
 import { Skeleton, SkeletonListItem } from '../components/Skeleton'
+import { toast, ToastHost } from '../components/Toast'
 import './pages.css'
 
 /** /tasks：自动落到最近一条任务，没有任务则新建一条（原型 README §3 + 05 §1.1①） */
@@ -37,6 +38,7 @@ export default function TasksPage() {
     api
       .createTask({ title: '新建选型任务' })
       .then((t) => {
+        toast('已新建选型任务', 'success')
         qc.invalidateQueries({ queryKey: ['tasks'] })
         navigate(`/tasks/${t.id}`, { replace: true })
       })
@@ -50,13 +52,15 @@ export default function TasksPage() {
   }
 
   return (
-    <main className="ms-main">
-      <div className="ms-page-header">
-        <div>
-          <h1 className="ms-page-header__title">智能推荐</h1>
-          <div className="ms-page-header__sub">正在打开最近的选型任务…</div>
+    <>
+      <ToastHost />
+      <main className="ms-main">
+        <div className="ms-page-header">
+          <div>
+            <h1 className="ms-page-header__title">智能推荐</h1>
+            <div className="ms-page-header__sub">正在打开最近的选型任务…</div>
+          </div>
         </div>
-      </div>
 
       {tasks.isError || error ? (
         <Notice tone="danger">
@@ -76,6 +80,7 @@ export default function TasksPage() {
           <Skeleton height={32} width={160} />
         </div>
       )}
-    </main>
+      </main>
+    </>
   )
 }

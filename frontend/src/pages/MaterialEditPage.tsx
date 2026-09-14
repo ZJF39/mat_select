@@ -7,7 +7,7 @@ import { SidePanel } from '../layout/SidePanel'
 import { CategoryTree } from '../components/CategoryTree'
 import { Chip } from '../components/Chip'
 import { Notice } from '../components/Notice'
-import { SkeletonTreeRow } from '../components/Skeleton'
+import { Skeleton, SkeletonTreeRow } from '../components/Skeleton'
 import { Icon } from '../icons'
 import { toast, ToastHost } from '../components/Toast'
 import './pages.css'
@@ -347,6 +347,22 @@ export default function MaterialEditPage() {
           </Notice>
         )}
 
+        {isEdit && material.isLoading ? (
+          /* 编辑态加载骨架：避免数据未回来时闪现空表单（D-03） */
+          <div className="ms-col" style={{ gap: 'var(--sp-6)' }} aria-busy="true" aria-label="表单载入中">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="ms-card ms-edit__card">
+                <Skeleton height={18} width="30%" />
+                <div className="ms-field-grid" style={{ marginTop: 'var(--sp-5)' }}>
+                  <Skeleton height={34} />
+                  <Skeleton height={34} />
+                  <Skeleton height={34} />
+                  <Skeleton height={34} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="ms-edit">
           <nav className="ms-edit__nav" aria-label="表单锚点">
             {SECTIONS.map((s) => (
@@ -588,6 +604,7 @@ export default function MaterialEditPage() {
             </section>
           </div>
         </div>
+        )}
       </main>
     </>
   )
