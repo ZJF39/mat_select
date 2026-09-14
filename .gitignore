@@ -25,6 +25,15 @@ data/exports/
 *.bak
 _tmp/
 .tmp/
+.gitmessage.tmp
+_git_baseline.log
+_gitmsg.txt
+_gitcheck2.json
+_check_git.py
+install_status*.txt
+_piperr.txt
+_pip_install.log
+_npm_install.log
 docs/plan/_gitcheck.txt
 
 # ---- 编辑器 / 系统 ----
@@ -37,3 +46,37 @@ _pip_install.log
 _npm_install.log
 install_status*.txt
 _piperr.txt
+
+# ---- 临时诊断 / 草稿文件（不入版本控制） ----
+_gitdbg.txt
+_gitstate.json
+_merge_msg.txt
+_gitmsg.txt
+_r1.txt
+_r2.txt
+_state.txt
+_git_baseline.log
+_gitcheck2.json
+_check_git.py
+install_status*.txt
+tools/_commit_check.txt
+
+# ---- 临时诊断 / 草稿文件（不入版本控制） ----
+_gitdbg.txt
+_gitstate.json
+_merge_msg.txt
+_gitmsg.txt
+_r1.txt
+_r2.txt
+_state.txt
+_git_baseline.log
+_gitcheck2.json
+_check_git.py
+install_status*.txt
+tools/_commit_check.txt
+.gitmessage.txt
+_install_status.txt
+_state.txt
+.gitmessage.txt
+_install_status.txt
+_state.txt
