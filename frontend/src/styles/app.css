@@ -1,0 +1,357 @@
+/* ============================================================================
+ * MatSelect · 共享 UI 基元（App Primitives）
+ * 归属：技术负责人（冻结）。前端专家在 pages/components 中**必须复用**这些类，
+ * 不得为单屏另起一套视觉语言（原型《03-组件库规格》§7）。
+ * 规则：所有色值/间距/圆角一律引用 tokens.css 变量。
+ * ========================================================================== */
+
+/* ---------- 骨架布局 ---------- */
+.ms-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-app);
+  min-width: 1024px;
+}
+.ms-app__body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.ms-main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--size-page-padding);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-9);
+  overflow-y: auto;
+}
+
+/* ---------- 页头 ---------- */
+.ms-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+.ms-page-header__title {
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  font-weight: var(--fw-semibold);
+  color: var(--text-1);
+}
+.ms-page-header__sub {
+  margin-top: 3px;
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  color: var(--text-5);
+}
+.ms-page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+/* ---------- 卡片 / 面板 ---------- */
+.ms-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-3xl);
+  padding: var(--sp-8);
+  box-shadow: var(--shadow-none);
+}
+.ms-card--tight { padding: var(--sp-7); }
+.ms-card--flat { border-radius: var(--radius-2xl); padding: var(--sp-6); }
+.ms-card__title {
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  font-weight: var(--fw-semibold);
+  color: var(--text-1);
+  margin-bottom: var(--sp-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+
+/* ---------- Chip ---------- */
+.ms-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  height: 20px;
+  padding: 0 7px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sunken);
+  color: var(--text-3);
+  font-size: var(--fs-caption);
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ms-chip--24 { height: 24px; }
+.ms-chip--26 { height: 26px; font-size: var(--fs-small); }
+.ms-chip--30 { height: 30px; font-size: var(--fs-body); }
+.ms-chip--accent { background: var(--color-accent-soft); color: var(--color-accent); font-weight: var(--fw-medium); }
+.ms-chip--success { background: var(--success-soft); color: var(--success-strong); }
+.ms-chip--warning { background: var(--warning-soft); color: var(--warning-strong); }
+.ms-chip--danger  { background: var(--danger-soft);  color: var(--danger-strong); }
+.ms-chip--info    { background: var(--info-soft);    color: var(--info-text); }
+.ms-chip--selectable { cursor: pointer; border: 1px solid transparent; }
+.ms-chip--selectable:hover { border-color: var(--border-control); }
+.ms-chip--selected {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent-soft-border);
+  font-weight: var(--fw-medium);
+}
+.ms-chip__close {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  opacity: .7;
+}
+.ms-chip__close:hover { opacity: 1; }
+
+/* ---------- 按钮（AntD 之外的轻量补充；主按钮统一用 AntD primary） ---------- */
+.ms-btn {
+  height: var(--size-control);
+  padding: 0 15px;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  transition: background var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.ms-btn--sm { height: 30px; }
+.ms-btn--primary { background: var(--color-accent); color: #fff; }
+.ms-btn--primary:hover { background: var(--color-accent-hover); }
+.ms-btn--secondary { background: var(--bg-surface); border-color: var(--border-control); color: var(--text-2); }
+.ms-btn--secondary:hover { background: var(--bg-subtle); }
+.ms-btn--ghost { background: transparent; color: var(--color-accent); }
+.ms-btn--ghost:hover { background: var(--color-accent-soft); }
+.ms-btn--danger { background: var(--bg-surface); border-color: #EBC3C1; color: var(--danger); }
+.ms-btn--danger:hover { background: var(--bg-subtle); }
+.ms-btn:disabled { opacity: .45; cursor: not-allowed; }
+.ms-btn:active { transform: translateY(.5px); }
+
+.ms-icon-btn {
+  width: var(--size-icon-btn);
+  height: var(--size-icon-btn);
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--text-4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.ms-icon-btn:hover { background: var(--bg-subtle); color: var(--color-accent); }
+.ms-icon-btn--danger:hover { color: var(--danger); }
+
+/* ---------- 提示条 Notice ---------- */
+.ms-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  border-radius: var(--radius-xl);
+  font-size: var(--fs-body);
+  line-height: 17px;
+}
+.ms-notice__icon { flex: none; display: inline-flex; margin-top: 1px; }
+.ms-notice__body { flex: 1; min-width: 0; }
+.ms-notice--warning { background: var(--warning-soft); color: var(--warning-strong); }
+.ms-notice--info    { background: var(--info-soft);    color: var(--info-text); }
+.ms-notice--danger  { background: var(--danger-soft);  color: var(--danger-strong); }
+.ms-notice--success { background: var(--success-soft); color: var(--success-strong); }
+
+/* ---------- 参数行 ---------- */
+.ms-param-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-6);
+  height: 28px;
+}
+.ms-param-row__label { font-size: var(--fs-body); color: var(--text-3); }
+.ms-param-row__value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  color: var(--text-1);
+}
+.ms-param-row--emphasis .ms-param-row__label,
+.ms-param-row--emphasis .ms-param-row__value { color: var(--color-accent); }
+.ms-param-row__value--empty { color: var(--text-7); }
+
+/* ---------- 指标列（卡片三列指标） ---------- */
+.ms-metrics { display: flex; align-items: stretch; }
+.ms-metric { flex: 1; text-align: center; min-width: 0; }
+.ms-metric__label { font-size: var(--fs-caption); color: var(--text-6); line-height: 14px; }
+.ms-metric__value {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: var(--fw-medium);
+  color: var(--text-1);
+}
+.ms-metric__value--empty { color: var(--text-7); }
+.ms-metric-sep { width: 1px; background: var(--border-divider); align-self: center; height: 30px; }
+
+/* ---------- 分段控件 ---------- */
+.ms-segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: var(--size-control);
+  padding: 3px;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+}
+.ms-segmented__item {
+  height: var(--size-control-sm);
+  padding: 0 10px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-5);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.ms-segmented__item:hover { color: var(--text-2); }
+.ms-segmented__item--active { background: var(--color-accent-soft); color: var(--color-accent); }
+
+/* ---------- 匹配度徽章 ---------- */
+.ms-score {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: var(--radius-md);
+  background: var(--success-soft);
+  color: var(--success-strong);
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+}
+.ms-score--mid { background: var(--warning-soft); color: var(--warning-strong); }
+
+/* ---------- 表格（对齐原型：行高46 / 表头42 / 无投影） ---------- */
+.ms-table-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+}
+.ms-table { width: 100%; border-collapse: collapse; }
+.ms-table thead th {
+  height: var(--size-thead-height);
+  background: var(--bg-subtle);
+  color: var(--text-4);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  text-align: left;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border-row);
+  white-space: nowrap;
+}
+.ms-table tbody td {
+  height: var(--size-row-height);
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border-row);
+  font-size: var(--fs-body);
+  color: var(--text-2);
+  vertical-align: middle;
+}
+.ms-table tbody tr:last-child td { border-bottom: none; }
+.ms-table tbody tr:hover td { background: var(--bg-subtle); }
+.ms-table tbody tr.is-selected td { background: var(--color-accent-soft); }
+.ms-table tbody tr.is-archived td { opacity: .55; }
+.ms-table .is-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.ms-table .is-name { color: var(--text-1); font-weight: var(--fw-medium); }
+
+/* ---------- 骨架屏 ---------- */
+.ms-skel {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  animation: ms-pulse 1.2s ease-in-out infinite;
+}
+.ms-skel-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-3xl);
+  padding: var(--sp-7);
+  height: var(--size-card-height);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+@keyframes ms-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .ms-skel { animation: none; } }
+
+/* ---------- 空态 ---------- */
+.ms-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  padding: var(--sp-16) var(--sp-8);
+  text-align: center;
+}
+.ms-empty__icon { color: var(--text-7); }
+.ms-empty__title { font-size: var(--fs-h3); font-weight: var(--fw-medium); color: var(--text-2); }
+.ms-empty__desc { font-size: var(--fs-small); color: var(--text-5); max-width: 420px; line-height: 17px; }
+
+/* ---------- 工具类 ---------- */
+.ms-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.ms-muted { color: var(--text-5); }
+.ms-muted-aa { color: var(--text-accessible-muted); }
+.ms-row { display: flex; align-items: center; }
+.ms-col { display: flex; flex-direction: column; }
+.ms-gap-2 { gap: var(--sp-2); }
+.ms-gap-3 { gap: var(--sp-3); }
+.ms-gap-4 { gap: var(--sp-4); }
+.ms-gap-5 { gap: var(--sp-5); }
+.ms-gap-6 { gap: var(--sp-6); }
+.ms-gap-8 { gap: var(--sp-8); }
+.ms-gap-9 { gap: var(--sp-9); }
+.ms-wrap { flex-wrap: wrap; }
+.ms-grow { flex: 1; min-width: 0; }
+.ms-ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ms-clamp2 {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ms-hr { height: 1px; background: var(--border-row); border: 0; margin: 0; }
+.ms-link { color: var(--color-accent); cursor: pointer; text-decoration: none; }
+.ms-link:hover { text-decoration: underline; }
+.ms-highlight-flash { animation: ms-flash 600ms var(--ease-out); }
+@keyframes ms-flash {
+  from { background: var(--color-accent-soft); }
+  to { background: transparent; }
+}
+
+/* ---------- AntD 微调（契约 §1：圆角/无投影/字体） ---------- */
+.ant-btn { box-shadow: none !important; }
+.ant-modal-content { border-radius: var(--radius-4xl) !important; }
+.ant-tooltip-inner { font-size: var(--fs-small) !important; }

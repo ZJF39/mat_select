@@ -1,0 +1,39 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# ---- Node ----
+node_modules/
+dist/
+dist-ssr/
+.vite/
+npm-debug.log*
+
+# ---- 数据与运行时产物（数据库本体不入库，种子 JSON 入库） ----
+data/*.db
+data/*.db-journal
+data/backups/
+data/exports/
+*.log
+
+# ---- 本地草稿 / 临时诊断文件（按项目惯例不入版本控制） ----
+*.tmp
+*.bak
+_tmp/
+.tmp/
+docs/plan/_gitcheck.txt
+
+# ---- 编辑器 / 系统 ----
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+_pip_install.log
+_npm_install.log
+install_status*.txt
+_piperr.txt

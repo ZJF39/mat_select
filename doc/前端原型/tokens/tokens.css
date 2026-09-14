@@ -1,0 +1,178 @@
+/* ============================================================================
+ * MatSelect · Design Tokens (v1.0 / 2026-09-14)
+ * 用法：在项目入口（main.ts / index.css）中 @import 本文件
+ * 约定：业务组件只允许引用变量，不允许出现字面色值
+ * ========================================================================== */
+
+:root {
+  /* ---------- 1. 主色（唯一强调色） ---------- */
+  --color-accent: #1F5FD0;
+  --color-accent-hover: #1A4FAE;
+  --color-accent-soft: #EAEFFB;
+  --color-accent-soft-border: #C6D5F4;
+  --color-accent-strong: #1A3557;
+  --color-accent-text: #1A4FAE;
+
+  /* ---------- 2. 中性色 ---------- */
+  --bg-app: #F4F5F7;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F7F8FA;
+  --bg-sunken: #F2F4F7;
+  --bg-panel-alt: #FBFCFD;
+  --border: #E4E6EB;
+  --border-control: #DDE1E7;
+  --border-row: #EFF1F4;
+  --border-divider: #E9ECF1;
+  --border-track: #EEF0F3;
+
+  /* ---------- 3. 文字层级 ---------- */
+  --text-1: #15171C;
+  --text-2: #3F4855;
+  --text-3: #565E6B;
+  --text-4: #7A8494;
+  --text-5: #8A93A1;
+  --text-6: #98A1AE;
+  --text-7: #AAB2BD;
+  --text-8: #B4BBC5;
+  --text-accessible-muted: #6B7482; /* 浅灰信息的 AA 合规替代 */
+
+  /* ---------- 4. 语义色 ---------- */
+  --success: #2E9E6B;
+  --success-strong: #1D6B47;
+  --success-soft: #E7F5EE;
+  --warning: #C9821B;
+  --warning-strong: #8A5A12;
+  --warning-soft: #FDF3E4;
+  --danger: #D2433E;
+  --danger-strong: #A5322E;
+  --danger-soft: #FCECEB;
+  --info-text: #1A4FAE;
+  --info-soft: #EAF0FC;
+
+  /* ---------- 5. 遮罩 ---------- */
+  --scrim: rgba(15, 20, 28, 0.45);
+
+  /* ---------- 6. 字体 ---------- */
+  --font-sans: "Noto Sans SC", system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  /* ---------- 7. 字号 / 行高 ---------- */
+  --fs-display: 20px;  --lh-display: 26px;
+  --fs-h1: 15px;       --lh-h1: 20px;
+  --fs-h2: 14px;       --lh-h2: 19px;
+  --fs-h3: 13px;       --lh-h3: 18px;
+  --fs-body: 12px;     --lh-body: 18px;
+  --fs-small: 11px;    --lh-small: 17px;
+  --fs-caption: 10px;  --lh-caption: 15px;
+  --fs-micro: 9px;     --lh-micro: 12px;
+
+  /* ---------- 8. 间距 ---------- */
+  --sp-1: 2px;
+  --sp-2: 4px;
+  --sp-3: 6px;
+  --sp-4: 8px;
+  --sp-5: 10px;
+  --sp-6: 12px;
+  --sp-7: 14px;
+  --sp-8: 16px;
+  --sp-9: 18px;
+  --sp-10: 20px;
+  --sp-12: 24px;
+  --sp-16: 32px;
+
+  /* ---------- 9. 圆角 ---------- */
+  --radius-xs: 4px;
+  --radius-sm: 5px;
+  --radius-md: 6px;
+  --radius-lg: 7px;
+  --radius-xl: 8px;
+  --radius-2xl: 10px;
+  --radius-3xl: 12px;
+  --radius-4xl: 14px;
+  --radius-pill: 999px;
+
+  /* ---------- 10. 阴影（仅 Modal 使用） ---------- */
+  --shadow-none: none;
+  --shadow-modal: 0 18px 44px -6px rgba(15, 20, 28, 0.24);
+
+  /* ---------- 11. 布局骨架尺寸 ---------- */
+  --size-topbar: 56px;
+  --size-rail: 68px;
+  --size-panel: 264px;
+  --size-shortlist: 300px;
+  --size-page-padding: 24px;
+  --size-card-width: 342px;
+  --size-card-height: 180px;
+  --size-row-height: 46px;      /* 表格行 */
+  --size-thead-height: 42px;    /* 表头 */
+  --size-control: 32px;         /* 按钮 / 筛选项 / 分段控件外框 */
+  --size-control-lg: 34px;      /* 输入框 */
+  --size-control-sm: 26px;      /* 分段控件内项 / 行内图标按钮 */
+  --size-icon-btn: 26px;
+
+  /* ---------- 12. 动效 ---------- */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-modal: 220ms;
+
+  /* ---------- 13. 焦点态 ---------- */
+  --focus-ring: 2px solid var(--color-accent);
+  --focus-offset: 2px;
+}
+
+/* ---------- 全局基础 ---------- */
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg-app);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 数字等宽：参数值 / 匹配度 / 日期 / 编号 */
+.num,
+.param-value,
+.score,
+.date {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 焦点可见性：全站不可移除 */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* 滚动条（浅色、细） */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D3D7DE transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb {
+  background: #D3D7DE;
+  border-radius: var(--radius-pill);
+}
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* 尊重系统减弱动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

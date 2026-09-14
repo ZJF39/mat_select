@@ -1,0 +1,9 @@
+# MatSelect 后端依赖（Python 3.13）
+# 原则：最小依赖集，避免编译型/重量级包（无 GPU、无需联网）
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+python-multipart==0.0.20
+openpyxl==3.1.5
+httpx==0.28.1
+pytest==8.3.4
