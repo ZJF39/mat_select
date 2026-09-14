@@ -51,6 +51,12 @@ EXTRA_KEYWORDS = {
 
 _TEMP_RE = re.compile(r"(\d{2,3})\s*(?:°\s*c|℃|度|摄氏度)", re.IGNORECASE)
 
+# 语义维度「不可评价」时的中性基线（契约 §5.3 只定义语义为 cosine(user_text, 材料文本)；
+# 当调用方仅传结构化约束、没有场景文本时（POST /api/recommend/run 的常态），
+# cosine 恒为 0 会把达标材料的综合分压到 60 分门槛以下 → 推荐主流程整体空结果。
+# 与成本维度「用户未提成本 → 中性基线」同一原则，此处同样给中性基线。）
+SEMANTIC_NEUTRAL = 0.5
+
 # 力学维度：按零件类型给特性关键词加权
 _MECHANICS_BY_PART = {
     "电气件": (("阻燃", 0.4), ("绝缘", 0.3), ("耐温", 0.15), ("强度", 0.15)),
@@ -182,11 +188,16 @@ def _hard_filter(constraints: dict, temp_override: Optional[float] = None):
 
 
 def _temp_score(limit: Optional[float], need: Optional[float]) -> float:
-    """温度裕度：0~20% 裕度给满分；裕度过大线性扣分（避免过度设计）。"""
+    """温度裕度：0~20% 裕度给满分；裕度过大线性扣分（避免过度设计）。
+
+    契约 §5.3 明确「裕度 0~20% 得满分」：`service_temp_limit` 恰好等于需求温度
+    属于硬约束达标（`>=`），裕度为 0 必须给满分；仅当低于需求（裕度为负，
+    正常已被第 ② 段过滤）才给 0。
+    """
     if need is None or limit is None:
         return 0.7
     margin = float(limit) - float(need)
-    if margin <= 0:
+    if margin < 0:
         return 0.0
     ratio = margin / max(float(need), 1.0)
     if ratio <= 0.2:
@@ -294,7 +305,11 @@ def build_key_params(material: dict) -> List[str]:
 
 
 def build_reason(material: dict, constraints: dict, dims: dict, penalty: float) -> str:
-    """模板 + 槽位填充。所有数值均取自 material，零编造。"""
+    """模板 + 槽位填充。所有数值均取自 material，零编造。
+
+    以「材料名：」开头：reason 会被短名单、对比导出与验收报告**脱离卡片标题**单独引用，
+    带上库中真实材料名是契约 §5.4「零编造」的可追溯锚点。
+    """
     segs: List[str] = []
     need = constraints.get("temp_limit")
     limit = material.get("service_temp_limit")
@@ -317,7 +332,9 @@ def build_reason(material: dict, constraints: dict, dims: dict, penalty: float) 
         segs.append(f"（因历史反馈降分 {abs(penalty):.1f}）")
     if not segs:
         segs.append("在硬约束过滤后的候选集中综合匹配度最高")
-    return "；".join(segs) + "。"
+    name = str(material.get("name") or "").strip()
+    body = "；".join(segs) + "。"
+    return f"{name}：{body}" if name else body
 
 
 def _build_alternatives(ranked: List[dict], idx: int, top: dict) -> List[dict]:
@@ -353,7 +370,8 @@ def run(constraints: dict, task_id: Optional[int] = None, user_text: str = "") -
     dim_weights = get_penalty_dim_weights()
 
     user_text = (user_text or "").strip()
-    if not user_text:
+    has_scene_text = bool(user_text)
+    if not has_scene_text:
         user_text = " ".join(
             str(x) for x in (
                 constraints.get("part_type"), constraints.get("process"),
@@ -365,12 +383,13 @@ def run(constraints: dict, task_id: Optional[int] = None, user_text: str = "") -
     candidates = _hard_filter(constraints)
 
     # 空结果 → 放宽温度 10 度重试（PRD B1 降级；绝不返回空列表给前端）
+    # 契约 §5.2：relaxed 记录「放宽项」本身；即便放宽后仍为空也必须记录，
+    # 否则前端无法向用户解释「为什么放宽了还没有结果」。
     if not candidates and constraints.get("temp_limit") is not None:
         original = float(constraints["temp_limit"])
         relaxed_temp = max(0.0, original - 10.0)
         candidates = _hard_filter(constraints, temp_override=relaxed_temp)
-        if candidates:
-            relaxed.append(f"已放宽温度至 {int(relaxed_temp)} °C")
+        relaxed.append(f"已放宽温度至 {int(relaxed_temp)} °C")
 
     if not candidates:
         return {"results": [], "degraded": True, "relaxed": relaxed}
@@ -384,7 +403,7 @@ def run(constraints: dict, task_id: Optional[int] = None, user_text: str = "") -
     for card in candidates:
         mid = material_repo.get_material_id(card["uid"])
         s_temp = _temp_score(card.get("service_temp_limit"), constraints.get("temp_limit"))
-        s_sem = _semantic_score(user_text, card)
+        s_sem = _semantic_score(user_text, card) if has_scene_text else SEMANTIC_NEUTRAL
         s_cost = _cost_score(card, cost_sensitive)
         s_mech = _mechanics_score(card, constraints.get("part_type"))
         s_proc = _process_score(card, constraints.get("process"))
@@ -406,7 +425,8 @@ def run(constraints: dict, task_id: Optional[int] = None, user_text: str = "") -
             for k, v in parts.items()
         }
         breakdown["feedback_penalty"] = -pen if pen else 0
-        ranked.append({"material": card, "score": total, "breakdown": breakdown, "_pen": pen})
+        ranked.append({"material": card, "score": total, "breakdown": breakdown,
+                       "_pen": pen, "_dims": parts})
 
     ranked.sort(key=lambda r: r["score"], reverse=True)
     ranked = [r for r in ranked if r["score"] >= 60][:5]
@@ -423,7 +443,7 @@ def run(constraints: dict, task_id: Optional[int] = None, user_text: str = "") -
             "material": m,
             "score": int(round(item["score"])),
             "breakdown": item["breakdown"],
-            "reason": build_reason(m, constraints, {}, item["_pen"]),
+            "reason": build_reason(m, constraints, item.get("_dims") or {}, item["_pen"]),
             "key_params": build_key_params(m),
             "cautions": [c.get("content", "") for c in (m.get("cautions") or []) if isinstance(c, dict)],
             "alternatives": _build_alternatives(ranked, i, top),
