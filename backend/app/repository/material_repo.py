@@ -248,6 +248,14 @@ def _values_from_upsert(data: dict) -> dict:
             vals[c] = json_dumps(data.get(c, []) or [])
         elif c in OBJ_COLS:
             vals[c] = json_dumps(data.get(c, {}) or ({} if c == "certifications" else []))
+        elif c == "archived":
+            # 契约 §3「空值一律 null」，但 `archived` 是过滤列（列表默认 WHERE archived=0）：
+            # 若写入 NULL，因 SQL 中 `NULL = 0` 不成立，新建材料会从默认列表中「消失」。
+            # DDL 的 DEFAULT 0 对显式传 NULL 不生效，故在此归一为 0/1（PRD A1/D1）。
+            vals[c] = 1 if data.get(c) else 0
+        elif c == "value_type":
+            # ADR-05：value_type 缺省为 typical
+            vals[c] = data.get(c) or "typical"
         else:
             vals[c] = data.get(c)
     return vals

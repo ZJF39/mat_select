@@ -48,28 +48,29 @@ except Exception as _e:  # noqa: BLE001
 
 
 # ---------------------------------------------------------------------------
-# 已知后端缺陷的测试态隔离（不修改 backend/app 任何文件）
-# 缺陷 P0-INIT：app/db/init_db.py 的 _run_schema 用 raw.split(";") 朴素切分 SQL，
-# 而 schema.sql 含 CREATE TRIGGER ... BEGIN ... END; 多语句块，切分后触发器体被
-# 截断 → sqlite3.OperationalError: incomplete input，导致 init_db() 抛错、应用
-# 生命周期无法启动（src/app/main.py lifespan 调用 init_db）。
-# 仅在本测试进程内将 _run_schema 替换为正确的 executescript 执行方式，以隔离该
-# 启动缺陷、对真实业务接口做验收；该缺陷已记入 02-缺陷与交付判定报告.md 交技术负责人。
+# 测试态隔离：不加载真实种子数据
+#
+# 背景：应用 lifespan 会调用 init_db() + seed_if_empty()，后者从
+# data/{categories,materials,term_alias}.json 导入 17 分类 / 50 材料 / 77 术语。
+# 而本测试套件自带一套**受控种子**（SEED_CATEGORIES / SEED_MATERIALS，8 条，
+# 覆盖高低温与不同工艺），用例的计数、完整率、放宽降级等断言都基于这套受控数据。
+# 若真实种子同时入库，断言会因数据量不符而失真（例如「材料总数 == 8」变成 58）。
+#
+# 因此在本测试进程内把 seed_if_empty 置为空操作，保证初始库为空、
+# 由 _seed_via_api() 通过 REST 黑盒写入受控数据。这是测试隔离，不是放宽断言。
+#
+# 备注：init_db._run_schema 曾因「按 ";" 朴素切分导致触发器被截断」需要打补丁；
+# 该缺陷已由技术负责人修复（改为先探测 trigram 再整体 executescript），
+# 此处不再打补丁，测试直接走真实代码路径。
 # ---------------------------------------------------------------------------
 if BACKEND_AVAILABLE:
     import app.db.init_db as _init_db_mod
 
-    _SCHEMA_PATH = _init_db_mod._SCHEMA_PATH
+    def _noop_seed_if_empty():
+        """测试自带受控种子，隔离 data/*.json 的真实种子。"""
+        return None
 
-    def _patched_run_schema(conn):
-        raw = _SCHEMA_PATH.read_text(encoding="utf-8")
-        try:
-            conn.executescript(raw)
-        except Exception:
-            fallback = raw.replace("tokenize='trigram'", "tokenize='unicode61'")
-            conn.executescript(fallback)
-
-    _init_db_mod._run_schema = _patched_run_schema
+    _init_db_mod.seed_if_empty = _noop_seed_if_empty
 
 
 # ===========================================================================
