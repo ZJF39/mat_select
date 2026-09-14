@@ -67,6 +67,18 @@ def test_flow_followup_refreshes(seeded_client):
     assert "assistant" in r2.json(), "追问应返回新的 assistant 消息"
 
 
+def test_flow_list_messages_time_ordered(seeded_client):
+    """P1 | G2 §4.3 会话回放：GET /api/tasks/{id}/messages 按时间序返回 user + assistant。"""
+    task_id = _new_task(seeded_client, title="验收-消息列表")
+    seeded_client.post(f"/api/tasks/{task_id}/messages", json={"text": "保险丝座 注塑 150°C"})
+    r = seeded_client.get(f"/api/tasks/{task_id}/messages")
+    assert r.status_code == 200, f"期望 200，实际 {r.status_code}：{r.text}"
+    items = r.json()["items"]
+    roles = [m.get("role") for m in items]
+    assert "user" in roles and "assistant" in roles, f"期望含 user/assistant，实际 {roles}"
+    assert roles.index("user") < roles.index("assistant"), "user 消息应早于 assistant 返回"
+
+
 def test_flow_skip_not_counted_as_fail(seeded_client):
     """P0 | ⑧ skipped 不计失败：result=skipped 存储且不触发降权。"""
     task_id = _new_task(seeded_client)

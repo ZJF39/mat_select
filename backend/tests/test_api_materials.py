@@ -245,6 +245,30 @@ def test_category_create_rename_conflict(seeded_client):
         f"期望改名成功，实际 {rp.json()}"
 
 
+def test_category_delete_conflict_and_success(seeded_client):
+    """P0 | G1 §4.1 删除分类：被材料引用 → 409 CONFLICT；无引用可删；不存在 → 404。"""
+    # ① 被材料引用的二级分类（种子材料挂在「工程塑料」下）→ 409 CONFLICT
+    tree = seeded_client.get("/api/categories").json()["items"]
+    leaf = next((c for n in tree for c in (n.get("children") or []) if c.get("count", 0) > 0), None)
+    assert leaf is not None, "期望种子库存在被材料引用的二级分类"
+    rc = seeded_client.delete(f"/api/categories/{leaf['id']}")
+    assert rc.status_code == 409, f"期望 409 CONFLICT，实际 {rc.status_code}：{rc.text}"
+    assert rc.json().get("error", {}).get("code") == "CONFLICT", f"期望 CONFLICT，实际 {rc.json()}"
+
+    # ② 无引用的临时分类 → 删除成功，列表不再包含
+    rid = seeded_client.post(
+        "/api/categories", json={"name": "验收待删除分类", "parent_id": None}
+    ).json()["id"]
+    rd = seeded_client.delete(f"/api/categories/{rid}")
+    assert rd.status_code == 200 and rd.json().get("ok") is True, f"期望删除成功，实际 {rd.json()}"
+    names = [n["name"] for n in seeded_client.get("/api/categories").json()["items"]]
+    assert "验收待删除分类" not in names, "删除后不应再出现在分类树"
+
+    # ③ 不存在的分类 → 404
+    r404 = seeded_client.delete("/api/categories/999999")
+    assert r404.status_code == 404, f"期望 404，实际 {r404.status_code}：{r404.text}"
+
+
 # ---------------------------------------------------------------------------
 # 字段级数据一致性（契约 §4.6 / 矩阵「数据一致性」）
 # ---------------------------------------------------------------------------
