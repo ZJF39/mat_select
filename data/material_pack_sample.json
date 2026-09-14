@@ -1,0 +1,245 @@
+{
+  "pack_version": 1,
+  "exported_at": "2026-09-01T09:00:00+08:00",
+  "exported_by": "MatSelect 数据收集师",
+  "material_count": 3,
+  "checksum": "sha256:20379e6dc3a8960023edc17ad8e4b363dece52586acd6464aeabb420799a7624",
+  "materials": [
+    {
+      "name": "PP（均聚聚丙烯）",
+      "short_name": "PP-H",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "PP-H",
+        "聚丙烯",
+        "均聚PP",
+        "Polypropylene"
+      ],
+      "description": "密度小、成本低、耐化学性好的通用热塑性塑料，广泛用于汽车内饰与非受力件。",
+      "density_min": 0.9,
+      "density_max": 0.91,
+      "tensile_strength_min": 28,
+      "tensile_strength_max": 38,
+      "elastic_modulus_min": 1.0,
+      "elastic_modulus_max": 1.6,
+      "elongation_min": 50,
+      "elongation_max": 600,
+      "notch_impact_min": 3,
+      "notch_impact_max": 5,
+      "hdt_min": 90,
+      "hdt_max": 100,
+      "service_temp_min": -20,
+      "service_temp_max": 100,
+      "service_temp_limit": 100,
+      "features": [
+        "密度小",
+        "成本低",
+        "耐化学性好",
+        "易成型"
+      ],
+      "cautions": [
+        {
+          "type": "环境",
+          "content": "低温脆性明显，低于 0°C 冲击下降"
+        },
+        {
+          "type": "耐候",
+          "content": "抗 UV 差，户外需加抗老化剂"
+        },
+        {
+          "type": "尺寸",
+          "content": "成型收缩率大，尺寸控制难"
+        }
+      ],
+      "applications": [
+        "内饰卡扣",
+        "文件盒类小件",
+        "暖风出风口",
+        "低配仪表板本体"
+      ],
+      "price_min": 8,
+      "price_max": 12,
+      "price_unit": "元/kg",
+      "price_note": "随原料行情波动，以最新报价为准",
+      "molding_process": [
+        "注塑",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温低，不适用高温区",
+        "易老化变脆",
+        "耐油性一般"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PE-HD（高密度聚乙烯）",
+      "short_name": "PE-HD",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "PE-HD",
+        "高密度聚乙烯",
+        "HDPE",
+        "High Density Polyethylene"
+      ],
+      "description": "韧性好、耐化学性优的聚烯烃，常用于油箱、管路与护套。",
+      "density_min": 0.94,
+      "density_max": 0.97,
+      "tensile_strength_min": 20,
+      "tensile_strength_max": 35,
+      "elastic_modulus_min": 0.8,
+      "elastic_modulus_max": 1.5,
+      "elongation_min": 100,
+      "elongation_max": 1000,
+      "notch_impact_min": 10,
+      "notch_impact_max": 40,
+      "hdt_min": 60,
+      "hdt_max": 80,
+      "service_temp_min": -40,
+      "service_temp_max": 80,
+      "service_temp_limit": 80,
+      "features": [
+        "耐化学性好",
+        "韧性好",
+        "低吸湿",
+        "低成本"
+      ],
+      "cautions": [
+        {
+          "type": "耐温",
+          "content": "耐温低，长期 >80°C 易软化"
+        },
+        {
+          "type": "应力",
+          "content": "环境应力开裂敏感"
+        }
+      ],
+      "applications": [
+        "油箱",
+        "水管接头",
+        "线束护套",
+        "衬套"
+      ],
+      "price_min": 9,
+      "price_max": 13,
+      "price_unit": "元/kg",
+      "price_note": "随石化行情波动",
+      "molding_process": [
+        "注塑",
+        "挤出",
+        "吹塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温低",
+        "易应力开裂",
+        "易燃"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "ABS（丙烯腈-丁二烯-苯乙烯）",
+      "short_name": "ABS",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "ABS",
+        "丙烯腈-丁二烯-苯乙烯",
+        "工程级ABS",
+        "Acrylonitrile Butadiene Styrene"
+      ],
+      "description": "刚性与尺寸稳定性好、易电镀的通用工程塑料，广泛用于内饰与外壳。",
+      "density_min": 1.04,
+      "density_max": 1.06,
+      "tensile_strength_min": 40,
+      "tensile_strength_max": 55,
+      "elastic_modulus_min": 2.0,
+      "elastic_modulus_max": 2.5,
+      "elongation_min": 10,
+      "elongation_max": 40,
+      "notch_impact_min": 15,
+      "notch_impact_max": 25,
+      "hdt_min": 80,
+      "hdt_max": 100,
+      "service_temp_min": -20,
+      "service_temp_max": 80,
+      "service_temp_limit": 80,
+      "features": [
+        "刚性好",
+        "尺寸稳定",
+        "易电镀",
+        "易成型"
+      ],
+      "cautions": [
+        {
+          "type": "耐候",
+          "content": "耐候性差，户外易黄变"
+        },
+        {
+          "type": "阻燃",
+          "content": "易燃，阻燃需改性"
+        },
+        {
+          "type": "耐温",
+          "content": "热变形温度中等"
+        }
+      ],
+      "applications": [
+        "内饰件",
+        "格栅",
+        "空调出风口",
+        "电子外壳"
+      ],
+      "price_min": 12,
+      "price_max": 18,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐候差",
+        "耐温中",
+        "易燃"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    }
+  ]
+}

@@ -1,0 +1,3737 @@
+{
+  "materials": [
+    {
+      "name": "PP（均聚聚丙烯）",
+      "short_name": "PP-H",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "PP-H",
+        "聚丙烯",
+        "均聚PP",
+        "Polypropylene"
+      ],
+      "description": "密度小、成本低、耐化学性好的通用热塑性塑料，广泛用于汽车内饰与非受力件。",
+      "density_min": 0.9,
+      "density_max": 0.91,
+      "tensile_strength_min": 28,
+      "tensile_strength_max": 38,
+      "elastic_modulus_min": 1.0,
+      "elastic_modulus_max": 1.6,
+      "elongation_min": 50,
+      "elongation_max": 600,
+      "notch_impact_min": 3,
+      "notch_impact_max": 5,
+      "hdt_min": 90,
+      "hdt_max": 100,
+      "service_temp_min": -20,
+      "service_temp_max": 100,
+      "service_temp_limit": 100,
+      "features": [
+        "密度小",
+        "成本低",
+        "耐化学性好",
+        "易成型"
+      ],
+      "cautions": [
+        {
+          "type": "环境",
+          "content": "低温脆性明显，低于 0°C 冲击下降"
+        },
+        {
+          "type": "耐候",
+          "content": "抗 UV 差，户外需加抗老化剂"
+        },
+        {
+          "type": "尺寸",
+          "content": "成型收缩率大，尺寸控制难"
+        }
+      ],
+      "applications": [
+        "内饰卡扣",
+        "文件盒类小件",
+        "暖风出风口",
+        "低配仪表板本体"
+      ],
+      "price_min": 8,
+      "price_max": 12,
+      "price_unit": "元/kg",
+      "price_note": "随原料行情波动，以最新报价为准",
+      "molding_process": [
+        "注塑",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温低，不适用高温区",
+        "易老化变脆",
+        "耐油性一般"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PE-HD（高密度聚乙烯）",
+      "short_name": "PE-HD",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "PE-HD",
+        "高密度聚乙烯",
+        "HDPE",
+        "High Density Polyethylene"
+      ],
+      "description": "韧性好、耐化学性优的聚烯烃，常用于油箱、管路与护套。",
+      "density_min": 0.94,
+      "density_max": 0.97,
+      "tensile_strength_min": 20,
+      "tensile_strength_max": 35,
+      "elastic_modulus_min": 0.8,
+      "elastic_modulus_max": 1.5,
+      "elongation_min": 100,
+      "elongation_max": 1000,
+      "notch_impact_min": 10,
+      "notch_impact_max": 40,
+      "hdt_min": 60,
+      "hdt_max": 80,
+      "service_temp_min": -40,
+      "service_temp_max": 80,
+      "service_temp_limit": 80,
+      "features": [
+        "耐化学性好",
+        "韧性好",
+        "低吸湿",
+        "低成本"
+      ],
+      "cautions": [
+        {
+          "type": "耐温",
+          "content": "耐温低，长期 >80°C 易软化"
+        },
+        {
+          "type": "应力",
+          "content": "环境应力开裂敏感"
+        }
+      ],
+      "applications": [
+        "油箱",
+        "水管接头",
+        "线束护套",
+        "衬套"
+      ],
+      "price_min": 9,
+      "price_max": 13,
+      "price_unit": "元/kg",
+      "price_note": "随石化行情波动",
+      "molding_process": [
+        "注塑",
+        "挤出",
+        "吹塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温低",
+        "易应力开裂",
+        "易燃"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "ABS（丙烯腈-丁二烯-苯乙烯）",
+      "short_name": "ABS",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "ABS",
+        "丙烯腈-丁二烯-苯乙烯",
+        "工程级ABS",
+        "Acrylonitrile Butadiene Styrene"
+      ],
+      "description": "刚性与尺寸稳定性好、易电镀的通用工程塑料，广泛用于内饰与外壳。",
+      "density_min": 1.04,
+      "density_max": 1.06,
+      "tensile_strength_min": 40,
+      "tensile_strength_max": 55,
+      "elastic_modulus_min": 2.0,
+      "elastic_modulus_max": 2.5,
+      "elongation_min": 10,
+      "elongation_max": 40,
+      "notch_impact_min": 15,
+      "notch_impact_max": 25,
+      "hdt_min": 80,
+      "hdt_max": 100,
+      "service_temp_min": -20,
+      "service_temp_max": 80,
+      "service_temp_limit": 80,
+      "features": [
+        "刚性好",
+        "尺寸稳定",
+        "易电镀",
+        "易成型"
+      ],
+      "cautions": [
+        {
+          "type": "耐候",
+          "content": "耐候性差，户外易黄变"
+        },
+        {
+          "type": "阻燃",
+          "content": "易燃，阻燃需改性"
+        },
+        {
+          "type": "耐温",
+          "content": "热变形温度中等"
+        }
+      ],
+      "applications": [
+        "内饰件",
+        "格栅",
+        "空调出风口",
+        "电子外壳"
+      ],
+      "price_min": 12,
+      "price_max": 18,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐候差",
+        "耐温中",
+        "易燃"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PVC（聚氯乙烯，硬）",
+      "short_name": "PVC",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "PVC",
+        "聚氯乙烯",
+        "硬PVC",
+        "Polyvinyl Chloride"
+      ],
+      "description": "阻燃与耐化学性好的低成本通用塑料，常用于护套与管材。",
+      "density_min": 1.35,
+      "density_max": 1.45,
+      "tensile_strength_min": 40,
+      "tensile_strength_max": 55,
+      "elastic_modulus_min": 2.5,
+      "elastic_modulus_max": 4.0,
+      "elongation_min": 10,
+      "elongation_max": 40,
+      "notch_impact_min": 2,
+      "notch_impact_max": 10,
+      "hdt_min": 60,
+      "hdt_max": 80,
+      "service_temp_min": -10,
+      "service_temp_max": 60,
+      "service_temp_limit": 60,
+      "features": [
+        "阻燃性好",
+        "耐化学性好",
+        "成本低",
+        "电绝缘"
+      ],
+      "cautions": [
+        {
+          "type": "热稳定",
+          "content": "热稳定性差，加工温度窗口窄"
+        },
+        {
+          "type": "耐温",
+          "content": "耐温低，长期 >60°C 性能下降"
+        },
+        {
+          "type": "迁移",
+          "content": "增塑剂迁移可能影响性能"
+        }
+      ],
+      "applications": [
+        "线束护套",
+        "管材",
+        "密封条",
+        "绝缘件"
+      ],
+      "price_min": 8,
+      "price_max": 12,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "挤出",
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温低",
+        "热稳定差",
+        "增塑剂迁移"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PMMA（聚甲基丙烯酸甲酯）",
+      "short_name": "PMMA",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "PMMA",
+        "亚克力",
+        "有机玻璃",
+        "Polymethyl Methacrylate"
+      ],
+      "description": "高透明、耐候性好的光学级塑料，用于灯罩与透光件。",
+      "density_min": 1.17,
+      "density_max": 1.2,
+      "tensile_strength_min": 60,
+      "tensile_strength_max": 75,
+      "elastic_modulus_min": 2.7,
+      "elastic_modulus_max": 3.2,
+      "elongation_min": 2,
+      "elongation_max": 7,
+      "notch_impact_min": 1.5,
+      "notch_impact_max": 2.5,
+      "hdt_min": 85,
+      "hdt_max": 100,
+      "service_temp_min": -40,
+      "service_temp_max": 90,
+      "service_temp_limit": 90,
+      "features": [
+        "透明",
+        "耐候性好",
+        "表面硬度高",
+        "易染色"
+      ],
+      "cautions": [
+        {
+          "type": "韧性",
+          "content": "脆性大，受冲击易裂"
+        },
+        {
+          "type": "表面",
+          "content": "易划伤，需保护"
+        }
+      ],
+      "applications": [
+        "灯罩",
+        "仪表透光件",
+        "指示灯透镜",
+        "标牌"
+      ],
+      "price_min": 15,
+      "price_max": 25,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "脆",
+        "易划伤",
+        "耐温中"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PS（聚苯乙烯，通用）",
+      "short_name": "PS",
+      "category_path": [
+        "热塑性塑料",
+        "通用塑料"
+      ],
+      "grade_type": "通用塑料",
+      "aliases": [
+        "PS",
+        "聚苯乙烯",
+        "GPPS",
+        "Polystyrene"
+      ],
+      "description": "透明、刚性好、成本低的通用塑料，但脆性大。",
+      "density_min": 1.04,
+      "density_max": 1.07,
+      "tensile_strength_min": 35,
+      "tensile_strength_max": 55,
+      "elastic_modulus_min": 3.0,
+      "elastic_modulus_max": 3.5,
+      "elongation_min": 1,
+      "elongation_max": 4,
+      "notch_impact_min": 1.5,
+      "notch_impact_max": 2.5,
+      "hdt_min": 70,
+      "hdt_max": 90,
+      "service_temp_min": -20,
+      "service_temp_max": 70,
+      "service_temp_limit": 70,
+      "features": [
+        "透明",
+        "刚性好",
+        "成本低",
+        "易成型"
+      ],
+      "cautions": [
+        {
+          "type": "韧性",
+          "content": "脆，耐冲击差"
+        },
+        {
+          "type": "耐温",
+          "content": "耐温低"
+        }
+      ],
+      "applications": [
+        "小家电外壳",
+        "一次性结构件",
+        "绝缘件",
+        "装饰件"
+      ],
+      "price_min": 9,
+      "price_max": 13,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "脆",
+        "耐冲击差",
+        "耐温低"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PA6（聚酰胺6）",
+      "short_name": "PA6",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PA6",
+        "尼龙6",
+        "聚酰胺6",
+        "Nylon 6"
+      ],
+      "description": "韧性好、耐磨的通用尼龙，吸湿较大需充分干燥。",
+      "density_min": 1.12,
+      "density_max": 1.15,
+      "tensile_strength_min": 70,
+      "tensile_strength_max": 85,
+      "elastic_modulus_min": 2.5,
+      "elastic_modulus_max": 3.2,
+      "elongation_min": 40,
+      "elongation_max": 200,
+      "notch_impact_min": 4,
+      "notch_impact_max": 10,
+      "hdt_min": 60,
+      "hdt_max": 80,
+      "service_temp_min": -40,
+      "service_temp_max": 120,
+      "service_temp_limit": 120,
+      "features": [
+        "韧性好",
+        "耐磨",
+        "耐油",
+        "自润滑"
+      ],
+      "cautions": [
+        {
+          "type": "吸湿",
+          "content": "吸湿大，尺寸与性能随湿度变化"
+        },
+        {
+          "type": "成型",
+          "content": "成型前需充分干燥"
+        }
+      ],
+      "applications": [
+        "齿轮",
+        "轴承",
+        "卡扣",
+        "接头"
+      ],
+      "price_min": 18,
+      "price_max": 26,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "吸湿大",
+        "尺寸不稳",
+        "需干燥"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PA66（聚酰胺66）",
+      "short_name": "PA66",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PA66",
+        "尼龙66",
+        "聚酰胺66",
+        "Nylon 66"
+      ],
+      "description": "强度与耐热性优于 PA6 的通用尼龙，汽车电气件常用基材。",
+      "density_min": 1.13,
+      "density_max": 1.15,
+      "tensile_strength_min": 80,
+      "tensile_strength_max": 95,
+      "elastic_modulus_min": 2.8,
+      "elastic_modulus_max": 3.5,
+      "elongation_min": 40,
+      "elongation_max": 150,
+      "notch_impact_min": 4,
+      "notch_impact_max": 8,
+      "hdt_min": 70,
+      "hdt_max": 90,
+      "service_temp_min": -40,
+      "service_temp_max": 130,
+      "service_temp_limit": 130,
+      "features": [
+        "强度高",
+        "耐热好",
+        "耐磨",
+        "耐油"
+      ],
+      "cautions": [
+        {
+          "type": "吸湿",
+          "content": "吸湿导致尺寸变化"
+        },
+        {
+          "type": "翘曲",
+          "content": "玻纤改性前翘曲可控"
+        }
+      ],
+      "applications": [
+        "连接器",
+        "卡扣",
+        "齿轮",
+        "扎带"
+      ],
+      "price_min": 22,
+      "price_max": 30,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "吸湿大",
+        "需干燥"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PA66+GF30（30%玻纤增强尼龙66）",
+      "short_name": "PA66-GF30",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PA66+GF30",
+        "PA66 GF30",
+        "玻纤增强尼龙66",
+        "30% Glass Filled Nylon 66"
+      ],
+      "description": "30% 玻纤增强的高强度耐热尼龙，电气与结构件主力材料。",
+      "density_min": 1.35,
+      "density_max": 1.4,
+      "tensile_strength_min": 170,
+      "tensile_strength_max": 210,
+      "elastic_modulus_min": 8.0,
+      "elastic_modulus_max": 11.0,
+      "elongation_min": 2,
+      "elongation_max": 5,
+      "notch_impact_min": 8,
+      "notch_impact_max": 14,
+      "hdt_min": 240,
+      "hdt_max": 260,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "高强度",
+        "高刚性",
+        "耐热",
+        "尺寸稳定"
+      ],
+      "cautions": [
+        {
+          "type": "各向异性",
+          "content": "玻纤取向导致各向异性与翘曲"
+        },
+        {
+          "type": "外观",
+          "content": "表面浮纤，外观要求高需处理"
+        },
+        {
+          "type": "吸湿",
+          "content": "仍具吸湿性，使用前需干燥"
+        }
+      ],
+      "applications": [
+        "保险丝座",
+        "连接器",
+        "ECU壳体",
+        "传感器支架"
+      ],
+      "price_min": 25,
+      "price_max": 35,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "各向异性",
+        "浮纤",
+        "难焊接"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PA6+GF30（30%玻纤增强尼龙6）",
+      "short_name": "PA6-GF30",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PA6+GF30",
+        "PA6 GF30",
+        "玻纤增强尼龙6",
+        "30% Glass Filled Nylon 6"
+      ],
+      "description": "30% 玻纤增强尼龙6，韧性优于 PA66 体系，综合性能均衡。",
+      "density_min": 1.35,
+      "density_max": 1.38,
+      "tensile_strength_min": 150,
+      "tensile_strength_max": 190,
+      "elastic_modulus_min": 7.0,
+      "elastic_modulus_max": 10.0,
+      "elongation_min": 2,
+      "elongation_max": 5,
+      "notch_impact_min": 8,
+      "notch_impact_max": 13,
+      "hdt_min": 200,
+      "hdt_max": 220,
+      "service_temp_min": -40,
+      "service_temp_max": 140,
+      "service_temp_limit": 140,
+      "features": [
+        "高强度",
+        "韧性好",
+        "耐热",
+        "尺寸稳定"
+      ],
+      "cautions": [
+        {
+          "type": "各向异性",
+          "content": "玻纤取向导致翘曲与浮纤"
+        },
+        {
+          "type": "吸湿",
+          "content": "需充分干燥"
+        }
+      ],
+      "applications": [
+        "连接器",
+        "支架",
+        "外壳",
+        "卡扣"
+      ],
+      "price_min": 24,
+      "price_max": 33,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "各向异性",
+        "浮纤"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PBT（聚对苯二甲酸丁二醇酯）",
+      "short_name": "PBT",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PBT",
+        "聚对苯二甲酸丁二醇酯",
+        "Polybutylene Terephthalate"
+      ],
+      "description": "电绝缘与耐化学性优的结晶工程塑料，电气件常用基材。",
+      "density_min": 1.3,
+      "density_max": 1.35,
+      "tensile_strength_min": 50,
+      "tensile_strength_max": 60,
+      "elastic_modulus_min": 2.3,
+      "elastic_modulus_max": 2.6,
+      "elongation_min": 30,
+      "elongation_max": 200,
+      "notch_impact_min": 4,
+      "notch_impact_max": 8,
+      "hdt_min": 50,
+      "hdt_max": 65,
+      "service_temp_min": -40,
+      "service_temp_max": 140,
+      "service_temp_limit": 140,
+      "features": [
+        "耐化学性",
+        "电绝缘",
+        "低吸湿",
+        "尺寸稳定"
+      ],
+      "cautions": [
+        {
+          "type": "缺口",
+          "content": "缺口敏感，未增强冲击一般"
+        },
+        {
+          "type": "成型",
+          "content": "需干燥，结晶慢"
+        }
+      ],
+      "applications": [
+        "连接器",
+        "线圈骨架",
+        "继电器",
+        "开关"
+      ],
+      "price_min": 18,
+      "price_max": 26,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "缺口敏感",
+        "需干燥"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PBT+GF30（30%玻纤增强PBT）",
+      "short_name": "PBT-GF30",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PBT+GF30",
+        "PBT GF30",
+        "玻纤增强PBT",
+        "30% Glass Filled PBT"
+      ],
+      "description": "30% 玻纤增强 PBT，耐热与刚性提升，电气连接器主流材料。",
+      "density_min": 1.5,
+      "density_max": 1.55,
+      "tensile_strength_min": 110,
+      "tensile_strength_max": 140,
+      "elastic_modulus_min": 8.0,
+      "elastic_modulus_max": 10.0,
+      "elongation_min": 2,
+      "elongation_max": 4,
+      "notch_impact_min": 8,
+      "notch_impact_max": 12,
+      "hdt_min": 200,
+      "hdt_max": 215,
+      "service_temp_min": -40,
+      "service_temp_max": 140,
+      "service_temp_limit": 140,
+      "features": [
+        "高刚性",
+        "耐热",
+        "电绝缘",
+        "尺寸稳定"
+      ],
+      "cautions": [
+        {
+          "type": "浮纤",
+          "content": "表面浮纤，外观需处理"
+        },
+        {
+          "type": "各向异性",
+          "content": "玻纤取向导致翘曲"
+        }
+      ],
+      "applications": [
+        "连接器",
+        "插座",
+        "开关",
+        "线圈骨架"
+      ],
+      "price_min": 22,
+      "price_max": 32,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "浮纤",
+        "难焊接"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "POM（聚甲醛，共聚）",
+      "short_name": "POM",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "POM",
+        "聚甲醛",
+        "赛钢",
+        "Polyoxymethylene"
+      ],
+      "description": "高刚性、耐磨自润滑的精密工程塑料，适合齿轮与滑动件。",
+      "density_min": 1.4,
+      "density_max": 1.42,
+      "tensile_strength_min": 60,
+      "tensile_strength_max": 70,
+      "elastic_modulus_min": 2.6,
+      "elastic_modulus_max": 3.0,
+      "elongation_min": 25,
+      "elongation_max": 75,
+      "notch_impact_min": 5,
+      "notch_impact_max": 10,
+      "hdt_min": 100,
+      "hdt_max": 115,
+      "service_temp_min": -40,
+      "service_temp_max": 100,
+      "service_temp_limit": 100,
+      "features": [
+        "高刚性",
+        "耐磨",
+        "自润滑",
+        "尺寸稳定"
+      ],
+      "cautions": [
+        {
+          "type": "耐酸",
+          "content": "耐强酸差"
+        },
+        {
+          "type": "热稳定",
+          "content": "热稳定性一般，加工需控温"
+        }
+      ],
+      "applications": [
+        "齿轮",
+        "滑块",
+        "卡扣",
+        "轴承"
+      ],
+      "price_min": 20,
+      "price_max": 28,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐酸差",
+        "热稳定一般"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PC（聚碳酸酯）",
+      "short_name": "PC",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PC",
+        "聚碳酸酯",
+        "Polycarbonate"
+      ],
+      "description": "高冲击、透明的工程塑料，用于防护与透光结构件。",
+      "density_min": 1.2,
+      "density_max": 1.22,
+      "tensile_strength_min": 60,
+      "tensile_strength_max": 70,
+      "elastic_modulus_min": 2.2,
+      "elastic_modulus_max": 2.4,
+      "elongation_min": 80,
+      "elongation_max": 130,
+      "notch_impact_min": 50,
+      "notch_impact_max": 80,
+      "hdt_min": 125,
+      "hdt_max": 140,
+      "service_temp_min": -40,
+      "service_temp_max": 120,
+      "service_temp_limit": 120,
+      "features": [
+        "高冲击",
+        "透明",
+        "尺寸稳定",
+        "耐热中"
+      ],
+      "cautions": [
+        {
+          "type": "耐化学",
+          "content": "耐化学性差，易应力开裂"
+        },
+        {
+          "type": "成型",
+          "content": "需充分干燥"
+        }
+      ],
+      "applications": [
+        "透明罩",
+        "灯壳",
+        "仪表",
+        "防护件"
+      ],
+      "price_min": 20,
+      "price_max": 30,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-2",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐化学差",
+        "应力开裂",
+        "需干燥"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PC-ABS（PC/ABS合金）",
+      "short_name": "PC-ABS",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PC-ABS",
+        "PC/ABS",
+        "聚碳酸酯ABS合金",
+        "PC ABS Alloy"
+      ],
+      "description": "兼具 PC 高冲击与 ABS 易成型的合金，内饰与外壳常用。",
+      "density_min": 1.1,
+      "density_max": 1.18,
+      "tensile_strength_min": 50,
+      "tensile_strength_max": 60,
+      "elastic_modulus_min": 2.0,
+      "elastic_modulus_max": 2.5,
+      "elongation_min": 20,
+      "elongation_max": 60,
+      "notch_impact_min": 30,
+      "notch_impact_max": 55,
+      "hdt_min": 90,
+      "hdt_max": 125,
+      "service_temp_min": -40,
+      "service_temp_max": 110,
+      "service_temp_limit": 110,
+      "features": [
+        "高冲击",
+        "易成型",
+        "耐热中",
+        "表面好"
+      ],
+      "cautions": [
+        {
+          "type": "耐候",
+          "content": "耐候性一般"
+        }
+      ],
+      "applications": [
+        "内饰",
+        "仪表板",
+        "电子外壳",
+        "格栅"
+      ],
+      "price_min": 18,
+      "price_max": 26,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐候一般",
+        "耐化学中"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "mPPO（改性聚苯醚）",
+      "short_name": "mPPO",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "mPPO",
+        "改性聚苯醚",
+        "MPPE",
+        "Modified Polyphenylene Oxide"
+      ],
+      "description": "尺寸稳定、低吸水、电性好的工程塑料，适合精密外壳。",
+      "density_min": 1.05,
+      "density_max": 1.1,
+      "tensile_strength_min": 50,
+      "tensile_strength_max": 65,
+      "elastic_modulus_min": 2.0,
+      "elastic_modulus_max": 2.8,
+      "elongation_min": 10,
+      "elongation_max": 40,
+      "notch_impact_min": 12,
+      "notch_impact_max": 25,
+      "hdt_min": 100,
+      "hdt_max": 130,
+      "service_temp_min": -40,
+      "service_temp_max": 120,
+      "service_temp_limit": 120,
+      "features": [
+        "尺寸稳定",
+        "低吸水",
+        "电性好",
+        "耐热中"
+      ],
+      "cautions": [
+        {
+          "type": "耐温",
+          "content": "耐温中等，高于 120°C 受限"
+        },
+        {
+          "type": "成本",
+          "content": "成本高于通用塑料"
+        }
+      ],
+      "applications": [
+        "外壳",
+        "支架",
+        "连接器",
+        "线圈骨架"
+      ],
+      "price_min": 25,
+      "price_max": 35,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温中",
+        "成本高"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PET（聚对苯二甲酸乙二醇酯）",
+      "short_name": "PET",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PET",
+        "聚对苯二甲酸乙二醇酯",
+        "Polyethylene Terephthalate"
+      ],
+      "description": "刚性好、耐化学的结晶塑料，常用于薄膜、扎带与绝缘件。",
+      "density_min": 1.35,
+      "density_max": 1.4,
+      "tensile_strength_min": 50,
+      "tensile_strength_max": 60,
+      "elastic_modulus_min": 2.5,
+      "elastic_modulus_max": 3.0,
+      "elongation_min": 30,
+      "elongation_max": 200,
+      "notch_impact_min": 3,
+      "notch_impact_max": 6,
+      "hdt_min": 70,
+      "hdt_max": 80,
+      "service_temp_min": -40,
+      "service_temp_max": 120,
+      "service_temp_limit": 120,
+      "features": [
+        "刚性好",
+        "耐化学",
+        "透明(瓶级)",
+        "低成本"
+      ],
+      "cautions": [
+        {
+          "type": "结晶",
+          "content": "结晶慢，需改性或快速冷却"
+        },
+        {
+          "type": "吸湿",
+          "content": "需干燥"
+        }
+      ],
+      "applications": [
+        "薄膜",
+        "绝缘件",
+        "扎带",
+        "外壳"
+      ],
+      "price_min": 12,
+      "price_max": 18,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "结晶慢",
+        "需干燥"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PA46（聚酰胺46）",
+      "short_name": "PA46",
+      "category_path": [
+        "热塑性塑料",
+        "工程塑料"
+      ],
+      "grade_type": "工程塑料",
+      "aliases": [
+        "PA46",
+        "聚酰胺46",
+        "尼龙46",
+        "Stanyl"
+      ],
+      "description": "高耐热、快结晶的尼龙，适合高温连接器与引擎周边件。",
+      "density_min": 1.16,
+      "density_max": 1.18,
+      "tensile_strength_min": 90,
+      "tensile_strength_max": 100,
+      "elastic_modulus_min": 3.0,
+      "elastic_modulus_max": 3.5,
+      "elongation_min": 30,
+      "elongation_max": 80,
+      "notch_impact_min": 5,
+      "notch_impact_max": 8,
+      "hdt_min": 160,
+      "hdt_max": 180,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "高耐热",
+        "高强度",
+        "快结晶",
+        "耐磨"
+      ],
+      "cautions": [
+        {
+          "type": "吸湿",
+          "content": "吸湿，需干燥"
+        },
+        {
+          "type": "成本",
+          "content": "成本高"
+        }
+      ],
+      "applications": [
+        "高温连接器",
+        "齿轮",
+        "引擎周边件",
+        "轴承"
+      ],
+      "price_min": 45,
+      "price_max": 65,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "吸湿",
+        "成本高"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PPS（聚苯硫醚）",
+      "short_name": "PPS",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PPS",
+        "聚苯硫醚",
+        "Poly phenylene sulfide"
+      ],
+      "description": "耐高温、本征阻燃、耐化学的特种工程塑料，常用于高温电气件。",
+      "density_min": 1.34,
+      "density_max": 1.38,
+      "tensile_strength_min": 70,
+      "tensile_strength_max": 85,
+      "elastic_modulus_min": 3.3,
+      "elastic_modulus_max": 4.0,
+      "elongation_min": 1,
+      "elongation_max": 5,
+      "notch_impact_min": 3,
+      "notch_impact_max": 6,
+      "hdt_min": 110,
+      "hdt_max": 130,
+      "service_temp_min": -40,
+      "service_temp_max": 200,
+      "service_temp_limit": 200,
+      "features": [
+        "耐高温",
+        "阻燃",
+        "耐化学",
+        "电性好"
+      ],
+      "cautions": [
+        {
+          "type": "韧性",
+          "content": "脆性大，常需玻纤/矿物增强"
+        },
+        {
+          "type": "成本",
+          "content": "成本较高"
+        }
+      ],
+      "applications": [
+        "高温连接器",
+        "线圈骨架",
+        "传感器",
+        "继电器"
+      ],
+      "price_min": 55,
+      "price_max": 80,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "脆性",
+        "成本高"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PPS+GF40（40%玻纤增强PPS）",
+      "short_name": "PPS-GF40",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PPS+GF40",
+        "PPS GF40",
+        "玻纤增强聚苯硫醚",
+        "40% Glass Filled PPS"
+      ],
+      "description": "40% 玻纤增强 PPS，超耐热高刚性，引擎舱电气件主力。",
+      "density_min": 1.6,
+      "density_max": 1.66,
+      "tensile_strength_min": 180,
+      "tensile_strength_max": 210,
+      "elastic_modulus_min": 13.0,
+      "elastic_modulus_max": 17.0,
+      "elongation_min": 1,
+      "elongation_max": 2,
+      "notch_impact_min": 8,
+      "notch_impact_max": 12,
+      "hdt_min": 260,
+      "hdt_max": 280,
+      "service_temp_min": -40,
+      "service_temp_max": 220,
+      "service_temp_limit": 220,
+      "features": [
+        "超耐热",
+        "高刚性",
+        "阻燃",
+        "耐化学"
+      ],
+      "cautions": [
+        {
+          "type": "脆性",
+          "content": "质脆，冲击一般"
+        },
+        {
+          "type": "成本",
+          "content": "成本高"
+        }
+      ],
+      "applications": [
+        "高温连接器",
+        "ECU壳体",
+        "引擎周边件",
+        "传感器支架"
+      ],
+      "price_min": 70,
+      "price_max": 100,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "脆",
+        "成本高",
+        "难焊接"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PEEK（聚醚醚酮）",
+      "short_name": "PEEK",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PEEK",
+        "聚醚醚酮",
+        "Polyether ether ketone"
+      ],
+      "description": "超耐热、耐化学、自润滑的顶级特种工程塑料，用于极端工况。",
+      "density_min": 1.3,
+      "density_max": 1.32,
+      "tensile_strength_min": 90,
+      "tensile_strength_max": 110,
+      "elastic_modulus_min": 3.6,
+      "elastic_modulus_max": 4.2,
+      "elongation_min": 15,
+      "elongation_max": 50,
+      "notch_impact_min": 5,
+      "notch_impact_max": 8,
+      "hdt_min": 140,
+      "hdt_max": 160,
+      "service_temp_min": -40,
+      "service_temp_max": 240,
+      "service_temp_limit": 240,
+      "features": [
+        "超耐热",
+        "耐化学",
+        "自润滑",
+        "高强度"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "极昂贵，仅特殊工况使用"
+        }
+      ],
+      "applications": [
+        "高温密封",
+        "轴承",
+        "特种连接器",
+        "齿轮"
+      ],
+      "price_min": 350,
+      "price_max": 600,
+      "price_unit": "元/kg",
+      "price_note": "特种牌号价格高且波动大",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "极昂贵"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PEI（聚醚酰亚胺）",
+      "short_name": "PEI",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PEI",
+        "聚醚酰亚胺",
+        "ULTEM",
+        "Polyetherimide"
+      ],
+      "description": "高耐热、阻燃、尺寸稳定的无定形特种工程塑料。",
+      "density_min": 1.27,
+      "density_max": 1.3,
+      "tensile_strength_min": 100,
+      "tensile_strength_max": 110,
+      "elastic_modulus_min": 3.0,
+      "elastic_modulus_max": 3.5,
+      "elongation_min": 5,
+      "elongation_max": 60,
+      "notch_impact_min": 4,
+      "notch_impact_max": 7,
+      "hdt_min": 190,
+      "hdt_max": 210,
+      "service_temp_min": -40,
+      "service_temp_max": 170,
+      "service_temp_limit": 170,
+      "features": [
+        "高耐热",
+        "阻燃",
+        "尺寸稳定",
+        "电性好"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "昂贵"
+        },
+        {
+          "type": "应力",
+          "content": "应力开裂敏感"
+        }
+      ],
+      "applications": [
+        "高温连接器",
+        "外壳",
+        "支架",
+        "灯座"
+      ],
+      "price_min": 120,
+      "price_max": 200,
+      "price_unit": "元/kg",
+      "price_note": "特种牌号价格波动大",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "昂贵",
+        "应力开裂"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PES（聚醚砜）",
+      "short_name": "PES",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PES",
+        "聚醚砜",
+        "Polyethersulfone"
+      ],
+      "description": "耐热、透明、阻燃的特种工程塑料，适合高温绝缘件。",
+      "density_min": 1.37,
+      "density_max": 1.4,
+      "tensile_strength_min": 80,
+      "tensile_strength_max": 95,
+      "elastic_modulus_min": 2.4,
+      "elastic_modulus_max": 2.7,
+      "elongation_min": 20,
+      "elongation_max": 60,
+      "notch_impact_min": 5,
+      "notch_impact_max": 8,
+      "hdt_min": 180,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 180,
+      "service_temp_limit": 180,
+      "features": [
+        "耐热",
+        "透明",
+        "阻燃",
+        "电性好"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "昂贵"
+        }
+      ],
+      "applications": [
+        "高温绝缘件",
+        "灯座",
+        "医疗件",
+        "连接器"
+      ],
+      "price_min": 100,
+      "price_max": 160,
+      "price_unit": "元/kg",
+      "price_note": "特种牌号价格波动大",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "昂贵"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "LCP（液晶聚合物）",
+      "short_name": "LCP",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "LCP",
+        "液晶聚合物",
+        "Liquid Crystal Polymer"
+      ],
+      "description": "超高耐热、低翘曲、高流动性的特种工程塑料，适合精密高频件。",
+      "density_min": 1.35,
+      "density_max": 1.55,
+      "tensile_strength_min": 110,
+      "tensile_strength_max": 180,
+      "elastic_modulus_min": 10.0,
+      "elastic_modulus_max": 20.0,
+      "elongation_min": 1,
+      "elongation_max": 5,
+      "notch_impact_min": 5,
+      "notch_impact_max": 15,
+      "hdt_min": 240,
+      "hdt_max": 300,
+      "service_temp_min": -40,
+      "service_temp_max": 240,
+      "service_temp_limit": 240,
+      "features": [
+        "超高耐热",
+        "低翘曲",
+        "高流动",
+        "尺寸稳定"
+      ],
+      "cautions": [
+        {
+          "type": "各向异性",
+          "content": "强各向异性，焊接需特殊工艺"
+        },
+        {
+          "type": "成本",
+          "content": "昂贵"
+        }
+      ],
+      "applications": [
+        "高频连接器",
+        "精密件",
+        "传感器",
+        "线圈骨架"
+      ],
+      "price_min": 90,
+      "price_max": 150,
+      "price_unit": "元/kg",
+      "price_note": "特种牌号价格波动大",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "各向异性",
+        "昂贵"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PA9T（聚酰胺9T）",
+      "short_name": "PA9T",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PA9T",
+        "聚酰胺9T",
+        "尼龙9T",
+        "Genestar"
+      ],
+      "description": "低吸湿、高耐热、尺寸稳定的半芳香尼龙，适合 SMT 连接器。",
+      "density_min": 1.14,
+      "density_max": 1.16,
+      "tensile_strength_min": 85,
+      "tensile_strength_max": 100,
+      "elastic_modulus_min": 3.0,
+      "elastic_modulus_max": 3.5,
+      "elongation_min": 20,
+      "elongation_max": 80,
+      "notch_impact_min": 5,
+      "notch_impact_max": 9,
+      "hdt_min": 125,
+      "hdt_max": 150,
+      "service_temp_min": -40,
+      "service_temp_max": 160,
+      "service_temp_limit": 160,
+      "features": [
+        "低吸湿",
+        "高耐热",
+        "尺寸稳定",
+        "耐回流焊"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "成本高"
+        }
+      ],
+      "applications": [
+        "表面贴装连接器",
+        "LED支架",
+        "传感器",
+        "开关"
+      ],
+      "price_min": 60,
+      "price_max": 90,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "成本高"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PPA（半芳香族聚酰胺）",
+      "short_name": "PPA",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PPA",
+        "半芳香族聚酰胺",
+        "高温尼龙",
+        "Polyphthalamide"
+      ],
+      "description": "低吸湿、高耐热、高强度的半芳香尼龙，引擎舱电气件优选。",
+      "density_min": 1.1,
+      "density_max": 1.2,
+      "tensile_strength_min": 90,
+      "tensile_strength_max": 120,
+      "elastic_modulus_min": 4.0,
+      "elastic_modulus_max": 8.0,
+      "elongation_min": 2,
+      "elongation_max": 10,
+      "notch_impact_min": 5,
+      "notch_impact_max": 12,
+      "hdt_min": 200,
+      "hdt_max": 280,
+      "service_temp_min": -40,
+      "service_temp_max": 180,
+      "service_temp_limit": 180,
+      "features": [
+        "高耐热",
+        "低吸湿",
+        "高强度",
+        "耐回流焊"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "成本高"
+        },
+        {
+          "type": "成型",
+          "content": "需充分干燥"
+        }
+      ],
+      "applications": [
+        "高温连接器",
+        "引擎周边件",
+        "传感器",
+        "支架"
+      ],
+      "price_min": 70,
+      "price_max": 110,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "成本高",
+        "需干燥"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PSU（聚砜）",
+      "short_name": "PSU",
+      "category_path": [
+        "热塑性塑料",
+        "特种工程塑料"
+      ],
+      "grade_type": "特种工程塑料",
+      "aliases": [
+        "PSU",
+        "聚砜",
+        "Polysulfone"
+      ],
+      "description": "耐热、透明、耐水解的特种工程塑料，适合医疗与食品级件。",
+      "density_min": 1.24,
+      "density_max": 1.26,
+      "tensile_strength_min": 70,
+      "tensile_strength_max": 85,
+      "elastic_modulus_min": 2.4,
+      "elastic_modulus_max": 2.7,
+      "elongation_min": 20,
+      "elongation_max": 80,
+      "notch_impact_min": 5,
+      "notch_impact_max": 7,
+      "hdt_min": 170,
+      "hdt_max": 185,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "耐热",
+        "透明",
+        "电性好",
+        "耐水解"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "昂贵"
+        },
+        {
+          "type": "耐溶剂",
+          "content": "耐部分有机溶剂一般"
+        }
+      ],
+      "applications": [
+        "医疗件",
+        "食品级件",
+        "绝缘件",
+        "外壳"
+      ],
+      "price_min": 80,
+      "price_max": 130,
+      "price_unit": "元/kg",
+      "price_note": "特种牌号价格波动大",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "昂贵",
+        "耐溶剂一般"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "酚醛PF（酚醛树脂）",
+      "short_name": "PF",
+      "category_path": [
+        "热固性塑料",
+        "通用热固性"
+      ],
+      "grade_type": "热固性塑料",
+      "aliases": [
+        "PF",
+        "酚醛",
+        "电木",
+        "Bakelite",
+        "Phenolic"
+      ],
+      "description": "耐热、本征阻燃、绝缘的低成本热固性塑料，电气件经典基材。",
+      "density_min": 1.35,
+      "density_max": 1.5,
+      "tensile_strength_min": 40,
+      "tensile_strength_max": 70,
+      "elastic_modulus_min": 8.0,
+      "elastic_modulus_max": 12.0,
+      "elongation_min": 0.5,
+      "elongation_max": 2,
+      "notch_impact_min": 1,
+      "notch_impact_max": 4,
+      "hdt_min": 150,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "耐热",
+        "阻燃",
+        "绝缘",
+        "低成本"
+      ],
+      "cautions": [
+        {
+          "type": "韧性",
+          "content": "质脆"
+        },
+        {
+          "type": "外观",
+          "content": "颜色深，难做浅色件"
+        },
+        {
+          "type": "成型",
+          "content": "需热压/模压成型"
+        }
+      ],
+      "applications": [
+        "继电器底座",
+        "开关",
+        "绝缘件",
+        "把手"
+      ],
+      "price_min": 12,
+      "price_max": 20,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "注塑",
+        "模压"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "脆",
+        "颜色深",
+        "成型慢"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "环氧EP（环氧树脂）",
+      "short_name": "EP",
+      "category_path": [
+        "热固性塑料",
+        "通用热固性"
+      ],
+      "grade_type": "热固性塑料",
+      "aliases": [
+        "EP",
+        "环氧树脂",
+        "Epoxy",
+        "Epoxy Resin"
+      ],
+      "description": "粘接好、绝缘、耐化学的热固性树脂，常用于灌封与封装。",
+      "density_min": 1.1,
+      "density_max": 1.3,
+      "tensile_strength_min": 40,
+      "tensile_strength_max": 90,
+      "elastic_modulus_min": 2.5,
+      "elastic_modulus_max": 4.0,
+      "elongation_min": 1,
+      "elongation_max": 8,
+      "notch_impact_min": 2,
+      "notch_impact_max": 6,
+      "hdt_min": 100,
+      "hdt_max": 160,
+      "service_temp_min": -40,
+      "service_temp_max": 130,
+      "service_temp_limit": 130,
+      "features": [
+        "粘接好",
+        "绝缘",
+        "耐化学",
+        "低收缩"
+      ],
+      "cautions": [
+        {
+          "type": "固化",
+          "content": "需固化，收缩与气泡需控制"
+        },
+        {
+          "type": "韧性",
+          "content": "未增韧时较脆"
+        }
+      ],
+      "applications": [
+        "灌封",
+        "封装",
+        "线圈",
+        "绝缘件"
+      ],
+      "price_min": 25,
+      "price_max": 45,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "浇注",
+        "模压"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "固化收缩",
+        "脆性"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "不饱和聚酯UP",
+      "short_name": "UP",
+      "category_path": [
+        "热固性塑料",
+        "通用热固性"
+      ],
+      "grade_type": "热固性塑料",
+      "aliases": [
+        "UP",
+        "不饱和聚酯",
+        "Unsaturated Polyester"
+      ],
+      "description": "低成本、易成型、绝缘的热固性树脂，用于外壳与结构件。",
+      "density_min": 1.1,
+      "density_max": 1.3,
+      "tensile_strength_min": 40,
+      "tensile_strength_max": 80,
+      "elastic_modulus_min": 2.5,
+      "elastic_modulus_max": 4.5,
+      "elongation_min": 1,
+      "elongation_max": 5,
+      "notch_impact_min": 2,
+      "notch_impact_max": 6,
+      "hdt_min": 60,
+      "hdt_max": 120,
+      "service_temp_min": -40,
+      "service_temp_max": 120,
+      "service_temp_limit": 120,
+      "features": [
+        "低成本",
+        "易成型",
+        "绝缘",
+        "可手糊"
+      ],
+      "cautions": [
+        {
+          "type": "收缩",
+          "content": "成型收缩较大"
+        },
+        {
+          "type": "韧性",
+          "content": "较脆"
+        }
+      ],
+      "applications": [
+        "外壳",
+        "绝缘件",
+        "结构件",
+        "罩盖"
+      ],
+      "price_min": 12,
+      "price_max": 22,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "模压",
+        "浇注"
+      ],
+      "certifications": {
+        "ul94": "HB",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "收缩大",
+        "脆"
+      ],
+      "source": "汽车材料选型手册 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "SMC（片状模塑料）",
+      "short_name": "SMC",
+      "category_path": [
+        "热固性塑料",
+        "增强塑料"
+      ],
+      "grade_type": "热固性塑料",
+      "aliases": [
+        "SMC",
+        "片状模塑料",
+        "Sheet Molding Compound"
+      ],
+      "description": "玻纤增强热固性片状料，可成型大型轻质结构件。",
+      "density_min": 1.7,
+      "density_max": 1.9,
+      "tensile_strength_min": 60,
+      "tensile_strength_max": 120,
+      "elastic_modulus_min": 9.0,
+      "elastic_modulus_max": 13.0,
+      "elongation_min": 0.5,
+      "elongation_max": 2,
+      "notch_impact_min": 30,
+      "notch_impact_max": 80,
+      "hdt_min": 180,
+      "hdt_max": 220,
+      "service_temp_min": -40,
+      "service_temp_max": 140,
+      "service_temp_limit": 140,
+      "features": [
+        "高强度",
+        "轻量",
+        "可大型化",
+        "绝缘"
+      ],
+      "cautions": [
+        {
+          "type": "周期",
+          "content": "成型周期长，设备投入大"
+        },
+        {
+          "type": "修复",
+          "content": "损伤后难修复"
+        }
+      ],
+      "applications": [
+        "车身板",
+        "电池壳",
+        "壳体",
+        "覆盖件"
+      ],
+      "price_min": 20,
+      "price_max": 35,
+      "price_unit": "元/kg",
+      "price_note": "随配方与行情波动",
+      "molding_process": [
+        "模压"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "周期长",
+        "设备大"
+      ],
+      "source": "复合材料应用手册 2023",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "BMC（团状模塑料）",
+      "short_name": "BMC",
+      "category_path": [
+        "热固性塑料",
+        "增强塑料"
+      ],
+      "grade_type": "热固性塑料",
+      "aliases": [
+        "BMC",
+        "团状模塑料",
+        "Bulk Molding Compound"
+      ],
+      "description": "玻纤增强热固性团料，成型快、尺寸稳定，适合电气外壳。",
+      "density_min": 1.8,
+      "density_max": 2.0,
+      "tensile_strength_min": 40,
+      "tensile_strength_max": 90,
+      "elastic_modulus_min": 9.0,
+      "elastic_modulus_max": 13.0,
+      "elongation_min": 0.3,
+      "elongation_max": 1.5,
+      "notch_impact_min": 10,
+      "notch_impact_max": 40,
+      "hdt_min": 150,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 130,
+      "service_temp_limit": 130,
+      "features": [
+        "成型快",
+        "尺寸稳定",
+        "绝缘",
+        "耐热"
+      ],
+      "cautions": [
+        {
+          "type": "密度",
+          "content": "密度较高"
+        },
+        {
+          "type": "设备",
+          "content": "需专用成型设备"
+        }
+      ],
+      "applications": [
+        "电气外壳",
+        "绝缘子",
+        "底座",
+        "罩盖"
+      ],
+      "price_min": 18,
+      "price_max": 32,
+      "price_unit": "元/kg",
+      "price_note": "随配方与行情波动",
+      "molding_process": [
+        "模压",
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "密度高",
+        "设备要求"
+      ],
+      "source": "复合材料应用手册 2023",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "冷轧钢SPCC",
+      "short_name": "SPCC",
+      "category_path": [
+        "金属",
+        "钢材"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "SPCC",
+        "冷轧钢板",
+        "冷板",
+        "Cold Rolled Steel"
+      ],
+      "description": "成本低、强度好、易焊接加工的通用碳素结构钢。",
+      "density_min": 7.85,
+      "density_max": 7.85,
+      "tensile_strength_min": 270,
+      "tensile_strength_max": 410,
+      "elastic_modulus_min": 200.0,
+      "elastic_modulus_max": 200.0,
+      "elongation_min": 20,
+      "elongation_max": 40,
+      "notch_impact_min": 150,
+      "notch_impact_max": 250,
+      "hdt_min": -40,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 200,
+      "service_temp_limit": 200,
+      "features": [
+        "强度高",
+        "易加工",
+        "成本低",
+        "可焊"
+      ],
+      "cautions": [
+        {
+          "type": "腐蚀",
+          "content": "易锈蚀，需表面处理"
+        },
+        {
+          "type": "密度",
+          "content": "密度大，增重明显"
+        }
+      ],
+      "applications": [
+        "支架",
+        "钣金件",
+        "结构件",
+        "加强板"
+      ],
+      "price_min": 5,
+      "price_max": 8,
+      "price_unit": "元/kg",
+      "price_note": "随钢价行情波动",
+      "molding_process": [
+        "冲压",
+        "机加工"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "易锈",
+        "密度大"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "镀锌钢（镀锌钢板）",
+      "short_name": "GI",
+      "category_path": [
+        "金属",
+        "钢材"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "镀锌钢",
+        "镀锌钢板",
+        "GI",
+        "Galvanized Steel"
+      ],
+      "description": "表面镀锌防锈的钢板，兼顾成本与耐蚀性。",
+      "density_min": 7.85,
+      "density_max": 7.85,
+      "tensile_strength_min": 270,
+      "tensile_strength_max": 400,
+      "elastic_modulus_min": 200.0,
+      "elastic_modulus_max": 200.0,
+      "elongation_min": 20,
+      "elongation_max": 38,
+      "notch_impact_min": 150,
+      "notch_impact_max": 250,
+      "hdt_min": -40,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 200,
+      "service_temp_limit": 200,
+      "features": [
+        "防锈",
+        "可焊",
+        "成本低",
+        "易加工"
+      ],
+      "cautions": [
+        {
+          "type": "腐蚀",
+          "content": "镀层损伤处易锈"
+        },
+        {
+          "type": "密度",
+          "content": "密度大"
+        }
+      ],
+      "applications": [
+        "车身件",
+        "支架",
+        "底盘件",
+        "结构件"
+      ],
+      "price_min": 6,
+      "price_max": 10,
+      "price_unit": "元/kg",
+      "price_note": "随钢价行情波动",
+      "molding_process": [
+        "冲压"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "镀层损伤易锈",
+        "密度大"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "不锈钢304",
+      "short_name": "SUS304",
+      "category_path": [
+        "金属",
+        "钢材"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "304",
+        "不锈钢304",
+        "SUS304",
+        "Stainless Steel 304"
+      ],
+      "description": "耐腐蚀、高强度、食品级的不锈钢，用于排气与紧固件。",
+      "density_min": 7.93,
+      "density_max": 7.93,
+      "tensile_strength_min": 515,
+      "tensile_strength_max": 620,
+      "elastic_modulus_min": 193.0,
+      "elastic_modulus_max": 200.0,
+      "elongation_min": 40,
+      "elongation_max": 60,
+      "notch_impact_min": 180,
+      "notch_impact_max": 320,
+      "hdt_min": -40,
+      "hdt_max": 400,
+      "service_temp_min": -40,
+      "service_temp_max": 400,
+      "service_temp_limit": 400,
+      "features": [
+        "耐腐蚀",
+        "高强度",
+        "食品级",
+        "美观"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "成本高"
+        },
+        {
+          "type": "加工",
+          "content": "加工硬化明显"
+        }
+      ],
+      "applications": [
+        "排气件",
+        "紧固件",
+        "支架",
+        "装饰件"
+      ],
+      "price_min": 18,
+      "price_max": 28,
+      "price_unit": "元/kg",
+      "price_note": "随镍价行情波动",
+      "molding_process": [
+        "机加工",
+        "冲压"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "成本高",
+        "加工硬化"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "铝合金6061",
+      "short_name": "AL6061",
+      "category_path": [
+        "金属",
+        "铝合金"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "6061",
+        "铝合金6061",
+        "AL6061",
+        "Aluminum 6061"
+      ],
+      "description": "轻量、耐腐蚀、易加工的通用结构铝合金（T6 态）。",
+      "density_min": 2.7,
+      "density_max": 2.7,
+      "tensile_strength_min": 276,
+      "tensile_strength_max": 310,
+      "elastic_modulus_min": 68.0,
+      "elastic_modulus_max": 70.0,
+      "elongation_min": 8,
+      "elongation_max": 17,
+      "notch_impact_min": 25,
+      "notch_impact_max": 70,
+      "hdt_min": -40,
+      "hdt_max": 150,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "轻量",
+        "耐腐蚀",
+        "易加工",
+        "导热好"
+      ],
+      "cautions": [
+        {
+          "type": "强度",
+          "content": "强度低于钢"
+        },
+        {
+          "type": "变形",
+          "content": "薄壁易变形"
+        }
+      ],
+      "applications": [
+        "支架",
+        "壳体",
+        "散热件",
+        "框架"
+      ],
+      "price_min": 20,
+      "price_max": 30,
+      "price_unit": "元/kg",
+      "price_note": "随铝价行情波动",
+      "molding_process": [
+        "机加工",
+        "挤压"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "强度低于钢",
+        "易变形"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "压铸铝ADC12",
+      "short_name": "ADC12",
+      "category_path": [
+        "金属",
+        "铝合金"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "ADC12",
+        "压铸铝",
+        "压铸铝合金",
+        "Aluminum Die Casting"
+      ],
+      "description": "流动性好、适合复杂件的压铸铝合金，量产壳体常用。",
+      "density_min": 2.65,
+      "density_max": 2.68,
+      "tensile_strength_min": 228,
+      "tensile_strength_max": 290,
+      "elastic_modulus_min": 70.0,
+      "elastic_modulus_max": 73.0,
+      "elongation_min": 1,
+      "elongation_max": 4,
+      "notch_impact_min": 15,
+      "notch_impact_max": 40,
+      "hdt_min": -40,
+      "hdt_max": 150,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "轻量",
+        "复杂件",
+        "量产好",
+        "成本低"
+      ],
+      "cautions": [
+        {
+          "type": "气孔",
+          "content": "压铸气孔，焊接与密封需注意"
+        },
+        {
+          "type": "强度",
+          "content": "强度中等"
+        }
+      ],
+      "applications": [
+        "壳体",
+        "支架",
+        "变速箱件",
+        "端盖"
+      ],
+      "price_min": 22,
+      "price_max": 32,
+      "price_unit": "元/kg",
+      "price_note": "随铝价行情波动",
+      "molding_process": [
+        "压铸"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "气孔",
+        "强度中",
+        "耐温中"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "黄铜H62",
+      "short_name": "H62",
+      "category_path": [
+        "金属",
+        "铜合金"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "H62",
+        "黄铜",
+        "普通黄铜",
+        "Brass H62"
+      ],
+      "description": "导电好、易加工、耐磨的铜锌合金，用于端子与接插件。",
+      "density_min": 8.43,
+      "density_max": 8.43,
+      "tensile_strength_min": 300,
+      "tensile_strength_max": 410,
+      "elastic_modulus_min": 100.0,
+      "elastic_modulus_max": 110.0,
+      "elongation_min": 20,
+      "elongation_max": 45,
+      "notch_impact_min": 120,
+      "notch_impact_max": 320,
+      "hdt_min": -40,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 200,
+      "service_temp_limit": 200,
+      "features": [
+        "导电好",
+        "易加工",
+        "耐磨",
+        "耐腐蚀"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "成本高"
+        },
+        {
+          "type": "密度",
+          "content": "密度大"
+        }
+      ],
+      "applications": [
+        "端子",
+        "接插件",
+        "水阀",
+        "导电件"
+      ],
+      "price_min": 40,
+      "price_max": 60,
+      "price_unit": "元/kg",
+      "price_note": "随铜价行情波动",
+      "molding_process": [
+        "机加工",
+        "冲压"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "成本高",
+        "密度大"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "磷青铜（锡磷青铜）",
+      "short_name": "PB",
+      "category_path": [
+        "金属",
+        "铜合金"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "磷青铜",
+        "锡磷青铜",
+        "Phosphor Bronze",
+        "C5191"
+      ],
+      "description": "弹性好、耐疲劳、导电的铜合金，适合弹片与端子。",
+      "density_min": 8.8,
+      "density_max": 8.8,
+      "tensile_strength_min": 350,
+      "tensile_strength_max": 600,
+      "elastic_modulus_min": 110.0,
+      "elastic_modulus_max": 125.0,
+      "elongation_min": 10,
+      "elongation_max": 45,
+      "notch_impact_min": 120,
+      "notch_impact_max": 320,
+      "hdt_min": -40,
+      "hdt_max": 200,
+      "service_temp_min": -40,
+      "service_temp_max": 200,
+      "service_temp_limit": 200,
+      "features": [
+        "弹性好",
+        "导电",
+        "耐疲劳",
+        "耐磨"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "成本高"
+        }
+      ],
+      "applications": [
+        "弹片",
+        "端子",
+        "弹簧",
+        "导电件"
+      ],
+      "price_min": 60,
+      "price_max": 90,
+      "price_unit": "元/kg",
+      "price_note": "随铜价行情波动",
+      "molding_process": [
+        "冲压",
+        "机加工"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "成本高"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "锌合金（Zamak）",
+      "short_name": "Zamak",
+      "category_path": [
+        "金属",
+        "锌合金"
+      ],
+      "grade_type": "金属材料",
+      "aliases": [
+        "锌合金",
+        "Zamak",
+        "压铸锌合金",
+        "Zinc Alloy"
+      ],
+      "description": "易压铸、尺寸好、成本低的锌基合金，适合小壳体与装饰件。",
+      "density_min": 6.6,
+      "density_max": 6.7,
+      "tensile_strength_min": 220,
+      "tensile_strength_max": 280,
+      "elastic_modulus_min": 70.0,
+      "elastic_modulus_max": 80.0,
+      "elongation_min": 5,
+      "elongation_max": 15,
+      "notch_impact_min": 35,
+      "notch_impact_max": 80,
+      "hdt_min": -40,
+      "hdt_max": 100,
+      "service_temp_min": -40,
+      "service_temp_max": 100,
+      "service_temp_limit": 100,
+      "features": [
+        "易压铸",
+        "尺寸好",
+        "成本低",
+        "表面好"
+      ],
+      "cautions": [
+        {
+          "type": "耐温",
+          "content": "耐温低，长期 >100°C 蠕变"
+        },
+        {
+          "type": "老化",
+          "content": "长期易老化变脆"
+        }
+      ],
+      "applications": [
+        "卡扣",
+        "装饰件",
+        "小壳体",
+        "支架"
+      ],
+      "price_min": 18,
+      "price_max": 28,
+      "price_unit": "元/kg",
+      "price_note": "随锌价行情波动",
+      "molding_process": [
+        "压铸"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温低",
+        "蠕变",
+        "易老化"
+      ],
+      "source": "金属材料手册 第4版 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "TPE（热塑性弹性体）",
+      "short_name": "TPE",
+      "category_path": [
+        "弹性体",
+        "热塑性弹性体"
+      ],
+      "grade_type": "弹性体",
+      "aliases": [
+        "TPE",
+        "热塑性弹性体",
+        "TPV",
+        "Thermoplastic Elastomer"
+      ],
+      "description": "软触感、可回收的热塑性弹性体，用于密封与软触件。",
+      "density_min": 0.89,
+      "density_max": 1.1,
+      "tensile_strength_min": 5,
+      "tensile_strength_max": 25,
+      "elastic_modulus_min": 0.01,
+      "elastic_modulus_max": 0.5,
+      "elongation_min": 100,
+      "elongation_max": 600,
+      "notch_impact_min": 10,
+      "notch_impact_max": 40,
+      "hdt_min": -40,
+      "hdt_max": 100,
+      "service_temp_min": -40,
+      "service_temp_max": 100,
+      "service_temp_limit": 100,
+      "features": [
+        "软触感",
+        "回弹",
+        "可回收",
+        "易成型"
+      ],
+      "cautions": [
+        {
+          "type": "耐温",
+          "content": "耐温低"
+        },
+        {
+          "type": "蠕变",
+          "content": "长期受压易蠕变"
+        },
+        {
+          "type": "耐油",
+          "content": "部分牌号耐油差"
+        }
+      ],
+      "applications": [
+        "密封条",
+        "软触件",
+        "护套",
+        "脚垫"
+      ],
+      "price_min": 15,
+      "price_max": 30,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "耐温低",
+        "易蠕变",
+        "耐油差(部分)"
+      ],
+      "source": "橡胶与弹性体选型指南 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "TPU（热塑性聚氨酯）",
+      "short_name": "TPU",
+      "category_path": [
+        "弹性体",
+        "热塑性弹性体"
+      ],
+      "grade_type": "弹性体",
+      "aliases": [
+        "TPU",
+        "热塑性聚氨酯",
+        "Thermoplastic Polyurethane"
+      ],
+      "description": "耐磨、弹性好、可选透明的热塑性弹性体。",
+      "density_min": 1.1,
+      "density_max": 1.25,
+      "tensile_strength_min": 30,
+      "tensile_strength_max": 60,
+      "elastic_modulus_min": 0.02,
+      "elastic_modulus_max": 0.5,
+      "elongation_min": 300,
+      "elongation_max": 700,
+      "notch_impact_min": 20,
+      "notch_impact_max": 50,
+      "hdt_min": -40,
+      "hdt_max": 80,
+      "service_temp_min": -40,
+      "service_temp_max": 80,
+      "service_temp_limit": 80,
+      "features": [
+        "耐磨",
+        "弹性好",
+        "透明可选",
+        "耐油中"
+      ],
+      "cautions": [
+        {
+          "type": "水解",
+          "content": "易水解"
+        },
+        {
+          "type": "耐温",
+          "content": "耐温低"
+        }
+      ],
+      "applications": [
+        "护套",
+        "密封圈",
+        "脚垫",
+        "线缆包覆"
+      ],
+      "price_min": 20,
+      "price_max": 40,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "易水解",
+        "耐温低"
+      ],
+      "source": "橡胶与弹性体选型指南 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "SEBS（苯乙烯-乙烯-丁烯-苯乙烯）",
+      "short_name": "SEBS",
+      "category_path": [
+        "弹性体",
+        "热塑性弹性体"
+      ],
+      "grade_type": "弹性体",
+      "aliases": [
+        "SEBS",
+        "热塑性橡胶",
+        "苯乙烯嵌段共聚物",
+        "Styrene Ethylene Butylene Styrene"
+      ],
+      "description": "软质、耐候、无毒的热塑性弹性体基料。",
+      "density_min": 0.91,
+      "density_max": 1.0,
+      "tensile_strength_min": 10,
+      "tensile_strength_max": 30,
+      "elastic_modulus_min": 0.001,
+      "elastic_modulus_max": 0.1,
+      "elongation_min": 300,
+      "elongation_max": 800,
+      "notch_impact_min": 10,
+      "notch_impact_max": 40,
+      "hdt_min": -40,
+      "hdt_max": 90,
+      "service_temp_min": -40,
+      "service_temp_max": 90,
+      "service_temp_limit": 90,
+      "features": [
+        "软质",
+        "耐候",
+        "无毒",
+        "回弹"
+      ],
+      "cautions": [
+        {
+          "type": "强度",
+          "content": "机械强度低"
+        },
+        {
+          "type": "耐油",
+          "content": "耐油差"
+        }
+      ],
+      "applications": [
+        "软触件",
+        "密封",
+        "包覆",
+        "玩具件"
+      ],
+      "price_min": 18,
+      "price_max": 35,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "强度低",
+        "耐油差"
+      ],
+      "source": "橡胶与弹性体选型指南 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "硅橡胶VMQ（甲基乙烯基硅橡胶）",
+      "short_name": "VMQ",
+      "category_path": [
+        "弹性体",
+        "橡胶"
+      ],
+      "grade_type": "弹性体",
+      "aliases": [
+        "VMQ",
+        "硅橡胶",
+        "硅胶",
+        "Silicone Rubber"
+      ],
+      "description": "耐高低温、绝缘、生物相容的橡胶，用于密封与护套。",
+      "density_min": 1.1,
+      "density_max": 1.2,
+      "tensile_strength_min": 4,
+      "tensile_strength_max": 10,
+      "elastic_modulus_min": 0.001,
+      "elastic_modulus_max": 0.01,
+      "elongation_min": 100,
+      "elongation_max": 500,
+      "notch_impact_min": 5,
+      "notch_impact_max": 20,
+      "hdt_min": -60,
+      "hdt_max": 200,
+      "service_temp_min": -60,
+      "service_temp_max": 200,
+      "service_temp_limit": 200,
+      "features": [
+        "耐高低温",
+        "绝缘",
+        "生物相容",
+        "耐候"
+      ],
+      "cautions": [
+        {
+          "type": "强度",
+          "content": "机械强度低，易撕裂"
+        },
+        {
+          "type": "成本",
+          "content": "成本高于通用橡胶"
+        }
+      ],
+      "applications": [
+        "密封圈",
+        "线束护套",
+        "垫圈",
+        "绝缘件"
+      ],
+      "price_min": 40,
+      "price_max": 80,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "模压",
+        "挤出"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "强度低",
+        "易撕裂"
+      ],
+      "source": "橡胶与弹性体选型指南 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "EPDM（三元乙丙橡胶）",
+      "short_name": "EPDM",
+      "category_path": [
+        "弹性体",
+        "橡胶"
+      ],
+      "grade_type": "弹性体",
+      "aliases": [
+        "EPDM",
+        "三元乙丙橡胶",
+        "Ethylene Propylene Diene Monomer"
+      ],
+      "description": "耐候、耐臭氧、耐水的橡胶，汽车密封条主力。",
+      "density_min": 0.86,
+      "density_max": 0.9,
+      "tensile_strength_min": 5,
+      "tensile_strength_max": 20,
+      "elastic_modulus_min": 0.001,
+      "elastic_modulus_max": 0.02,
+      "elongation_min": 100,
+      "elongation_max": 400,
+      "notch_impact_min": 10,
+      "notch_impact_max": 40,
+      "hdt_min": -50,
+      "hdt_max": 130,
+      "service_temp_min": -50,
+      "service_temp_max": 130,
+      "service_temp_limit": 130,
+      "features": [
+        "耐候",
+        "耐臭氧",
+        "耐水",
+        "绝缘"
+      ],
+      "cautions": [
+        {
+          "type": "耐油",
+          "content": "不耐油"
+        },
+        {
+          "type": "强度",
+          "content": "机械强度一般"
+        }
+      ],
+      "applications": [
+        "密封条",
+        "水管",
+        "护套",
+        "减震件"
+      ],
+      "price_min": 15,
+      "price_max": 30,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "挤出",
+        "模压"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "不耐油",
+        "强度一般"
+      ],
+      "source": "橡胶与弹性体选型指南 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "NBR（丁腈橡胶）",
+      "short_name": "NBR",
+      "category_path": [
+        "弹性体",
+        "橡胶"
+      ],
+      "grade_type": "弹性体",
+      "aliases": [
+        "NBR",
+        "丁腈橡胶",
+        "Nitrile",
+        "Nitrile Butadiene Rubber"
+      ],
+      "description": "耐油、耐磨的橡胶，油封与 O 型圈常用。",
+      "density_min": 0.95,
+      "density_max": 1.0,
+      "tensile_strength_min": 5,
+      "tensile_strength_max": 25,
+      "elastic_modulus_min": 0.001,
+      "elastic_modulus_max": 0.05,
+      "elongation_min": 100,
+      "elongation_max": 500,
+      "notch_impact_min": 5,
+      "notch_impact_max": 30,
+      "hdt_min": -40,
+      "hdt_max": 100,
+      "service_temp_min": -40,
+      "service_temp_max": 100,
+      "service_temp_limit": 100,
+      "features": [
+        "耐油",
+        "耐磨",
+        "耐水",
+        "低成本"
+      ],
+      "cautions": [
+        {
+          "type": "耐候",
+          "content": "不耐候，臭氧老化"
+        },
+        {
+          "type": "耐温",
+          "content": "耐温低"
+        }
+      ],
+      "applications": [
+        "油封",
+        "密封圈",
+        "O型圈",
+        "垫片"
+      ],
+      "price_min": 18,
+      "price_max": 35,
+      "price_unit": "元/kg",
+      "price_note": "随行情波动",
+      "molding_process": [
+        "模压"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "不耐候",
+        "耐温低"
+      ],
+      "source": "橡胶与弹性体选型指南 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "氟橡胶FKM",
+      "short_name": "FKM",
+      "category_path": [
+        "弹性体",
+        "橡胶"
+      ],
+      "grade_type": "弹性体",
+      "aliases": [
+        "FKM",
+        "氟橡胶",
+        "Fluoroelastomer",
+        "Viton"
+      ],
+      "description": "耐油、耐高温、耐化学的顶级橡胶，用于极端密封。",
+      "density_min": 1.8,
+      "density_max": 1.95,
+      "tensile_strength_min": 10,
+      "tensile_strength_max": 20,
+      "elastic_modulus_min": 0.005,
+      "elastic_modulus_max": 0.02,
+      "elongation_min": 100,
+      "elongation_max": 300,
+      "notch_impact_min": 5,
+      "notch_impact_max": 25,
+      "hdt_min": -20,
+      "hdt_max": 200,
+      "service_temp_min": -20,
+      "service_temp_max": 200,
+      "service_temp_limit": 200,
+      "features": [
+        "耐油",
+        "耐高温",
+        "耐化学",
+        "耐候"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "极昂贵"
+        },
+        {
+          "type": "耐寒",
+          "content": "耐寒性差"
+        }
+      ],
+      "applications": [
+        "油封",
+        "高温密封",
+        "燃油件",
+        "垫片"
+      ],
+      "price_min": 150,
+      "price_max": 300,
+      "price_unit": "元/kg",
+      "price_note": "特种橡胶价格高且波动大",
+      "molding_process": [
+        "模压"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "极昂贵",
+        "耐寒差"
+      ],
+      "source": "橡胶与弹性体选型指南 2024",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PA66+GF50（50%玻纤增强尼龙66）",
+      "short_name": "PA66-GF50",
+      "category_path": [
+        "复合材料",
+        "增强复合材料"
+      ],
+      "grade_type": "复合材料",
+      "aliases": [
+        "PA66+GF50",
+        "PA66 GF50",
+        "50%玻纤增强尼龙66",
+        "50% Glass Filled Nylon 66"
+      ],
+      "description": "50% 玻纤增强尼龙66，超高刚性与尺寸稳定，结构支架优选。",
+      "density_min": 1.55,
+      "density_max": 1.6,
+      "tensile_strength_min": 220,
+      "tensile_strength_max": 260,
+      "elastic_modulus_min": 14.0,
+      "elastic_modulus_max": 18.0,
+      "elongation_min": 1,
+      "elongation_max": 3,
+      "notch_impact_min": 10,
+      "notch_impact_max": 16,
+      "hdt_min": 250,
+      "hdt_max": 270,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "超高刚性",
+        "尺寸稳定",
+        "高强度",
+        "耐热"
+      ],
+      "cautions": [
+        {
+          "type": "脆性",
+          "content": "质脆，冲击一般"
+        },
+        {
+          "type": "浮纤",
+          "content": "表面浮纤明显"
+        },
+        {
+          "type": "焊接",
+          "content": "难超声焊接"
+        }
+      ],
+      "applications": [
+        "结构支架",
+        "壳体",
+        "齿轮",
+        "支座"
+      ],
+      "price_min": 30,
+      "price_max": 45,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "脆",
+        "浮纤",
+        "难焊接"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "PBT+GB30（30%玻璃珠增强PBT）",
+      "short_name": "PBT-GB30",
+      "category_path": [
+        "复合材料",
+        "增强复合材料"
+      ],
+      "grade_type": "复合材料",
+      "aliases": [
+        "PBT+GB30",
+        "PBT GB30",
+        "玻璃珠增强PBT",
+        "30% Glass Bead Filled PBT"
+      ],
+      "description": "30% 玻璃珠增强 PBT，低翘曲、表面好、尺寸稳定的外观件优选。",
+      "density_min": 1.5,
+      "density_max": 1.55,
+      "tensile_strength_min": 95,
+      "tensile_strength_max": 120,
+      "elastic_modulus_min": 7.0,
+      "elastic_modulus_max": 9.0,
+      "elongation_min": 2,
+      "elongation_max": 4,
+      "notch_impact_min": 7,
+      "notch_impact_max": 11,
+      "hdt_min": 195,
+      "hdt_max": 210,
+      "service_temp_min": -40,
+      "service_temp_max": 140,
+      "service_temp_limit": 140,
+      "features": [
+        "低翘曲",
+        "尺寸稳定",
+        "表面好",
+        "电绝缘"
+      ],
+      "cautions": [
+        {
+          "type": "强度",
+          "content": "强度低于玻纤增强"
+        },
+        {
+          "type": "外观",
+          "content": "表面哑光，需处理"
+        }
+      ],
+      "applications": [
+        "外壳",
+        "支架",
+        "线圈骨架",
+        "装饰件"
+      ],
+      "price_min": 22,
+      "price_max": 32,
+      "price_unit": "元/kg",
+      "price_note": "随牌号与行情波动",
+      "molding_process": [
+        "注塑"
+      ],
+      "certifications": {
+        "ul94": "V-0",
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "强度低于GF",
+        "表面哑光"
+      ],
+      "source": "供应商工程塑料手册 A 2025 版",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    },
+    {
+      "name": "CFRP（碳纤维增强塑料）",
+      "short_name": "CFRP",
+      "category_path": [
+        "复合材料",
+        "增强复合材料"
+      ],
+      "grade_type": "复合材料",
+      "aliases": [
+        "CFRP",
+        "碳纤维增强塑料",
+        "碳纤维复合材料",
+        "Carbon Fiber Reinforced Polymer"
+      ],
+      "description": "超轻高强、刚度极高的碳纤维环氧复合材料，用于高端结构件。",
+      "density_min": 1.5,
+      "density_max": 1.6,
+      "tensile_strength_min": 600,
+      "tensile_strength_max": 1500,
+      "elastic_modulus_min": 50.0,
+      "elastic_modulus_max": 150.0,
+      "elongation_min": 1,
+      "elongation_max": 2,
+      "notch_impact_min": 5,
+      "notch_impact_max": 15,
+      "hdt_min": 180,
+      "hdt_max": 220,
+      "service_temp_min": -40,
+      "service_temp_max": 150,
+      "service_temp_limit": 150,
+      "features": [
+        "超轻高强",
+        "刚度高",
+        "疲劳好",
+        "耐腐蚀"
+      ],
+      "cautions": [
+        {
+          "type": "成本",
+          "content": "极昂贵"
+        },
+        {
+          "type": "各向异性",
+          "content": "强各向异性，设计需铺层"
+        },
+        {
+          "type": "冲击",
+          "content": "冲击敏感，损伤难检"
+        }
+      ],
+      "applications": [
+        "结构件",
+        "支架",
+        "外壳",
+        "传动件"
+      ],
+      "price_min": 300,
+      "price_max": 800,
+      "price_unit": "元/kg",
+      "price_note": "碳纤维价格波动大",
+      "molding_process": [
+        "模压",
+        "缠绕"
+      ],
+      "certifications": {
+        "ul94": null,
+        "ul_yellow_card": null,
+        "rohs": true,
+        "reach": true,
+        "iatf": null
+      },
+      "limitations": [
+        "极昂贵",
+        "各向异性",
+        "冲击敏感"
+      ],
+      "source": "复合材料应用手册 2023",
+      "source_date": "2026-09-01",
+      "value_type": "typical"
+    }
+  ]
+}

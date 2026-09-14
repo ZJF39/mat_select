@@ -1,0 +1,389 @@
+{
+  "aliases": [
+    {
+      "standard": "保险丝座",
+      "synonym": "熔断器底座",
+      "type": "零件类型"
+    },
+    {
+      "standard": "保险丝座",
+      "synonym": "保险丝盒",
+      "type": "零件类型"
+    },
+    {
+      "standard": "保险丝座",
+      "synonym": "fuse holder",
+      "type": "零件类型"
+    },
+    {
+      "standard": "连接器",
+      "synonym": "接插件",
+      "type": "零件类型"
+    },
+    {
+      "standard": "连接器",
+      "synonym": "connector",
+      "type": "零件类型"
+    },
+    {
+      "standard": "连接器",
+      "synonym": "端子台",
+      "type": "零件类型"
+    },
+    {
+      "standard": "ECU壳体",
+      "synonym": "电控单元壳体",
+      "type": "零件类型"
+    },
+    {
+      "standard": "ECU壳体",
+      "synonym": "控制器外壳",
+      "type": "零件类型"
+    },
+    {
+      "standard": "ECU壳体",
+      "synonym": "ECU housing",
+      "type": "零件类型"
+    },
+    {
+      "standard": "传感器支架",
+      "synonym": "传感器固定座",
+      "type": "零件类型"
+    },
+    {
+      "standard": "传感器支架",
+      "synonym": "sensor bracket",
+      "type": "零件类型"
+    },
+    {
+      "standard": "继电器底座",
+      "synonym": "继电器骨架",
+      "type": "零件类型"
+    },
+    {
+      "standard": "继电器底座",
+      "synonym": "relay base",
+      "type": "零件类型"
+    },
+    {
+      "standard": "卡扣",
+      "synonym": "clip",
+      "type": "零件类型"
+    },
+    {
+      "standard": "卡扣",
+      "synonym": "卡子",
+      "type": "零件类型"
+    },
+    {
+      "standard": "卡扣",
+      "synonym": "紧固扣",
+      "type": "零件类型"
+    },
+    {
+      "standard": "线圈骨架",
+      "synonym": "bobbin",
+      "type": "零件类型"
+    },
+    {
+      "standard": "线圈骨架",
+      "synonym": "绕线架",
+      "type": "零件类型"
+    },
+    {
+      "standard": "扎带",
+      "synonym": "束线带",
+      "type": "零件类型"
+    },
+    {
+      "standard": "扎带",
+      "synonym": "cable tie",
+      "type": "零件类型"
+    },
+    {
+      "standard": "出风口",
+      "synonym": "暖风出风口",
+      "type": "零件类型"
+    },
+    {
+      "standard": "出风口",
+      "synonym": "空调格栅",
+      "type": "零件类型"
+    },
+    {
+      "standard": "密封条",
+      "synonym": "密封件",
+      "type": "零件类型"
+    },
+    {
+      "standard": "密封条",
+      "synonym": "weatherstrip",
+      "type": "零件类型"
+    },
+    {
+      "standard": "油封",
+      "synonym": "旋转轴密封",
+      "type": "零件类型"
+    },
+    {
+      "standard": "O型圈",
+      "synonym": "O形圈",
+      "type": "零件类型"
+    },
+    {
+      "standard": "O型圈",
+      "synonym": "O-ring",
+      "type": "零件类型"
+    },
+    {
+      "standard": "齿轮",
+      "synonym": "传动齿",
+      "type": "零件类型"
+    },
+    {
+      "standard": "支架",
+      "synonym": "bracket",
+      "type": "零件类型"
+    },
+    {
+      "standard": "支架",
+      "synonym": "固定架",
+      "type": "零件类型"
+    },
+    {
+      "standard": "外壳",
+      "synonym": "壳体",
+      "type": "零件类型"
+    },
+    {
+      "standard": "外壳",
+      "synonym": "housing",
+      "type": "零件类型"
+    },
+    {
+      "standard": "端子",
+      "synonym": "接线端子",
+      "type": "零件类型"
+    },
+    {
+      "standard": "弹片",
+      "synonym": "弹性片",
+      "type": "零件类型"
+    },
+    {
+      "standard": "轴承",
+      "synonym": "轴套",
+      "type": "零件类型"
+    },
+    {
+      "standard": "按钮",
+      "synonym": "按键",
+      "type": "零件类型"
+    },
+    {
+      "standard": "注塑",
+      "synonym": "注射成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "注塑",
+      "synonym": "射出成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "注塑",
+      "synonym": "injection molding",
+      "type": "工艺"
+    },
+    {
+      "standard": "挤出",
+      "synonym": "挤压成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "挤出",
+      "synonym": "extrusion",
+      "type": "工艺"
+    },
+    {
+      "standard": "吹塑",
+      "synonym": "中空成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "压铸",
+      "synonym": "die casting",
+      "type": "工艺"
+    },
+    {
+      "standard": "压铸",
+      "synonym": "压铸成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "冲压",
+      "synonym": "钣金冲压",
+      "type": "工艺"
+    },
+    {
+      "standard": "冲压",
+      "synonym": "stamping",
+      "type": "工艺"
+    },
+    {
+      "standard": "机加工",
+      "synonym": "CNC加工",
+      "type": "工艺"
+    },
+    {
+      "standard": "机加工",
+      "synonym": "切削加工",
+      "type": "工艺"
+    },
+    {
+      "standard": "模压",
+      "synonym": "压缩成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "模压",
+      "synonym": "compression molding",
+      "type": "工艺"
+    },
+    {
+      "standard": "浇注",
+      "synonym": "灌封",
+      "type": "工艺"
+    },
+    {
+      "standard": "浇注",
+      "synonym": "casting",
+      "type": "工艺"
+    },
+    {
+      "standard": "缠绕",
+      "synonym": "filament winding",
+      "type": "工艺"
+    },
+    {
+      "standard": "烧结",
+      "synonym": "sintering",
+      "type": "工艺"
+    },
+    {
+      "standard": "焊接",
+      "synonym": "超声焊接",
+      "type": "工艺"
+    },
+    {
+      "standard": "焊接",
+      "synonym": "ultrasonic welding",
+      "type": "工艺"
+    },
+    {
+      "standard": "长期使用温度上限",
+      "synonym": "连续使用温度",
+      "type": "参数"
+    },
+    {
+      "standard": "长期使用温度上限",
+      "synonym": "耐温",
+      "type": "参数"
+    },
+    {
+      "standard": "长期使用温度上限",
+      "synonym": "continuous use temperature",
+      "type": "参数"
+    },
+    {
+      "standard": "长期使用温度上限",
+      "synonym": "最高使用温度",
+      "type": "参数"
+    },
+    {
+      "standard": "拉伸强度",
+      "synonym": "抗拉强度",
+      "type": "参数"
+    },
+    {
+      "standard": "拉伸强度",
+      "synonym": "tensile strength",
+      "type": "参数"
+    },
+    {
+      "standard": "弹性模量",
+      "synonym": "杨氏模量",
+      "type": "参数"
+    },
+    {
+      "standard": "弹性模量",
+      "synonym": "elastic modulus",
+      "type": "参数"
+    },
+    {
+      "standard": "断裂伸长率",
+      "synonym": "延伸率",
+      "type": "参数"
+    },
+    {
+      "standard": "断裂伸长率",
+      "synonym": "elongation",
+      "type": "参数"
+    },
+    {
+      "standard": "缺口冲击强度",
+      "synonym": "缺口冲击",
+      "type": "参数"
+    },
+    {
+      "standard": "缺口冲击强度",
+      "synonym": "notched impact",
+      "type": "参数"
+    },
+    {
+      "standard": "热变形温度",
+      "synonym": "HDT",
+      "type": "参数"
+    },
+    {
+      "standard": "热变形温度",
+      "synonym": "heat deflection temperature",
+      "type": "参数"
+    },
+    {
+      "standard": "密度",
+      "synonym": "比重",
+      "type": "参数"
+    },
+    {
+      "standard": "密度",
+      "synonym": "density",
+      "type": "参数"
+    },
+    {
+      "standard": "阻燃等级",
+      "synonym": "UL94",
+      "type": "参数"
+    },
+    {
+      "standard": "阻燃等级",
+      "synonym": "阻燃",
+      "type": "参数"
+    },
+    {
+      "standard": "参考价",
+      "synonym": "市场价",
+      "type": "参数"
+    },
+    {
+      "standard": "参考价",
+      "synonym": "价格",
+      "type": "参数"
+    },
+    {
+      "standard": "吸水率",
+      "synonym": "吸湿率",
+      "type": "参数"
+    }
+  ]
+}
