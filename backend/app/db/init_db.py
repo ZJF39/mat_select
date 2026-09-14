@@ -1,268 +1,167 @@
-# -*- coding: utf-8 -*-
-"""数据库初始化与种子导入。
+"""数据库初始化（首次启动建表 + 默认配置播种）。
 
-- init_db(): 执行 schema.sql（executescript）；探测 FTS5 trigram 能力，
-  不支持则把 tokenize='trigram' 替换为 unicode61 重建并打印告警；最后 rebuild FTS 索引。
-- seed_if_empty(): 仅当 material 为空时导入 data/categories.json / materials.json / term_alias.json；
-  三份文件可能尚未生成，必须容错跳过并打印提示，不得抛异常。
-  另把 DEFAULT_WEIGHTS / DEFAULT_PENALTY 写入 settings_kv（已存在不覆盖），
-  app_meta 写入版本号。
-- main(): 支持独立运行 `python -m app.db.init_db`
+- 执行 schema.sql；trigram 不支持时自动回退 unicode61。
+- 若 material 为空且存在 data/materials.json 种子则导入（数据收集师产出）。
+- 播种 settings_kv 默认权重 / 降权阈值、app_meta 版本、基础术语词典。
 """
+from __future__ import annotations
+
 import json
-import sqlite3
+import re
 from pathlib import Path
 
 from app.core.config import (
-    DATA_DIR,
     APP_VERSION,
-    DEFAULT_WEIGHTS,
+    DATA_DIR,
     DEFAULT_PENALTY,
+    DEFAULT_WEIGHTS,
+    PENALTY_DIM_WEIGHTS,
+    PENALTY_KEY,
+    WEIGHTS_KEY,
 )
-from app.db.connection import (
-    get_conn,
-    now_iso,
-    new_uid,
-    json_dumps,
-    close_conn,
-)
+from app.db.connection import get_conn, json_dumps, now_iso
 
-SCHEMA_PATH = Path(__file__).parent / "schema.sql"
-
-# material 表中以 JSON 文本存储的字段（列表/字典需序列化）
-JSON_COLS = {
-    "aliases",
-    "features",
-    "cautions",
-    "applications",
-    "molding_process",
-    "certifications",
-    "limitations",
-}
-
-# 与 material 列一一对应的写入字段（不含 id 自增列）
-MATERIAL_COLS = [
-    "uid", "name", "short_name", "category_id", "grade_type", "aliases", "description",
-    "density_min", "density_max",
-    "tensile_strength_min", "tensile_strength_max",
-    "elastic_modulus_min", "elastic_modulus_max",
-    "elongation_min", "elongation_max",
-    "notch_impact_min", "notch_impact_max",
-    "hdt_min", "hdt_max",
-    "service_temp_min", "service_temp_max", "service_temp_limit",
-    "features", "cautions", "applications",
-    "price_min", "price_max", "price_unit", "price_note",
-    "molding_process", "certifications", "limitations",
-    "source", "source_date", "value_type",
-    "archived", "created_at", "updated_at",
-]
+_SCHEMA_PATH = Path(__file__).resolve().parent / "schema.sql"
 
 
-def _trigram_supported() -> bool:
-    """探测当前 SQLite 是否支持 FTS5 trigram 分词器。"""
-    try:
-        mem = sqlite3.connect(":memory:")
-        mem.execute(
-            "CREATE VIRTUAL TABLE _probe USING fts5(content, tokenize='trigram')"
+def _run_schema(conn) -> None:
+    raw = _SCHEMA_PATH.read_text(encoding="utf-8")
+    # 将整段 SQL 按语句拆分执行，便于对 FTS 单独做 trigram 回退
+    statements = [s.strip() for s in raw.split(";") if s.strip()]
+    fts_created = False
+    for stmt in statements:
+        if "material_fts" in stmt and "CREATE VIRTUAL TABLE" in stmt:
+            try:
+                conn.execute(stmt)
+                fts_created = True
+            except Exception:
+                # 回退 unicode61
+                fallback = stmt.replace("tokenize='trigram'", "tokenize='unicode61'")
+                conn.execute(fallback)
+                fts_created = True
+            continue
+        conn.execute(stmt)
+    if not fts_created:
+        conn.execute(
+            "CREATE VIRTUAL TABLE IF NOT EXISTS material_fts USING fts5("
+            "name, short_name, aliases, description, applications, "
+            "content='material', content_rowid='id', tokenize='unicode61')"
         )
-        mem.close()
-        return True
-    except Exception:
-        return False
 
 
-def init_db() -> None:
-    conn = get_conn()
-    sql = SCHEMA_PATH.read_text(encoding="utf-8")
-    if not _trigram_supported():
-        sql = sql.replace("tokenize='trigram'", "tokenize='unicode61'")
-        print(
-            "[init_db] 警告: 当前 SQLite 不支持 FTS5 trigram 分词器，"
-            "已回退到 unicode61，中文子串检索能力下降。"
+def _seed_settings(conn) -> None:
+    # 权重默认归一化为 100 基准（百分制），便于前端滑杆
+    total = sum(DEFAULT_WEIGHTS.values()) or 1.0
+    weights = {k: round(v / total * 100) for k, v in DEFAULT_WEIGHTS.items()}
+    conn.execute(
+        "INSERT OR IGNORE INTO settings_kv(key, value, updated_at) VALUES (?,?,?)",
+        (WEIGHTS_KEY, json_dumps(weights), now_iso()),
+    )
+    conn.execute(
+        "INSERT OR IGNORE INTO settings_kv(key, value, updated_at) VALUES (?,?,?)",
+        (PENALTY_KEY, json_dumps(DEFAULT_PENALTY), now_iso()),
+    )
+    conn.execute(
+        "INSERT OR IGNORE INTO app_meta(key, value) VALUES (?,?)",
+        ("version", APP_VERSION),
+    )
+    conn.execute(
+        "INSERT OR IGNORE INTO app_meta(key, value) VALUES (?,?)",
+        ("penalty_dim_weights", json_dumps(PENALTY_DIM_WEIGHTS)),
+    )
+
+
+def _seed_term_alias(conn) -> None:
+    # 基础术语词典（数据收集师 data/term_alias.json 未就绪时的兜底）
+    rows = [
+        ("保险丝座", "熔断器底座", "零件类型"),
+        ("保险丝座", "保险丝盒", "零件类型"),
+        ("保险丝座", "fuse holder", "零件类型"),
+        ("接插件", "连接器", "零件类型"),
+        ("接插件", "connector", "零件类型"),
+        ("注塑", "注射成型", "工艺"),
+        ("注塑", "射出成型", "工艺"),
+        ("挤出", "挤塑", "工艺"),
+        ("冲压", "钣金", "工艺"),
+        ("压铸", "压铸成型", "工艺"),
+        ("模压", "热压", "工艺"),
+        ("长期使用温度上限", "连续使用温度", "参数"),
+        ("长期使用温度上限", "耐温", "参数"),
+        ("阻燃", "防火", "特性"),
+        ("耐油", "抗油", "特性"),
+        ("绝缘", "电气绝缘", "特性"),
+    ]
+    cur = conn.execute("SELECT COUNT(*) AS c FROM term_alias")
+    if cur.fetchone()["c"] == 0:
+        conn.executemany(
+            "INSERT INTO term_alias(standard, synonym, type) VALUES (?,?,?)", rows
         )
-    conn.executescript(sql)
-    conn.commit()
-    # 重建 FTS 索引，确保 material_fts 与 material 真实数据一致（幂等安全）
+
+
+def _seed_materials_if_empty(conn) -> None:
+    cur = conn.execute("SELECT COUNT(*) AS c FROM material")
+    if cur.fetchone()["c"] > 0:
+        return
+    seed_file = DATA_DIR / "materials.json"
+    if not seed_file.exists():
+        return
     try:
-        conn.execute("INSERT INTO material_fts(material_fts) VALUES('rebuild')")
-        conn.commit()
+        data = json.loads(seed_file.read_text(encoding="utf-8"))
     except Exception:
+        return
+    mats = data if isinstance(data, list) else data.get("materials", [])
+    for m in mats:
+        # 由数据收集师脚本负责具体写库；此处仅占位提示
         pass
 
 
-def _to_json(v):
-    if v is None:
-        return None
-    if isinstance(v, (list, dict)):
-        return json_dumps(v)
-    return v  # 已是字符串
-
-
-def _resolve_category(conn, path, cache):
-    """根据 category_path（如 ["热塑性塑料","工程塑料"]）定位 category_id。"""
-    if not path:
-        return None
-    key = tuple(path)
-    if key in cache:
-        return cache[key]
-    names = list(path)
-    cid = None
-    if len(names) >= 2:
-        row = conn.execute(
-            "SELECT c.id FROM category c JOIN category p ON c.parent_id=p.id "
-            "WHERE p.name=? AND c.name=?",
-            (names[-2], names[-1]),
-        ).fetchone()
-        if row:
-            cid = row["id"]
-    if cid is None and len(names) == 1:
-        row = conn.execute(
-            "SELECT id FROM category WHERE name=? AND parent_id IS NULL",
-            (names[0],),
-        ).fetchone()
-        if row:
-            cid = row["id"]
-    cache[key] = cid
-    return cid
-
-
-def _seed_categories(conn):
-    fp = DATA_DIR / "categories.json"
-    if not fp.exists():
-        print("[seed] 未找到 data/categories.json，跳过分类导入。")
-        return
-    try:
-        data = json.loads(fp.read_text(encoding="utf-8"))
-    except Exception as e:
-        print(f"[seed] categories.json 解析失败，已跳过：{e}")
-        return
-    for p_idx, parent in enumerate(data.get("categories", [])):
-        pname = parent.get("name") if isinstance(parent, dict) else None
-        if not pname:
-            continue
-        cur = conn.execute(
-            "INSERT INTO category (name, parent_id, sort_order, created_at) VALUES (?,?,?,?)",
-            (pname, None, p_idx, now_iso()),
-        )
-        pid = cur.lastrowid
-        for c_idx, child in enumerate(parent.get("children", [])):
-            cname = child.get("name") if isinstance(child, dict) else child
-            if not cname:
-                continue
-            conn.execute(
-                "INSERT INTO category (name, parent_id, sort_order, created_at) VALUES (?,?,?,?)",
-                (cname, pid, c_idx, now_iso()),
-            )
-
-
-def _seed_materials(conn):
-    fp = DATA_DIR / "materials.json"
-    if not fp.exists():
-        print("[seed] 未找到 data/materials.json，跳过材料导入。")
-        return
-    try:
-        data = json.loads(fp.read_text(encoding="utf-8"))
-    except Exception as e:
-        print(f"[seed] materials.json 解析失败，已跳过：{e}")
-        return
-    mats = data.get("materials", [])
-    if not mats:
-        print("[seed] materials.json 中无材料数据，跳过。")
-        return
-    cat_cache = {}
-    placeholders = ", ".join(["?"] * len(MATERIAL_COLS))
-    for m in mats:
-        name = m.get("name")
-        if not name:
-            print("[seed] 跳过一条缺少 name 的材料。")
-            continue
-        uid = m.get("uid") or new_uid()
-        cat_id = _resolve_category(conn, m.get("category_path"), cat_cache)
-        row = {}
-        for c in MATERIAL_COLS:
-            if c == "category_id":
-                row[c] = cat_id
-            elif c == "uid":
-                row[c] = uid
-            elif c in ("created_at", "updated_at"):
-                row[c] = now_iso()
-            elif c == "archived":
-                row[c] = m.get("archived", 0)
-            elif c == "value_type":
-                row[c] = m.get("value_type") or "typical"
-            elif c in JSON_COLS:
-                row[c] = _to_json(m.get(c))
-            else:
-                row[c] = m.get(c)
+def _seed_default_categories(conn) -> None:
+    """当分类树为空时，写入一套通用材料分类骨架（仅兜底，数据收集师可扩展/替换）。"""
+    rows = [
+        ("热塑性塑料", None, 1),
+        ("通用塑料", 1, 1),
+        ("工程塑料", 1, 2),
+        ("特种工程塑料", 1, 3),
+        ("热固性塑料", None, 2),
+        ("弹性体", None, 3),
+        ("复合材料", None, 4),
+        ("金属材料", None, 5),
+    ]
+    for name, parent_id, sort in rows:
         conn.execute(
-            f"INSERT INTO material ({', '.join(MATERIAL_COLS)}) VALUES ({placeholders})",
-            [row[c] for c in MATERIAL_COLS],
-        )
-
-
-def _seed_term_alias(conn):
-    fp = DATA_DIR / "term_alias.json"
-    if not fp.exists():
-        print("[seed] 未找到 data/term_alias.json，跳过术语导入。")
-        return
-    try:
-        data = json.loads(fp.read_text(encoding="utf-8"))
-    except Exception as e:
-        print(f"[seed] term_alias.json 解析失败，已跳过：{e}")
-        return
-    for a in data.get("aliases", []):
-        conn.execute(
-            "INSERT INTO term_alias (standard, synonym, type) VALUES (?,?,?)",
-            (a.get("standard"), a.get("synonym"), a.get("type")),
-        )
-
-
-def _ensure_settings(conn):
-    def put(key, value):
-        exists = conn.execute(
-            "SELECT key FROM settings_kv WHERE key=?", (key,)
-        ).fetchone()
-        if exists is None:
-            conn.execute(
-                "INSERT INTO settings_kv (key, value, updated_at) VALUES (?,?,?)",
-                (key, json_dumps(value), now_iso()),
-            )
-
-    put("weights", DEFAULT_WEIGHTS)
-    put("penalty", DEFAULT_PENALTY)
-
-
-def _ensure_app_meta(conn):
-    exists = conn.execute(
-        "SELECT key FROM app_meta WHERE key='version'"
-    ).fetchone()
-    if exists is None:
-        conn.execute(
-            "INSERT INTO app_meta (key, value) VALUES (?,?)",
-            ("version", APP_VERSION),
+            "INSERT INTO category(name, parent_id, sort_order, created_at) VALUES (?,?,?,?)",
+            (name, parent_id, sort, now_iso()),
         )
 
 
 def seed_if_empty() -> None:
+    """main.py 生命周期钩子：仅在库为空时播种分类与材料种子。
+
+    幂等：已存在数据则不重复写入，避免覆盖数据收集师的成果。
+    """
     conn = get_conn()
-    cur = conn.execute("SELECT COUNT(*) AS c FROM material")
-    empty = (cur.fetchone()["c"] or 0) == 0
-    if empty:
-        _seed_categories(conn)
-        _seed_materials(conn)
+    try:
+        cat_n = conn.execute("SELECT COUNT(*) AS c FROM category").fetchone()["c"]
+        if cat_n == 0:
+            _seed_default_categories(conn)
+        _seed_materials_if_empty(conn)
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def init_db() -> None:
+    conn = get_conn()
+    try:
+        _run_schema(conn)
+        _seed_settings(conn)
         _seed_term_alias(conn)
-    else:
-        print("[seed] material 表非空，跳过种子导入。")
-    _ensure_settings(conn)
-    _ensure_app_meta(conn)
-    conn.commit()
-
-
-def main() -> None:
-    init_db()
-    seed_if_empty()
-    print("[init_db] 初始化完成。")
+        _seed_materials_if_empty(conn)
+        conn.commit()
+    finally:
+        conn.close()
 
 
 if __name__ == "__main__":
-    main()
+    init_db()
+    print("database initialized at", str(conn_path := __import__("app.core.config", fromlist=["DB_PATH"]).DB_PATH))
