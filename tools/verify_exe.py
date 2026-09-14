@@ -55,6 +55,23 @@ def free_port(start: int = 8300) -> int:
     raise SystemExit("no free port")
 
 
+def _kill_tree(pid: int) -> None:
+    """按进程树强制结束（Windows）。
+
+    必要性：PyInstaller `--onefile` 的 exe 是「引导进程 + 子进程」结构，
+    只 terminate 引导进程会留下子进程继续持有 SQLite 连接，
+    导致 data\\matselect.db(+wal/shm) 被锁、用户压缩/移动目录时报「文件正被使用」。
+    """
+    if os.name == "nt":
+        subprocess.run(["taskkill", "/PID", str(pid), "/T", "/F"],
+                       capture_output=True, check=False)
+    else:
+        try:
+            os.killpg(os.getpgid(pid), 15)
+        except Exception:  # noqa: BLE001
+            pass
+
+
 if not EXE.exists():
     print(f"exe 不存在：{EXE}（请先执行 PyInstaller 打包）")
     raise SystemExit(2)
@@ -176,7 +193,8 @@ try:
               f"新建 uid={'有' if new_uid else '无'} 日志动作={actions[:5]}")
 finally:
     if proc is not None and proc.poll() is None:
-        proc.terminate()
+        # 必须整树结束：onefile exe 的子进程才是真正持有数据库连接的那个
+        _kill_tree(proc.pid)
         try:
             proc.wait(timeout=15)
         except Exception:  # noqa: BLE001
@@ -185,8 +203,17 @@ finally:
         log_fh.close()
     except Exception:  # noqa: BLE001
         pass
-    if proc is not None and proc.poll() is None:
-        pass  # 已在上方处理
+    # 清理前先确认数据库已释放（若仍被占用，rmtree 可能失败并留下锁）
+    db_file = run_dir / "data" / "matselect.db"
+    for _ in range(10):
+        if not db_file.exists():
+            break
+        try:
+            fh = open(db_file, "rb")
+            fh.close()
+            break
+        except OSError:
+            time.sleep(0.5)
     shutil.rmtree(sandbox, ignore_errors=True)
 
 lines += ["", f"总计: 通过 {passed} / 失败 {failed}", "RESULT: " + ("PASS" if failed == 0 else "FAIL")]
