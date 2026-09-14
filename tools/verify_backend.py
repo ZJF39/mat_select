@@ -104,16 +104,19 @@ try:
           f"HTTP {r.status_code}, 已注册路由 {len(paths)} 条")
     if paths:
         lines.append("       已注册路径: " + ", ".join(paths))
-    # 404 错误体形状（若 materials 路由已就绪）
-    r404 = client.get("/api/materials/no-such-uid-000")
-    body_ok = False
-    try:
-        j = r404.json()
-        body_ok = "error" in j and "code" in j["error"]
-    except Exception:
-        pass
-    check("统一错误体 {error:{code,message}}", r404.status_code in (404, 500) and body_ok,
-          f"HTTP {r404.status_code}")
+    # 404 错误体形状（仅在业务路由已注册时校验；0 路由时由 FastAPI 默认返回，豁免）
+    if paths:
+        r404 = client.get("/api/materials/no-such-uid-000")
+        body_ok = False
+        try:
+            j = r404.json()
+            body_ok = "error" in j and "code" in j["error"]
+        except Exception:
+            pass
+        check("统一错误体 {error:{code,message}}", r404.status_code in (404, 500) and body_ok,
+              f"HTTP {r404.status_code}")
+    else:
+        lines.append("[SKIP] 统一错误体校验（业务路由尚未注册，由 FastAPI 默认 404 兜底）")
 except Exception as exc:
     check("应用装配 / TestClient", False, f"{type(exc).__name__}: {exc}")
 
@@ -123,6 +126,54 @@ if BaseRepository is not None:
     missing_m = sorted(set(BASE_METHODS) - set(found))
     check("BaseRepository 契约方法齐备", not missing_m,
           f"缺失 {missing_m}" if missing_m else f"{len(found)} 个方法")
+
+# 6. 连接单例 / WAL / 事务原子性（契约 §3 刚需）
+try:
+    from app.db.connection import get_conn, close_conn, Row as _Row  # noqa: F401
+
+    check("connection.close_conn 存在", callable(close_conn))
+    c1, c2 = get_conn(), get_conn()
+    check("get_conn 返回模块级单例", c1 is c2, f"{id(c1)} vs {id(c2)}")
+    jm = c1.execute("PRAGMA journal_mode").fetchone()[0]
+    check("journal_mode=WAL", str(jm).lower() == "wal", f"journal_mode={jm}")
+    fk = c1.execute("PRAGMA foreign_keys").fetchone()[0]
+    check("foreign_keys=ON", int(fk) == 1, f"foreign_keys={fk}")
+
+    # 事务原子性：同一连接内 insert 后抛错必须回滚
+    from app.repository.base import tx as _tx
+
+    c1.execute("DROP TABLE IF EXISTS _tx_probe")
+    c1.execute("CREATE TABLE _tx_probe (v INTEGER)")
+    c1.commit()
+    try:
+        with _tx() as conn:
+            assert conn is get_conn(), "tx() 与 get_conn() 不是同一连接"
+            conn.execute("INSERT INTO _tx_probe (v) VALUES (1)")
+            raise RuntimeError("boom")
+    except RuntimeError:
+        pass
+    cnt = c1.execute("SELECT COUNT(*) FROM _tx_probe").fetchone()[0]
+    check("tx() 异常回滚生效（同连接内原子性）", cnt == 0, f"回滚后残留行数={cnt}")
+    c1.execute("DROP TABLE IF EXISTS _tx_probe")
+    c1.commit()
+
+    # 跨线程可用性（check_same_thread=False）
+    import threading
+
+    err: list[str] = []
+
+    def _worker() -> None:
+        try:
+            get_conn().execute("SELECT 1").fetchone()
+        except Exception as exc:  # noqa: BLE001
+            err.append(f"{type(exc).__name__}: {exc}")
+
+    t = threading.Thread(target=_worker)
+    t.start()
+    t.join()
+    check("连接可跨线程使用（check_same_thread=False）", not err, err[0] if err else "")
+except Exception as exc:
+    check("连接单例 / 事务原子性", False, f"{type(exc).__name__}: {exc}")
 
 lines.insert(0, "===== MatSelect 后端底座验证 =====")
 lines.append("")

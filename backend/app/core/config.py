@@ -9,7 +9,8 @@ import os
 from pathlib import Path
 
 # 应用版本（同时写入 app_meta，供 /api/health 读取）
-APP_VERSION = "0.4.0"
+# 契约 §3 冻结为 1.0.0（与前端 NavRail 版本号、里程碑 tag v1.0.0 一致）
+APP_VERSION = "1.0.0"
 
 # 项目根目录：backend/ 的上一级（MatSelect/）
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -24,6 +25,19 @@ DB_PATH = Path(os.environ.get("MATSELECT_DB", str(DATA_DIR / "matselect.db")))
 # 服务监听
 API_HOST = os.environ.get("API_HOST", "127.0.0.1")
 API_PORT = int(os.environ.get("API_PORT", "8100"))
+
+# CORS 允许来源：本地前端 dev server（vite 固定 127.0.0.1:5173）
+# 注意：app/main.py:20 依赖本常量，缺失会导致应用导入失败。
+_cors_env = os.environ.get("MATSELECT_CORS_ORIGINS", "")
+CORS_ORIGINS = (
+    [o.strip() for o in _cors_env.split(",") if o.strip()]
+    if _cors_env
+    else [
+        f"http://{API_HOST}:5173",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+)
 
 # 推荐五维默认权重（契约 §5.3）；自动归一化后使用
 DEFAULT_WEIGHTS = {
