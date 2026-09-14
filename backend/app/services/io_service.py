@@ -299,7 +299,14 @@ def import_parse(raw: bytes) -> dict:
 
     expected = pack.get("checksum")
     actual = pack_checksum(materials)
-    checksum_ok = bool(expected) and expected == actual
+    if not expected:
+        raise import_rejected("材料包缺少校验和字段，无法验证完整性")
+    if expected != actual:
+        # PRD E2「失败处理」：校验和不符 → 明确报错并拒绝写入，不产生半截数据。
+        # 这里必须在 parse 阶段就拒绝，否则用户可以越过校验直接 commit。
+        raise import_rejected(
+            "材料包校验和不符（文件可能已损坏或被修改），已拒绝导入且未写入任何数据"
+        )
 
     counters, details = _classify(materials)
 
@@ -314,7 +321,7 @@ def import_parse(raw: bytes) -> dict:
         "pack_version": int(version),
         "exported_by": pack.get("exported_by") or "",
         "exported_at": pack.get("exported_at") or "",
-        "checksum_ok": checksum_ok,
+        "checksum_ok": True,
         "added": counters["add"],
         "updated": counters["update"],
         "conflicted": counters["conflict"],
@@ -350,6 +357,12 @@ def import_commit(token: str, conflict_policy: str) -> dict:
 
     pack = json_loads(row["payload"])
     materials = pack.get("materials") or []
+
+    # 纵深防御：commit 时再校验一次暂存载荷的完整性，
+    # 防止暂存被篡改或 parse 阶段的历史数据绕过校验。
+    if pack.get("checksum") != pack_checksum(materials):
+        raise import_rejected("暂存材料包校验和不符，已拒绝写入")
+
     counters, _ = _classify(materials)
 
     added = updated = skipped = conflicted = 0

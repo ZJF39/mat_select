@@ -31,7 +31,7 @@ def list_tasks(status: Optional[str] = None, q: Optional[str] = None):
     return {"items": workbench_service.list_tasks(status=status, q=q)}
 
 
-@router.post("", status_code=201)
+@router.post("")
 def create_task(body: TaskCreateBody = None):
     return workbench_service.create_task((body.title if body else None))
 
@@ -48,7 +48,7 @@ def list_messages(task_id: int):
     return {"items": workbench_service.list_messages(task_id)}
 
 
-@router.post("/{task_id}/messages", status_code=201)
+@router.post("/{task_id}/messages")
 def send_message(task_id: int, body: MessageCreateBody):
     """追问 / 首次输入：写入用户消息 + assistant 消息（含约束回显与推荐结果）。"""
     return workbench_service.send_message(task_id, body.text)

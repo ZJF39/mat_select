@@ -26,7 +26,7 @@ def list_categories():
     return {"items": material_service.category_tree()}
 
 
-@router.post("", status_code=201)
+@router.post("")
 def create_category(body: CategoryCreateBody):
     return material_service.create_category(body.name, body.parent_id)
 

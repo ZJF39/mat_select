@@ -23,7 +23,7 @@ class FeedbackBody(BaseModel):
     material_uids: List[str] = Field(default_factory=list)
 
 
-@router.post("/tasks/{task_id}/feedback", status_code=201)
+@router.post("/tasks/{task_id}/feedback")
 def submit_feedback(task_id: int, body: FeedbackBody):
     return workbench_service.submit_feedback(task_id, body.model_dump())
 

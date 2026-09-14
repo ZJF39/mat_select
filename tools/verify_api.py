@@ -100,22 +100,22 @@ with TestClient(app) as client:
 
     # 7 任务 + 会话
     r = client.post("/api/tasks", json={"title": "保险丝座选材"})
-    task = r.json() if r.status_code == 201 else {}
+    task = r.json() if r.status_code == 200 else {}
     tid = task.get("id")
-    check("07a", "POST /api/tasks", r.status_code == 201 and tid, f"HTTP {r.status_code} id={tid}")
+    check("07a", "POST /api/tasks", r.status_code == 200 and tid, f"HTTP {r.status_code} id={tid}")
     r = client.post(f"/api/tasks/{tid}/messages", json={"text": TEST_TEXT})
-    msg = r.json() if r.status_code == 201 else {}
+    msg = r.json() if r.status_code == 200 else {}
     r2 = client.get(f"/api/tasks/{tid}/messages")
     msgs = r2.json().get("items", []) if r2.status_code == 200 else []
     roles = [m.get("role") for m in msgs]
     check("07b", "POST/GET /api/tasks/{id}/messages",
-          r.status_code == 201 and roles == ["user", "assistant"],
+          r.status_code == 200 and roles == ["user", "assistant"],
           f"HTTP {r.status_code} roles={roles} 推荐={len((msg.get('assistant') or {}).get('results') or [])}")
 
     # 8 待选 CRUD
     first_uid = (run.get("results") or [{}])[0].get("material", {}).get("uid")
     r = client.post(f"/api/tasks/{tid}/shortlist", json={"material_uid": first_uid})
-    item = r.json() if r.status_code == 201 else {}
+    item = r.json() if r.status_code == 200 else {}
     iid = item.get("id")
     r_dup = client.post(f"/api/tasks/{tid}/shortlist", json={"material_uid": first_uid})
     r3 = client.patch(f"/api/shortlist/{iid}", json={"user_note": "样品待测 -40℃ 低温冲击", "tag": "key"})
@@ -123,7 +123,7 @@ with TestClient(app) as client:
     r5 = client.delete(f"/api/shortlist/{iid}")
     r6 = client.get(f"/api/tasks/{tid}/shortlist")
     check("08", "待选 增/幂等/备注/标记/排序/删",
-          r.status_code == 201 and r_dup.status_code in (200, 201) and r3.status_code == 200
+          r.status_code == 200 and r_dup.status_code in (200, 201) and r3.status_code == 200
           and r4.status_code == 200 and r5.status_code == 200
           and len(r6.json().get("items", [])) == 0,
           f"add={r.status_code} dup={r_dup.status_code} patch={r3.status_code} "
@@ -136,10 +136,10 @@ with TestClient(app) as client:
         "reason_tags": ["④ 价格与实际不符"],
         "material_uids": [first_uid] if first_uid else [],
     })
-    fb = r.json() if r.status_code == 201 else {}
+    fb = r.json() if r.status_code == 200 else {}
     parsed = fb.get("parsed") or {}
     check("09", "POST /api/tasks/{id}/feedback(fail)",
-          r.status_code == 201 and "价格不符" in (parsed.get("dimensions") or [])
+          r.status_code == 200 and "价格不符" in (parsed.get("dimensions") or [])
           and parsed.get("confidence", 0) > 0,
           f"HTTP {r.status_code} parsed={parsed} penalty_applied={fb.get('penalty_applied')}")
 
@@ -172,16 +172,17 @@ with TestClient(app) as client:
           f"parse={parse_http} checksum_ok={prev.get('checksum_ok')} update={prev.get('updated')} "
           f"commit={r2.status_code} {res.get('message')}")
 
-    # 11b 篡改材料内容 → 校验和必须不一致（证明校验真的在算）
+    # 11b 篡改材料内容 → 校验和不一致必须**拒绝导入且不写库**（PRD E2 失败处理）
     broken = json.loads(pack_bytes.decode("utf-8"))
     broken["materials"][0]["name"] = "被篡改的材料"
     r = client.post("/api/import/parse",
                     files={"file": ("bad.json", json.dumps(broken, ensure_ascii=False).encode("utf-8"),
                                     "application/json")})
-    bp = r.json() if r.status_code == 200 else {}
-    check("11b", "导入 parse 检出校验和不一致",
-          r.status_code == 200 and bp.get("checksum_ok") is False,
-          f"HTTP {r.status_code} checksum_ok={bp.get('checksum_ok')}")
+    bp = r.json() if r.status_code in (400, 422) else {}
+    check("11b", "导入校验和不符 → 拒绝导入（4xx + IMPORT_REJECTED）",
+          r.status_code in (400, 422)
+          and (bp.get("error") or {}).get("code") == "IMPORT_REJECTED",
+          f"HTTP {r.status_code} body={bp}")
 
     # 11c 包版本不兼容 → 明确拒绝
     bad_ver = json.loads(pack_bytes.decode("utf-8"))

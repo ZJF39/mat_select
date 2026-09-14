@@ -35,7 +35,7 @@ def list_shortlist(task_id: int):
     return {"items": workbench_service.list_shortlist(task_id)}
 
 
-@router.post("/tasks/{task_id}/shortlist", status_code=201)
+@router.post("/tasks/{task_id}/shortlist")
 def add_shortlist(task_id: int, body: ShortlistAddBody):
     return workbench_service.add_shortlist(task_id, body.material_uid, body.tag)
 

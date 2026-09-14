@@ -43,7 +43,7 @@ def get_material(uid: str):
     return material_service.get_detail(uid)
 
 
-@router.post("", status_code=201)
+@router.post("")
 def create_material(body: dict):
     return material_service.create_material(body)
 
