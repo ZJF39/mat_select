@@ -338,7 +338,18 @@ def main() -> int:
         _pause_if_frozen(args)
         return 2
 
-    code = _run(src, args)
+    # load_input 解析失败会抛 SystemExit；任何未捕获异常也不允许静默——
+    # 全部拦到这里打印后统一 pause，避免 exe 窗口一闪而过看不到原因。
+    try:
+        code = _run(src, args)
+    except SystemExit as e:
+        code = e.code if isinstance(e.code, int) else 2
+    except Exception:  # noqa: BLE001
+        import traceback
+
+        print("\n[ERROR] 处理过程中出现未预期异常：")
+        traceback.print_exc()
+        code = 2
     _pause_if_frozen(args)
     return code
 
