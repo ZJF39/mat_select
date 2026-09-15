@@ -55,7 +55,14 @@ export default function TaskWorkbenchPage() {
   const feedbackTrigger = useRef<HTMLButtonElement>(null)
   const flowRef = useRef<HTMLDivElement>(null)
 
-  const tasks = useQuery({ queryKey: ['tasks'], queryFn: () => api.listTasks(), staleTime: 10_000 })
+  // status='all'：任务面板需要在左侧分组展示「进行中」与「已归档」两类，
+  // 而默认不传 status 时后端只返回 active（task_repo.list_tasks），
+  // 会导致归档后任务从列表里彻底消失、归档分组永远为空。
+  const tasks = useQuery({
+    queryKey: ['tasks'],
+    queryFn: () => api.listTasks({ status: 'all' }),
+    staleTime: 10_000,
+  })
   const messages = useQuery({
     queryKey: ['messages', taskId],
     queryFn: () => api.listMessages(taskId),

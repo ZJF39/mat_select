@@ -385,6 +385,8 @@ export default function MaterialsLibraryPage() {
             }}
             onOpen={(uid) => navigate(`/materials/${uid}`)}
             onExportSelected={exportSelected}
+            total={total}
+            onLoadMore={() => patch({ size: String(pageSize + PAGE_STEP) })}
           />
         )}
       </main>

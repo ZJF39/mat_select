@@ -16,7 +16,8 @@ export default function TasksPage() {
 
   const tasks = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => api.listTasks(),
+    // 与工作台共用同一 queryKey，须保持同一取数口径（含归档），否则缓存互相覆盖。
+    queryFn: () => api.listTasks({ status: 'all' }),
     staleTime: 10_000,
   })
 

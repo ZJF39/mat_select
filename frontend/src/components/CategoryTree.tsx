@@ -104,9 +104,9 @@ export function CategoryTree({ nodes, selectedId, onSelect, showManage = true }:
         >
           <span className="ms-tree-row__leaf-icon" />
           <span style={{ flex: 1 }}>全部分类</span>
-          <span className="ms-tree-row__count">
-            {nodes.reduce((s, n) => s + n.count + (n.children?.reduce((c, ch) => c + ch.count, 0) ?? 0), 0)}
-          </span>
+          {/* 后端 count 语义 = 该分类（含子分类）下的在用材料数（见 category_repo.list_tree），
+              此处只做根节点求和，**不可再叠加 children.count**，否则一级分类会被计两遍。 */}
+          <span className="ms-tree-row__count">{nodes.reduce((s, n) => s + n.count, 0)}</span>
         </div>
         {nodes.map((n) => (
           <Row key={n.id} node={n} level={0} />

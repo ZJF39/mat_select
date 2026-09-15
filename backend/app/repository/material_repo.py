@@ -5,6 +5,8 @@
 """
 from __future__ import annotations
 
+import re
+
 from app.db.connection import json_dumps, json_loads, new_uid, now_iso
 from app.repository.base import execute, query_all, query_one, scalar
 
@@ -112,6 +114,149 @@ def _row_to_card(row) -> dict:
 
 
 # ---------------- 检索 / 列表 ----------------
+
+def _expand_category_ids(ids) -> list:
+    """把选中的分类 id 展开为「自身 + 全部后代分类」的 id 列表。
+
+    必要性：材料只挂在**二级分类**上（契约 §3 / 原型 02 §0.3），点一级分类时若仍用
+    `category_id IN (一级id)` 做等值匹配，命中数恒为 0 —— 表现为「点击大类显示未找到匹配材料」。
+    这里按 parent_id 自顶向下 BFS 展开，使一级分类筛选等价于「其下所有子类的材料」。
+    """
+    rows = query_all("SELECT id, parent_id FROM category")
+    children: dict = {}
+    for r in rows:
+        children.setdefault(r["parent_id"], []).append(r["id"])
+
+    out: list = []
+    seen = set()
+    stack = [int(i) for i in ids]
+    while stack:
+        cur = stack.pop(0)
+        if cur in seen:
+            continue
+        seen.add(cur)
+        out.append(cur)
+        stack.extend(children.get(cur, []))
+    return out
+
+
+# 关键词检索参与匹配的列。
+#
+# 列集的确定依据有两个：
+#  ① PRD A3「精确检索」要求覆盖用户能看到的全部文本信息；
+#  ② 客户明确的四大关注点「成本 / 加工方式 / 温度 / 使用场景」必须都可被搜到。
+# 据此逐列核对后补齐了三个此前遗漏的字段：
+#   molding_process —— 加工方式（客户四大关注点之一，此前搜「注塑」「冲压」「压铸」
+#                      全部 0 命中，虽库中有 34 条注塑、5 条冲压、3 条压铸）；
+#   cautions        —— 注意项（材料卡正面与「主要特性」并列展示，客户会搜「耐候」「尺寸」）；
+#   certifications  —— 认证信息（UL94 阻燃等级、RoHS/REACH/IATF，客户选型合规必查项）。
+# 注：后两者以 JSON 文本入库，LIKE 直接命中键与值，故搜「UL94」「V-0」均可召回。
+SEARCH_COLS = (
+    "m.name", "m.short_name", "m.aliases", "m.description",
+    "m.applications", "m.features", "m.limitations", "m.grade_type",
+    "c.name", "m.price_note",
+    "m.molding_process", "m.cautions", "m.certifications",
+)
+
+# 查询分词分隔符：空白 + 中英文标点。
+#
+# 覆盖三类真实输入习惯：
+#  ① 组合条件「PA66, 阻燃」「PA66/阻燃」「PA66+GF30」——用逗号/斜杠/加号分隔；
+#  ② 直接粘贴的需求描述「它是一个注塑件，使用场景温度不超过 150°C。」——含句号、
+#     冒号、括号等成句标点，若不切分整句会变成一个永不命中的超长 token；
+#  ③ 全角括号写在材料名里（如「PA66（聚酰胺66）」），切分后两段仍各自命中同一材料。
+# 注意：**不含**连字符 `-`，否则「PA66-GF30」这类牌号会被拆坏。
+_SEARCH_SPLIT = re.compile(r"""[\s,，、;；/|+·。！？：（）()【】{}《》「」“”"'‘’…—～]+""")
+
+
+def _like_escape(s: str) -> str:
+    """转义 LIKE 通配符，避免用户输入的 % / _ 被当作模式（走 ESCAPE '\\'）。"""
+    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def _squash_text(s: str) -> str:
+    """去掉字符串中的全部空白（含 ASCII 空格与全角空格），用于空格不敏感匹配。"""
+    return re.sub(r"[\s\u3000]+", "", s)
+
+
+def _squash_sql(col: str) -> str:
+    """生成「把列值里空白去掉」的 SQL 表达式，与 _squash_text 口径保持一致。
+
+    char(12288) 是全角空格（U+3000）；中文文案里两种空格都可能出现，
+    直接写全角空格字面量在源码中不可见、易被编辑器误删，故用 char() 表达。
+    """
+    return f"REPLACE(REPLACE({col}, ' ', ''), char(12288), '')"
+
+
+def _search_tokens(q: str) -> list:
+    """把查询切成若干关键词；无分隔符时整串即为一个关键词。"""
+    parts = [p for p in _SEARCH_SPLIT.split(q) if p]
+    return parts or [q]
+
+
+def text_matches_query(text: str, q: str) -> bool:
+    """判断一段文本是否命中检索词 —— **与 list_materials 的关键词口径完全一致**。
+
+    存在的意义是「匹配规则只定义一次」：顶栏全局搜索的「场景标签」分组需要对
+    applications 里的每个标签单独判定，如果那里另写一套 `q in tag` 的判断，就会出现
+    「材料分组有结果、场景分组为空」的不一致（例如用户连写「抗UV」而数据写「抗 UV」、
+    或用户写「保险丝 座」多词而标签是「保险丝座」）。
+    """
+    if not text or not q or not q.strip():
+        return False
+    hay = str(text).lower()
+    hay_squash = _squash_text(hay)
+    for tok in _search_tokens(q.strip()):
+        t = tok.lower()  # 分词已按空白切开，故 token 本身不含空格
+        if t not in hay and t not in hay_squash:
+            return False  # 任一词不命中即整体不命中（AND 语义）
+    return True
+
+
+def _keyword_where(q: str, params: list) -> str:
+    """按关键词生成 WHERE 片段（分词 AND、列内 OR、空格不敏感），并把参数追加到 params。"""
+    groups = []
+    for tok in _search_tokens(q.strip()):
+        tok_squash = _squash_text(tok)
+        terms = []
+        for col in SEARCH_COLS:
+            terms.append(f"{col} LIKE ? ESCAPE '\\'")
+            params.append(f"%{_like_escape(tok)}%")
+            terms.append(f"{_squash_sql(col)} LIKE ? ESCAPE '\\'")
+            params.append(f"%{_like_escape(tok_squash)}%")
+        groups.append("(" + " OR ".join(terms) + ")")
+    return "(" + " AND ".join(groups) + ")"
+
+
+def search_application_tags(q: str, limit: int = 8) -> list:
+    """在 applications 中聚合命中检索词的应用场景标签（顶栏全局搜索「场景」分组）。
+
+    与材料分组共用 text_matches_query，保证两组的召回口径一致；SQL 里只按
+    「首个关键词」做一次粗筛（AND 语义下首词必命中，故粗筛是有效超集），
+    避免全表 JSON 解析，同时参数走 _like_escape 转义。
+    """
+    q = (q or "").strip()
+    if not q:
+        return []
+    tok = _search_tokens(q)[0]
+    sql = (
+        "SELECT applications FROM material WHERE archived=0 AND ("
+        f"applications LIKE ? ESCAPE '\\' OR {_squash_sql('applications')} LIKE ? ESCAPE '\\')"
+    )
+    rows = query_all(
+        sql,
+        (f"%{_like_escape(tok)}%", f"%{_like_escape(_squash_text(tok))}%"),
+    )
+    scenes: list = []
+    for r in rows:
+        for tag in json_loads(r["applications"]) or []:
+            if isinstance(tag, str) and tag not in scenes and text_matches_query(tag, q):
+                scenes.append(tag)
+        if len(scenes) >= limit:
+            break
+    return scenes[:limit]
+
+
 def list_materials(
     q=None, category_ids=None, processes=None, temp_min=None, price_max=None,
     flame=None, features=None, sort="updated_at", order="desc", archived=0,
@@ -127,9 +272,11 @@ def list_materials(
     if category_ids:
         ids = [int(x) for x in str(category_ids).split(",") if x.strip().isdigit()]
         if ids:
-            ph = ",".join("?" * len(ids))
+            # 选中的可能是父分类：展开为「自身 + 全部后代」后再匹配（PRD A1/A3）
+            expanded = _expand_category_ids(ids)
+            ph = ",".join("?" * len(expanded))
             where.append(f"m.category_id IN ({ph})")
-            params.extend(ids)
+            params.extend(expanded)
 
     if processes:
         procs = [p.strip() for p in str(processes).split(",") if p.strip()]
@@ -155,42 +302,37 @@ def list_materials(
             where.append("m.features LIKE ?")
             params.append(f"%{f}%")
 
-    # 关键词：优先 FTS5 MATCH，失败/空则 LIKE 兜底
-    fts_join = ""
-    if q:
-        q = q.strip()
-        if len(q) >= 2:
-            try:
-                safe = q.replace('"', '""')
-                rows = query_all(
-                    "SELECT m.id FROM material m "
-                    "JOIN material_fts f ON f.rowid = m.id "
-                    "WHERE material_fts MATCH ?",
-                    (f'"{safe}"',),
-                )
-                ids = [r["id"] for r in rows]
-                if ids:
-                    ph = ",".join("?" * len(ids))
-                    where.append(f"m.id IN ({ph})")
-                    params.extend(ids)
-                else:
-                    where.append(
-                        "(m.name LIKE ? OR m.aliases LIKE ? OR m.description LIKE ? OR m.applications LIKE ?)"
-                    )
-                    like = f"%{q}%"
-                    params.extend([like, like, like, like])
-            except Exception:
-                where.append(
-                    "(m.name LIKE ? OR m.aliases LIKE ? OR m.description LIKE ? OR m.applications LIKE ?)"
-                )
-                like = f"%{q}%"
-                params.extend([like, like, like, like])
-        else:
-            where.append(
-                "(m.name LIKE ? OR m.aliases LIKE ? OR m.description LIKE ? OR m.applications LIKE ?)"
-            )
-            like = f"%{q}%"
-            params.extend([like, like, like, like])
+    # 关键词检索：多关键词模糊匹配（模糊搜索不够强的根因修复）
+    #
+    # 原实现的两个硬伤：
+    #  ① FTS5(trigram) 的 `MATCH '"整串"'` 是**短语**匹配，用户写「PA66 阻燃」这种多词
+    #     组合时短语不存在 → 0 命中，且 FTS 一旦有命中就**替换**掉 LIKE 分支（互斥而非并集），
+    #     表现为「搜不到」；
+    #  ② 只索引/匹配 name、short_name、aliases、description、applications 5 列，
+    #     类别名、特性、材料类型等搜不到。
+    # 现改为：按分隔符切词 → 每个词在 SEARCH_COLS 内取 OR → 词与词之间取 AND。
+    # 既支持任意子串模糊匹配，也支持「多个条件同时满足」的自然写法。
+    #
+    # 另一处召回缺口：**空格不敏感**。中文技术文案习惯在中英文/数字之间插空格
+    # （实测 50 条材料中有 14 条如此，如「抗 UV 差」「长期 >80°C 易软化」「优于 PA6」），
+    # 而用户输入通常连写（「抗UV」），纯 LIKE 会漏召回。故每个词再对「去掉空格的列值」
+    # 匹配一次。反之（数据无空格、用户敲了空格）由分词本身就解决了——空格是分隔符。
+    tokens = _search_tokens(q.strip()) if q and q.strip() else []
+    if tokens:
+        where.append(_keyword_where(q, params))
+
+    # 相关性排序：首个关键词命中「名称 > 牌号 > 别名」的排前面。
+    # 顶栏下拉只展示 8 条，没有相关性排序时命中顺序随机，用户会认为「搜不准」。
+    rel_sql = ""
+    rel_params: list = []
+    if tokens:
+        rel_like = f"%{_like_escape(tokens[0])}%"
+        rel_sql = (
+            "CASE WHEN m.name LIKE ? ESCAPE '\\' THEN 0 "
+            "WHEN m.short_name LIKE ? ESCAPE '\\' THEN 1 "
+            "WHEN m.aliases LIKE ? ESCAPE '\\' THEN 2 ELSE 3 END, "
+        )
+        rel_params = [rel_like, rel_like, rel_like]
 
     sort_col = {
         "category_name": "c.name",
@@ -210,10 +352,10 @@ def list_materials(
 
     sql = (
         "SELECT m.*, c.name AS category_name, c.parent_id AS category_parent_id "
-        f"{base_from} WHERE {where_sql} ORDER BY {sort_col} {order} "
+        f"{base_from} WHERE {where_sql} ORDER BY {rel_sql}{sort_col} {order} "
         "LIMIT ? OFFSET ?"
     )
-    params_pag = list(params) + [int(page_size), (int(page) - 1) * int(page_size)]
+    params_pag = list(params) + list(rel_params) + [int(page_size), (int(page) - 1) * int(page_size)]
     rows = query_all(sql, params_pag)
     items = [_row_to_card(r) for r in rows]
     return total or 0, items

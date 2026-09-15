@@ -23,6 +23,10 @@ export interface MaterialTableProps {
   onSort?: (s: MaterialSort) => void
   onOpen?: (uid: string) => void
   onExportSelected?: () => void
+  /** 命中总数（用于底栏「已显示 n / total 条」与「加载更多」判断） */
+  total?: number
+  /** 加载下一页；不传则不渲染「加载更多」（底栏只报数） */
+  onLoadMore?: () => void
 }
 
 const COLS = 9
@@ -37,6 +41,8 @@ export function MaterialTable({
   onSort,
   onOpen,
   onExportSelected,
+  total,
+  onLoadMore,
 }: MaterialTableProps) {
   const navigate = useNavigate()
   const open = (uid: string) => (onOpen ? onOpen(uid) : navigate(`/materials/${uid}`))
@@ -153,12 +159,22 @@ export function MaterialTable({
           borderTop: '1px solid var(--border-row)',
         }}
       >
-        <span>已显示 {materials.length} 条 · 滚动到底部自动加载更多</span>
-        {selectable && selectedIds.length > 0 && (
-          <button className="ms-link" onClick={onExportSelected}>
-            导出选中行为 Excel
-          </button>
-        )}
+        <span>
+          已显示 {materials.length}
+          {total != null ? ` / ${total}` : ''} 条
+        </span>
+        <div className="ms-row ms-gap-4">
+          {onLoadMore && total != null && materials.length < total && (
+            <button className="ms-btn ms-btn--sm ms-btn--secondary" onClick={onLoadMore}>
+              加载更多
+            </button>
+          )}
+          {selectable && selectedIds.length > 0 && (
+            <button className="ms-link" onClick={onExportSelected}>
+              导出选中行为 Excel
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

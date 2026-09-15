@@ -169,7 +169,7 @@ export const api = {
     }),
 
   /* 任务 / 会话 */
-  listTasks: (q?: { status?: 'active' | 'archived'; q?: string }) =>
+  listTasks: (q?: { status?: 'active' | 'archived' | 'all'; q?: string }) =>
     get<{ items: SelectionTask[] }>('/tasks', q as Query),
   createTask: (body?: { title?: string }) => post<SelectionTask>('/tasks', body ?? {}),
   updateTask: (id: number, body: Partial<Pick<SelectionTask, 'title' | 'pinned' | 'status'>>) =>

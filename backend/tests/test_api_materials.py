@@ -41,6 +41,216 @@ def test_materials_search_by_keyword(seeded_client):
         f"期望命中含 PA66 的材料，实际返回 names={names}"
 
 
+# ---------------------------------------------------------------------------
+# 回归：一级分类筛选应含其子类材料（「点大类显示未找到匹配材料」）
+#
+# 背景：材料只挂在**二级分类**上，而旧实现用 `category_id IN (选中的id)` 做等值匹配，
+# 点一级分类时命中数恒为 0。修复后筛选父分类应展开为其全部后代分类。
+# 受控种子中：热塑性塑料(root) → 工程塑料(child)，材料挂在「工程塑料」上。
+# ---------------------------------------------------------------------------
+def test_materials_filter_by_root_category_includes_descendants(seeded_client):
+    """P0 | A1 回归：按一级分类筛选应返回其子类下的全部材料。"""
+    tree = seeded_client.get("/api/categories").json()["items"]
+    root = next((n for n in tree if n["name"] == "热塑性塑料"), None)
+    assert root is not None, f"种子缺少一级分类「热塑性塑料」，实际 tree={tree}"
+    child = next((c for c in root.get("children", []) if c["name"] == "工程塑料"), None)
+    assert child is not None, f"「热塑性塑料」下缺少子类「工程塑料」，实际 children={root.get('children')}"
+
+    r_child = seeded_client.get("/api/materials", params={"category_ids": child["id"], "page_size": 100})
+    r_root = seeded_client.get("/api/materials", params={"category_ids": root["id"], "page_size": 100})
+    assert r_child.status_code == 200 and r_root.status_code == 200, "分类筛选应返回 200"
+
+    n_child, n_root = r_child.json()["total"], r_root.json()["total"]
+    names = [m["name"] for m in r_root.json()["items"]]
+    assert n_child > 0, "子类「工程塑料」下应有种子材料，否则用例前提失效"
+    assert n_root >= n_child, \
+        f"一级分类命中数({n_root})不应少于其子类({n_child})；旧实现此处为 0"
+    assert any("PA66+GF30" in n for n in names), \
+        f"一级分类应命中挂在子类上的 PA66+GF30，实际 names={names}"
+
+
+def test_categories_root_count_equals_sum_of_children(seeded_client):
+    """P1 | 回归：一级分类计数 = 其子类计数之和（后端已含子类，前端不得再叠加）。"""
+    tree = seeded_client.get("/api/categories").json()["items"]
+    for node in tree:
+        kids = node.get("children") or []
+        if not kids:
+            continue
+        assert node["count"] == sum(c["count"] for c in kids), \
+            f"一级分类「{node['name']}」计数 {node['count']} != 子类之和 {sum(c['count'] for c in kids)}"
+
+
+# ---------------------------------------------------------------------------
+# 回归：模糊搜索（「搜索功能不够强」）
+# ---------------------------------------------------------------------------
+def test_materials_search_single_char(seeded_client):
+    """P0 | A3 回归：单字符也应能模糊命中，不被旧的 len(q)>=2 门槛挡掉。"""
+    # 种子中「尼」出现在 PA66+GF30 的名称（尼龙66）与别名（尼龙66玻纤）里
+    r = seeded_client.get("/api/materials", params={"q": "尼"})
+    assert r.status_code == 200, f"期望 200，实际 {r.status_code}"
+    names = [m["name"] for m in r.json()["items"]]
+    assert r.json()["total"] > 0, "单字符「尼」应至少命中 1 条（旧的 2 字门槛会返回 0）"
+    assert any("PA66+GF30" in n for n in names), f"「尼」应命中 PA66+GF30，实际 names={names}"
+
+
+def test_materials_search_multi_keyword(seeded_client):
+    """P0 | A3 回归：多关键词（空格分隔）应全部命中同一材料，而非整串短语匹配。"""
+    r = seeded_client.get("/api/materials", params={"q": "PA66 阻燃"})
+    assert r.status_code == 200, f"期望 200，实际 {r.status_code}"
+    items = r.json()["items"]
+    names = [m["name"] for m in items]
+    assert any("PA66" in n for n in names), \
+        f"期望「PA66 阻燃」命中 PA66+GF30（其 features 含阻燃可选），实际 names={names}"
+
+
+def test_materials_search_matches_feature_and_category(seeded_client):
+    """P1 | A3 回归：特性标签与所属分类名也应参与模糊匹配（旧实现只搜 4 列）。"""
+    r_feat = seeded_client.get("/api/materials", params={"q": "阻燃"})
+    assert r_feat.status_code == 200, f"期望 200，实际 {r_feat.status_code}"
+    assert r_feat.json()["total"] > 0, "「阻燃」应至少命中 1 条（种子 PPS/PA66/PBT 均含该特性）"
+
+    r_cat = seeded_client.get("/api/materials", params={"q": "弹性体"})
+    assert r_cat.status_code == 200, f"期望 200，实际 {r_cat.status_code}"
+    names = [m["name"] for m in r_cat.json()["items"]]
+    assert any("EPDM" in n for n in names), \
+        f"按分类名「弹性体」搜索应命中 EPDM，实际 names={names}"
+
+
+def test_materials_search_case_insensitive(seeded_client):
+    """P1 | A3 回归：牌号大小写不敏感（SQLite LIKE 对 ASCII 天然不敏感）。"""
+    up = seeded_client.get("/api/materials", params={"q": "PA66"}).json()["total"]
+    low = seeded_client.get("/api/materials", params={"q": "pa66"}).json()["total"]
+    assert up == low and up > 0, f"大小写命中数应一致且>0，实际 PA66={up} / pa66={low}"
+
+
+def test_materials_search_like_wildcard_escaped(seeded_client):
+    """P2 | 回归：用户输入的 % / _ 需转义，不得当作 SQL 通配符放大命中。"""
+    r = seeded_client.get("/api/materials", params={"q": "%"})
+    assert r.status_code == 200, f"期望 200，实际 {r.status_code}"
+    all_total = seeded_client.get("/api/materials").json()["total"]
+    assert r.json()["total"] < all_total, \
+        f"「%」应按字面匹配（种子中仅 30% 类牌号含字面 %），不应等于全量 {all_total}"
+
+
+def test_materials_search_relevance_order(seeded_client):
+    """P1 | A3 回归：相关性排序 —— 名称/牌号命中排在描述等次要列命中之前。"""
+    r = seeded_client.get("/api/materials", params={"q": "PPS", "page_size": 100})
+    assert r.status_code == 200, f"期望 200，实际 {r.status_code}"
+    items = r.json()["items"]
+    assert items, "「PPS」应至少命中 1 条"
+    first = items[0]
+    assert first["short_name"] == "PPS+GF40" or "PPS" in first["name"], \
+        f"首条应为牌号/名称直接命中 PPS 的材料，实际首条={first['name']}"
+
+
+# ---------------------------------------------------------------------------
+# 回归：加工方式 / 注意项 / 认证 必须可被检索（客户四大关注点之一）
+#
+# 背景：客户明确的四大关注点是「成本 / 加工方式 / 温度 / 使用场景」，其中
+#   · 成本      → 参数区间检索（price_max）已覆盖；
+#   · 温度      → 参数区间检索（temp_min）已覆盖；
+#   · 使用场景  → applications 已在检索列内；
+#   · 加工方式  → **仅存在于 molding_process 列，且此前不在检索列内**，
+#                 导致搜「注塑」「模压」「挤出」全部 0 命中。
+# 同时补齐 cautions（注意项）与 certifications（UL94/RoHS 认证）两列——它们是材料卡
+# 正面展示的信息，客户会直接搜「抗UV」「V-0」。
+# ---------------------------------------------------------------------------
+def test_materials_search_by_molding_process(seeded_client):
+    """P0 | 回归：加工方式（客户四大关注点之一）必须可被检索。"""
+    # 种子：EPDM 为 ["挤出","模压"]，PF 为 ["模压"]
+    r_ext = seeded_client.get("/api/materials", params={"q": "挤出", "page_size": 100})
+    assert r_ext.status_code == 200, f"期望 200，实际 {r_ext.status_code}"
+    names_ext = [m["name"] for m in r_ext.json()["items"]]
+    assert any("EPDM" in n for n in names_ext), \
+        f"搜「挤出」应命中 EPDM（此前 molding_process 不在检索列，返回 0），实际 names={names_ext}"
+
+    r_mo = seeded_client.get("/api/materials", params={"q": "模压", "page_size": 100})
+    names_mo = [m["name"] for m in r_mo.json()["items"]]
+    assert any("PF" in n for n in names_mo), \
+        f"搜「模压」应命中 PF（酚醛模塑料），实际 names={names_mo}"
+
+    # 注塑是最普遍的工艺，命中面应明显大于挤出
+    n_inj = seeded_client.get("/api/materials", params={"q": "注塑"}).json()["total"]
+    assert n_inj > r_ext.json()["total"], \
+        f"「注塑」命中数({n_inj})应大于「挤出」命中数({r_ext.json()['total']})"
+
+
+def test_materials_search_by_caution_content(seeded_client):
+    """P1 | 回归：注意项（cautions）应参与检索，客户会按风险点反查材料。"""
+    # 种子 PP 的 cautions 含「低温脆、抗UV差」
+    r = seeded_client.get("/api/materials", params={"q": "抗UV", "page_size": 100})
+    assert r.status_code == 200, f"期望 200，实际 {r.status_code}"
+    names = [m["name"] for m in r.json()["items"]]
+    assert any("PP" in n for n in names), \
+        f"搜「抗UV」应命中 cautions 中含「抗UV差」的 PP，实际 names={names}"
+
+
+def test_materials_search_by_certification(seeded_client):
+    """P1 | 回归：认证信息（certifications）应参与检索，阻燃等级是选型合规必查项。"""
+    # 种子中 PF 的 ul94 为 "V-1"（唯一值，不会与 V-0 混淆）
+    r = seeded_client.get("/api/materials", params={"q": "V-1", "page_size": 100})
+    assert r.status_code == 200, f"期望 200，实际 {r.status_code}"
+    names = [m["name"] for m in r.json()["items"]]
+    assert any("PF" in n for n in names), \
+        f"搜「V-1」应命中 ul94=V-1 的 PF，实际 names={names}"
+
+    # 搜 RoHS 应命中所有 rohs=true 的材料（种子全部为 true）
+    n_rohs = seeded_client.get("/api/materials", params={"q": "rohs"}).json()["total"]
+    assert n_rohs > 0, "搜「rohs」应命中带 RoHS 认证的材料"
+
+
+def test_materials_search_multi_keyword_and_semantics(seeded_client):
+    """P0 | 回归：多个关键词之间是 AND（同时满足），而非 OR 放大命中。"""
+    # 「尼龙 玻纤」：PA66+GF30 与 PA6+GF30 的名称同时含这两个词
+    r_hit = seeded_client.get("/api/materials", params={"q": "尼龙 玻纤", "page_size": 100})
+    names = [m["name"] for m in r_hit.json()["items"]]
+    assert len(names) >= 2, f"「尼龙 玻纤」应至少命中 PA66+GF30 与 PA6+GF30，实际 names={names}"
+
+    # 「PA66 模压」：PA66 系列都是注塑件，无人同时满足 → AND 语义下应为 0
+    n_miss = seeded_client.get("/api/materials", params={"q": "PA66 模压"}).json()["total"]
+    assert n_miss == 0, f"「PA66 模压」应 0 命中（AND 语义），实际 {n_miss}；若>0 说明退化成了 OR"
+
+
+def test_search_tokenizer_keeps_grade_hyphen():
+    """P1 | 单元回归：分词不得拆坏「PA66-GF30」这类连字符牌号，但应认得 + 号组合写法。"""
+    from app.repository.material_repo import _search_tokens
+    assert _search_tokens("PA66-GF30") == ["PA66-GF30"], "连字符牌号不能被拆开"
+    assert _search_tokens("PA66+GF30") == ["PA66", "GF30"], "加号组合应拆为两个词后 AND 命中同一材料"
+    tokens = _search_tokens("我想做一个保险丝座组件，它是一个注塑件，使用场景温度不超过150°C。")
+    assert all("。" not in t for t in tokens), "句末标点必须被切掉，否则整句成为永不命中的超长 token"
+    assert "它是一个注塑件" in tokens, "中文逗号应作为分隔符把长句切开"
+
+
+def test_search_whitespace_insensitive(seeded_client):
+    """P1 | 回归：搜索应忽略「中英文/数字之间的空格」差异。
+
+    真实语料习惯在中英文之间插空格，用户输入通常连写；纯 LIKE 会漏召回。
+    种子中 PPS+GF40 的 name 为「PPS+GF40（聚苯硫醚 40%玻纤）」——注意「硫醚」与「40」
+    之间有一个空格，且该串**只**出现在 name 里（aliases 是「聚苯硫醚玻纤」，不含数字），
+    因此「搜连写形式能否命中」是这条修复的精确判据。
+    """
+    from app.repository.material_repo import _squash_text
+    assert _squash_text("抗 UV 差") == "抗UV差", "去空格函数应处理 ASCII 空格"
+    assert _squash_text("长期\u300080°C") == "长期80°C", "去空格函数应处理全角空格"
+
+    # 用户连写、数据带空格 → 旧实现 0 命中，修复后应命中 PPS+GF40
+    r_tight = seeded_client.get("/api/materials", params={"q": "聚苯硫醚40", "page_size": 100})
+    assert r_tight.status_code == 200, f"期望 200，实际 {r_tight.status_code}"
+    names_tight = [m["name"] for m in r_tight.json()["items"]]
+    assert any("PPS+GF40" in n for n in names_tight), \
+        f"连写「聚苯硫醚40」应命中 name 含「聚苯硫醚 40%玻纤」的 PPS+GF40，实际 names={names_tight}"
+
+    # 用户按原文带空格输入 → 由分词解决（切成「聚苯硫醚」+「40」两个词 AND），同样应命中
+    r_spaced = seeded_client.get("/api/materials", params={"q": "聚苯硫醚 40", "page_size": 100})
+    names_spaced = [m["name"] for m in r_spaced.json()["items"]]
+    assert any("PPS+GF40" in n for n in names_spaced), \
+        f"带空格输入同样应命中 PPS+GF40，实际 names={names_spaced}"
+
+    # 而空格仍必须是分词分隔符：把两个词用空格分开应变成 AND 语义而非整串匹配
+    n_and = seeded_client.get("/api/materials", params={"q": "聚苯硫醚 尼龙"}).json()["total"]
+    assert n_and == 0, f"「聚苯硫醚 尼龙」应 0 命中（AND 语义，无材料同时满足），实际 {n_and}"
+
+
 def test_materials_range_filter_temp(seeded_client):
     """P0 | A3 参数区间检索：service_temp_limit>=200 仅含高温料（PPS/LCP）。"""
     r = seeded_client.get("/api/materials", params={"temp_min": 200})

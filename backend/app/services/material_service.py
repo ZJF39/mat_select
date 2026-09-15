@@ -12,7 +12,6 @@ from __future__ import annotations
 
 from app.core.errors import not_found, validation_error
 from app.core.logging import write_log
-from app.db.connection import json_loads
 from app.repository import category_repo, material_repo, task_repo
 from app.repository.base import query_all
 
@@ -221,16 +220,11 @@ def global_search(q: str, limit: int = 8) -> dict:
     _, mats = list_materials(q=q, page=1, page_size=limit)
     tasks = task_repo.list_tasks(status=None, q=q)[:limit]
 
-    # 场景标签：从 material.applications 的 JSON 文本里聚合包含关键词的标签
-    scenes: list[str] = []
-    rows = query_all(
-        "SELECT applications FROM material WHERE archived=0 AND applications LIKE ?", (f"%{q}%",)
-    )
-    for r in rows:
-        for tag in json_loads(r["applications"]) or []:
-            if isinstance(tag, str) and q.lower() in tag.lower() and tag not in scenes:
-                scenes.append(tag)
-        if len(scenes) >= limit:
-            break
+    # 场景标签：从 material.applications 的 JSON 文本里聚合命中关键词的标签。
+    # 口径交由仓储层的 search_application_tags 统一承担 —— 若在此另写一套
+    # `applications LIKE '%q%'` + `q in tag` 判断，会出现「材料分组有结果、
+    # 场景分组为空」的不一致（用户连写「抗UV」而数据写「抗 UV」、用户写
+    # 「保险丝 座」而标签是「保险丝座」均会命中；且原写法未转义 % / _）。
+    scenes = material_repo.search_application_tags(q, limit)
 
     return {"materials": mats[:limit], "tasks": tasks, "scenes": scenes[:limit]}

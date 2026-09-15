@@ -55,6 +55,38 @@ def test_global_search_empty_query_returns_empty_groups(seeded_client):
     assert r.json() == {"materials": [], "tasks": [], "scenes": []}, f"期望空分组，实际 {r.json()}"
 
 
+def test_global_search_whitespace_query_returns_empty_groups(seeded_client):
+    """P2 | 纯空白查询同样应返回空分组（前端清除输入时不会传空串，可能传空格）。"""
+    assert seeded_client.get("/api/search", params={"q": "   "}).json() == \
+        {"materials": [], "tasks": [], "scenes": []}, "纯空格查询应等价于空查询"
+
+
+def test_global_search_scenes_consistent_with_materials(seeded_client):
+    """P1 | 回归：全局搜索的「场景」分组必须与「材料」分组同口径。
+
+    原实现里场景标签另写了一套 `applications LIKE '%整串%'` + `q in tag` 判断，
+    导致多词查询（「保险丝 座」）或含空格的语料下，材料分组有结果、场景分组却为空，
+    在顶栏同一下拉里表现为「只有一半分组出结果」。修复后两者共用
+    material_repo.text_matches_query（分词 AND + 列内 OR + 空格不敏感）。
+
+    种子中 PPS+GF40 / PA66+GF30 的 applications 含「保险丝座」。
+    """
+    # 整串查询：两组都应有结果（与既有用例一致的基线）
+    r_full = seeded_client.get("/api/search", params={"q": "保险丝座"}).json()
+    assert r_full["materials"], f"「保险丝座」应命中材料，实际 {r_full}"
+    assert r_full["scenes"], f"「保险丝座」应聚合出场景标签，实际 {r_full['scenes']}"
+
+    # 多词查询：材料与场景两组必须同时有结果（原实现此处场景为空）
+    r_multi = seeded_client.get("/api/search", params={"q": "保险丝 座"}).json()
+    assert r_multi["materials"], f"「保险丝 座」应按 AND 语义命中材料，实际 {r_multi}"
+    assert r_multi["scenes"], \
+        f"「保险丝 座」场景分组不应为空（原实现为空的缺陷），实际 {r_multi['scenes']}"
+
+    # 纯通配符不得放大命中：% 必须按字面匹配，不能把全部应用场景当作命中
+    assert seeded_client.get("/api/search", params={"q": "%"}).json()["scenes"] == [], \
+        "「%」应按字面匹配，不得把全部应用场景当作命中"
+
+
 def test_backup_run_creates_restorable_cold_copy(seeded_client, tmp_db_path, tmp_path, monkeypatch):
     """P0 | G6 数据安全：备份产出可独立打开、含全部在用材料的冷备副本。
 

@@ -261,6 +261,15 @@
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-2xl);
+  /* 表格视图「没有滚动」的根因：
+     `.ms-main` 是 column flex 容器，flex 项在 `overflow != visible` 时其自动最小尺寸
+     解析为 0。原样式 `overflow: hidden` 使表格容器被**压缩到刚好一屏高**，
+     超出部分被静默裁掉、也不产生溢出，于是 `.ms-main` 也不出现滚动条 —— 看起来就是
+     「表格不滚动、底下的行看不到」。
+     `flex: none` 让它按内容自然撑高，滚动交回全站唯一滚动层 `.ms-main`（原型 02 §0.4 /
+     05 §5「全站只有主内容区一个滚动容器」），因此这里不另建嵌套滚动容器
+     （否则底栏会被横向滚动带走）。 */
+  flex: none;
   overflow: hidden;
 }
 .ms-table { width: 100%; border-collapse: collapse; }

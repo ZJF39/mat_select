@@ -127,7 +127,7 @@ export function TopBar() {
             ref={inputRef}
             value={text}
             aria-label="全局搜索"
-            placeholder="搜索材料名称 / 别名 / 牌号 / 应用场景，例如 PP、PA66+GF30、保险丝座"
+            placeholder="搜索材料名称 / 牌号 / 应用场景 / 工艺 / 认证，例如 PP、PA66+GF30、保险丝座、注塑"
             onChange={(e) => {
               setText(e.target.value)
               setOpen(true)

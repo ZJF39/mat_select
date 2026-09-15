@@ -231,11 +231,25 @@ export default function SettingsPage() {
             <div className="ms-settings__side">
               <div className="ms-card">
                 <div className="ms-card__title">配置说明</div>
-                <div className="ms-col" style={{ gap: 'var(--sp-4)', fontSize: 'var(--fs-small)', color: 'var(--text-3)', lineHeight: 17 }}>
-                  <span>· 硬约束（耐温上限、成型工艺）<strong>不参与打分</strong>，在打分前直接过滤，绝不越界。</span>
-                  <span>· 语义相似度仅在硬约束过滤后的候选集内计算。</span>
-                  <span>· 成本敏感时自动提高成本维度权重（追问「再便宜点」即触发）。</span>
-                  <span>· 单条负面反馈只提示、不降权；达阈值才软降权，幅度可配置。</span>
+                <div className="ms-note-list">
+                  <div className="ms-note-item">
+                    <span className="ms-note-item__dot" aria-hidden>·</span>
+                    <span className="ms-note-item__text">
+                      硬约束（耐温上限、成型工艺）<strong>不参与打分</strong>，在打分前直接过滤，绝不越界。
+                    </span>
+                  </div>
+                  <div className="ms-note-item">
+                    <span className="ms-note-item__dot" aria-hidden>·</span>
+                    <span className="ms-note-item__text">语义相似度仅在硬约束过滤后的候选集内计算。</span>
+                  </div>
+                  <div className="ms-note-item">
+                    <span className="ms-note-item__dot" aria-hidden>·</span>
+                    <span className="ms-note-item__text">成本敏感时自动提高成本维度权重（追问「再便宜点」即触发）。</span>
+                  </div>
+                  <div className="ms-note-item">
+                    <span className="ms-note-item__dot" aria-hidden>·</span>
+                    <span className="ms-note-item__text">单条负面反馈只提示、不降权；达阈值才软降权，幅度可配置。</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -350,10 +364,25 @@ export default function SettingsPage() {
             <div className="ms-settings__side">
               <div className="ms-card">
                 <div className="ms-card__title">分类约定</div>
-                <div className="col" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)', fontSize: 'var(--fs-small)', color: 'var(--text-3)', lineHeight: 17 }}>
-                  <span>· 两级结构：大类（热塑性塑料 / 热固性塑料 / 金属 / 弹性体 / 复合材料）+ 子类。</span>
-                  <span>· 材料归属到<strong>子类</strong>；面包屑按「大类 / 子类」展示。</span>
-                  <span>· 计数为该子类下<strong>未归档</strong>材料条数。</span>
+                <div className="ms-note-list">
+                  <div className="ms-note-item">
+                    <span className="ms-note-item__dot" aria-hidden>·</span>
+                    <span className="ms-note-item__text">
+                      两级结构：大类（热塑性塑料 / 热固性塑料 / 金属 / 弹性体 / 复合材料）+ 子类。
+                    </span>
+                  </div>
+                  <div className="ms-note-item">
+                    <span className="ms-note-item__dot" aria-hidden>·</span>
+                    <span className="ms-note-item__text">
+                      材料归属到<strong>子类</strong>；面包屑按「大类 / 子类」展示。
+                    </span>
+                  </div>
+                  <div className="ms-note-item">
+                    <span className="ms-note-item__dot" aria-hidden>·</span>
+                    <span className="ms-note-item__text">
+                      计数为大类<strong>含子类</strong>的未归档材料条数；筛选大类即筛选其下全部子类。
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

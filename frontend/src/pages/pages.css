@@ -166,9 +166,28 @@
 .ms-weights-sum { background: var(--bg-subtle); border-radius: var(--radius-xl); padding: var(--sp-5) var(--sp-6); font-size: var(--fs-caption); color: var(--text-3); line-height: 16px; }
 .ms-weights-sum--warn { color: var(--warning-strong); }
 
+/* 侧栏说明列表（设置页「配置说明」「分类约定」）：
+   项目符号独立成列、正文另占一列，折行后与首行文字左对齐（悬挂缩进）。
+   此前把「· 文本」写在同一个 span 里，折行会回到卡片左内边距，视觉上「没有对齐」。 */
+.ms-note-list { display: flex; flex-direction: column; gap: var(--sp-4); font-size: var(--fs-small); color: var(--text-3); line-height: 17px; }
+.ms-note-item { display: flex; align-items: flex-start; gap: var(--sp-4); }
+.ms-note-item__dot { flex: none; width: 6px; text-align: center; color: var(--text-5); }
+.ms-note-item__text { flex: 1; min-width: 0; }
+
 /* ---------- 任务列表面板 ---------- */
 .ms-tasklist { display: flex; flex-direction: column; gap: var(--sp-3); }
 .ms-tasklist__group-label { font-size: var(--fs-caption); color: var(--text-7); padding: var(--sp-2) var(--sp-4); }
+/* 归档分组折叠头：h30 与树行同规格，hover 有反馈，chevron 展开时旋转 90° */
+.ms-tasklist__group-toggle {
+  height: 30px; border-radius: var(--radius-md); border: none; background: transparent;
+  display: flex; align-items: center; gap: var(--sp-3); padding: 0 var(--sp-4);
+  font-family: inherit; font-size: var(--fs-caption); color: var(--text-7);
+  cursor: pointer; text-align: left; width: 100%;
+  transition: background var(--duration-fast);
+}
+.ms-tasklist__group-toggle:hover { background: var(--bg-subtle); color: var(--text-4); }
+.ms-tasklist__chev { display: inline-flex; flex: none; transition: transform var(--duration-fast) var(--ease-out); }
+.ms-tasklist__chev--open { transform: rotate(90deg); }
 .ms-task-item {
   height: 52px; border-radius: var(--radius-2xl); padding: var(--sp-4) var(--sp-5);
   display: flex; flex-direction: column; justify-content: center; gap: var(--sp-2); cursor: pointer;
@@ -180,6 +199,15 @@
 .ms-task-item--active .ms-task-item__title { color: var(--color-accent); }
 .ms-task-item__title { font-size: var(--fs-body); font-weight: var(--fw-medium); color: var(--text-2); }
 .ms-task-item__meta { font-size: var(--fs-caption); color: var(--text-5); }
+/* 归档任务：整体降饱和，标题前加「已归档」小标；仍可点击查看（只读） */
+.ms-task-item--archived .ms-task-item__title { color: var(--text-4); font-weight: var(--fw-regular); }
+.ms-task-item--archived .ms-task-item__meta { color: var(--text-6); }
+.ms-task-item__tag {
+  display: inline-block; margin-right: var(--sp-3); padding: 0 4px;
+  border: 1px solid var(--border-control); border-radius: var(--radius-xs);
+  font-size: var(--fs-micro); font-weight: var(--fw-regular); color: var(--text-6);
+  vertical-align: 1px;
+}
 
 /* ---------- 通用两列 / 网格 ---------- */
 .ms-cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-8); }
