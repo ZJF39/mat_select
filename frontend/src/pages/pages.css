@@ -108,6 +108,50 @@
 .ms-detail__cards { display: flex; flex-direction: column; gap: var(--sp-6); }
 .ms-detail__two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-8); }
 @media (max-width: 1023px) { .ms-detail__two { grid-template-columns: 1fr; } }
+
+/* ---------- 03 材料详情 · 关键参数（力学/热学两组） ----------
+ * 结构：两组并排，中间一条竖向分隔线；组内每行「物理量 | 数值+单位」两列网格，
+ * 数值列起点对齐（取组内最宽物理量），行与行之间以一条浅色细线分隔。
+ * 只作用于 .ms-params 容器，不影响同结构的「认证与合规」卡与「价格与工艺」卡。 */
+.ms-params { gap: var(--sp-9); }
+.ms-param-group { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
+.ms-param-group + .ms-param-group {
+  border-left: 1px solid var(--border-divider);  /* 力学与热学之间的分割竖线 */
+  padding-left: var(--sp-9);                     /* 与列间距同宽，竖线两侧留白对称 */
+}
+.ms-param-group__title { font-size: var(--fs-small); font-weight: var(--fw-medium); color: var(--text-3); }
+.ms-param-list { display: flex; flex-direction: column; }
+
+/* 行改写：名称列取组内最宽物理量（max-content），数值列紧随其后 —— 数值贴近物理量，
+ * 组内数值列起点一致；单位缀于数值后，弱化为浅色小字。 */
+.ms-param-list .ms-param-row {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: var(--sp-6);
+  align-items: baseline;
+  height: auto;
+  min-height: 26px;
+  padding: var(--sp-2) 0;                        /* 上下 4px，行间细线自然形成节奏 */
+  border-bottom: 1px solid var(--border-row);    /* 条目之间的短而浅的分割线 */
+}
+.ms-param-list .ms-param-row:last-child { border-bottom: none; }
+.ms-param-row__unit {
+  margin-left: var(--sp-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-regular);
+  color: var(--text-6);
+}
+/* 窄屏退化为单列：竖线改为横向分隔，避免左侧悬空竖线 */
+@media (max-width: 1023px) {
+  .ms-param-group + .ms-param-group {
+    border-left: none;
+    padding-left: 0;
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--border-divider);
+  }
+}
 .ms-crumbs { font-size: var(--fs-small); color: var(--text-5); }
 .ms-crumbs a { color: var(--text-5); }
 .ms-headcard { display: flex; flex-direction: column; gap: var(--sp-5); }

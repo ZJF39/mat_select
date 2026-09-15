@@ -191,26 +191,32 @@ export default function MaterialDetailPage() {
               <div className="ms-detail__main">
                 <div className="ms-card">
                   <div className="ms-card__title">关键参数与性能</div>
-                  <div className="ms-detail__two">
-                    <div className="ms-col ms-gap-2">
-                      <div className="ms-field__label">力学参数</div>
-                      <ParamRow label="密度 g/cm³" value={formatRange(m.density_min, m.density_max)} empty={m.density_min == null && m.density_max == null} />
-                      <ParamRow label="拉伸强度 MPa" value={formatRange(m.tensile_strength_min, m.tensile_strength_max)} empty={m.tensile_strength_min == null && m.tensile_strength_max == null} />
-                      <ParamRow label="弹性模量 GPa" value={formatRange(m.elastic_modulus_min, m.elastic_modulus_max)} empty={m.elastic_modulus_min == null && m.elastic_modulus_max == null} />
-                      <ParamRow label="断裂伸长率 %" value={formatRange(m.elongation_min, m.elongation_max)} empty={m.elongation_min == null && m.elongation_max == null} />
-                      <ParamRow label="缺口冲击强度 kJ/m²" value={formatRange(m.notch_impact_min, m.notch_impact_max)} empty={m.notch_impact_min == null && m.notch_impact_max == null} />
-                    </div>
-                    <div className="ms-col ms-gap-2">
-                      <div className="ms-field__label">热学参数</div>
-                      <ParamRow label="热变形温度 HDT °C" value={formatRange(m.hdt_min, m.hdt_max, 'temp')} empty={m.hdt_min == null && m.hdt_max == null} />
-                      <ParamRow label="长期使用温度范围 °C" value={formatRange(m.service_temp_min, m.service_temp_max, 'temp')} empty={m.service_temp_min == null && m.service_temp_max == null} />
-                      <ParamRow
-                        label="长期使用温度上限 °C"
-                        value={m.service_temp_limit == null ? '—' : String(m.service_temp_limit)}
-                        empty={m.service_temp_limit == null}
-                        emphasis
-                      />
-                    </div>
+                  {/* 力学 / 热学两组，中间竖向分隔线；组内每行「名称 | 数值+单位」，行间浅色细线 */}
+                  <div className="ms-detail__two ms-params">
+                    <section className="ms-param-group">
+                      <div className="ms-param-group__title">力学参数</div>
+                      <div className="ms-param-list">
+                        <ParamRow label="密度" unit="g/cm³" value={formatRange(m.density_min, m.density_max)} empty={m.density_min == null && m.density_max == null} />
+                        <ParamRow label="拉伸强度" unit="MPa" value={formatRange(m.tensile_strength_min, m.tensile_strength_max)} empty={m.tensile_strength_min == null && m.tensile_strength_max == null} />
+                        <ParamRow label="弹性模量" unit="GPa" value={formatRange(m.elastic_modulus_min, m.elastic_modulus_max)} empty={m.elastic_modulus_min == null && m.elastic_modulus_max == null} />
+                        <ParamRow label="断裂伸长率" unit="%" value={formatRange(m.elongation_min, m.elongation_max)} empty={m.elongation_min == null && m.elongation_max == null} />
+                        <ParamRow label="缺口冲击强度" unit="kJ/m²" value={formatRange(m.notch_impact_min, m.notch_impact_max)} empty={m.notch_impact_min == null && m.notch_impact_max == null} />
+                      </div>
+                    </section>
+                    <section className="ms-param-group">
+                      <div className="ms-param-group__title">热学参数</div>
+                      <div className="ms-param-list">
+                        <ParamRow label="热变形温度 HDT" unit="°C" value={formatRange(m.hdt_min, m.hdt_max, 'temp')} empty={m.hdt_min == null && m.hdt_max == null} />
+                        <ParamRow label="长期使用温度范围" unit="°C" value={formatRange(m.service_temp_min, m.service_temp_max, 'temp')} empty={m.service_temp_min == null && m.service_temp_max == null} />
+                        <ParamRow
+                          label="长期使用温度上限"
+                          unit="°C"
+                          value={m.service_temp_limit == null ? '—' : String(m.service_temp_limit)}
+                          empty={m.service_temp_limit == null}
+                          emphasis
+                        />
+                      </div>
+                    </section>
                   </div>
                 </div>
 
