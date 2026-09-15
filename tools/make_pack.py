@@ -326,8 +326,12 @@ def main() -> int:
 
     frozen = getattr(sys, "frozen", False)
     if not args.input:
-        print("用法： 把大模型输出的 JSON 文件拖到本程序上，或：")
+        print("用法： 把 JSON 文件拖到本程序的【图标】上（会以该文件启动新进程），或：")
         print("  MatSelectPackTool.exe 你的文件.json [-o 输出.json] [--check]")
+        if frozen:
+            print()
+            print("提示：拖到【已经打开的本窗口】里是收不到文件的——")
+            print("      那样只会把文件路径当文本粘贴进窗口。")
         if frozen:
             _pause_if_frozen(args)
         return 2
@@ -412,7 +416,8 @@ def _run(src: Path, args) -> int:
     out.write_text(json.dumps(pack, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n[OK] 已生成材料包：{out}")
     print(f"     条数 {pack['material_count']} · 校验和 {pack['checksum'][:23]}…")
-    print("\n下一步：打开应用 → 「数据分享」页 → 右栏「导入材料包」→ 拖入该文件。")
+    print("\n下一步：打开应用 → 「数据分享」页 → 「导入材料包」→ 拖入该文件。")
+    print("（v1.2.4 起，大模型原始 JSON 也可以直接拖入该导入区，无需先用本工具转换）")
     return 0
 
 

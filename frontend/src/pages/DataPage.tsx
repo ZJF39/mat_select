@@ -78,10 +78,10 @@ export default function DataPage() {
   const onFile = async (file: File) => {
     setImportError(null)
     setPreview(null)
-    if (!file.name.toLowerCase().endsWith('.json')) {
-      setImportError('仅支持 .json 材料包（E1 导出的产物）')
-      return
-    }
+      if (!file.name.toLowerCase().endsWith('.json')) {
+        setImportError('仅支持 .json 文件（E1 导出的材料包，或大模型输出的原始 JSON）')
+        return
+      }
     setParsing(true)
     try {
       const prev = await api.parseImport(file)
@@ -127,6 +127,7 @@ export default function DataPage() {
         <Notice tone="info">
           材料包内嵌包版本、导出时间、条数与<strong>校验和</strong>；导入时先本地校验（版本 / 校验和 / 必填字段），
           <strong>校验不通过直接拒绝且不写入任何数据</strong>，不会产生半截数据。
+          大模型输出的原始 JSON（数组或带 materials 的对象）可直接拖入，导入前由服务端自动补校验和。
         </Notice>
 
         <div className="ms-data-grid">

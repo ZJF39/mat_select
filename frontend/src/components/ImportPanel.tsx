@@ -65,6 +65,9 @@ export function ImportPanel({ preview, parsing, committing, error, onFile, onCom
           <div style={{ fontSize: 'var(--fs-body)', fontWeight: 'var(--fw-medium)', color: 'var(--text-3)' }}>
             拖入 .json 材料包，或点击选择文件
           </div>
+          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--text-6)' }}>
+            支持 E1 导出的材料包，也支持大模型输出的原始 JSON（自动补校验和）
+          </div>
           {preview && (
             <div className="ms-mono" style={{ fontSize: 'var(--fs-caption)', color: 'var(--text-7)' }}>
               导出人 {preview.exported_by} · 校验和{preview.checksum_ok ? '正常' : '异常'}

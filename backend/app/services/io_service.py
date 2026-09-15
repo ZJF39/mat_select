@@ -13,6 +13,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import re
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional, Tuple
 
@@ -280,33 +281,80 @@ def _classify(materials: List[dict]):
     return counters, details
 
 
+def _auto_wrap_pack(mats: List[dict], src_note: str) -> dict:
+    """把「不带校验和的原始 JSON」（如大模型输出）包成完整材料包。
+
+    服务端直接复用与导出相同的 pack_checksum 算法补校验和——这正是 make_pack
+    工具此前存在的意义；补完后走与正式包完全一致的校验/分类流程。
+    只补缺失的 uid（与 make_pack 行为一致），其余字段问题交给 _classify
+    逐条给出 invalid 原因，不在 parse 阶段整体拒绝。
+    """
+    for m in mats:
+        if isinstance(m, dict) and not str(m.get("uid") or "").strip():
+            m["uid"] = new_uid()
+    return {
+        "pack_version": PACK_VERSION,
+        "exported_at": now_iso(),
+        "exported_by": src_note,
+        "material_count": len(mats),
+        "checksum": pack_checksum(mats),
+        "materials": mats,
+    }
+
+
 def import_parse(raw: bytes) -> dict:
-    """第一段：只校验，不写库；成功则落 import_staging 并返回 token。"""
+    """第一段：只校验，不写库；成功则落 import_staging 并返回 token。
+
+    兼容三种输入形态（v1.2.4 起）：
+    1. 正式材料包（E1 导出 / make_pack 产物）：pack_version + checksum 严格校验；
+    2. 裸数组 ``[{...}, ...]``：自动补校验和；
+    3. 对象但缺 checksum（如大模型原始输出 ``{"materials": [...]}``）：自动补校验和；
+    另容错整段被 `` ```json ... ``` `` 围栏包裹的文件。
+    """
+    text = raw.decode("utf-8-sig", errors="replace")
+    m = re.search(r"```(?:json)?\s*(.+?)```", text, re.S)
+    if m:
+        text = m.group(1)
     try:
-        pack = json.loads(raw.decode("utf-8"))
+        pack = json.loads(text)
     except Exception as exc:  # noqa: BLE001
         raise import_rejected(f"文件不是合法 JSON：{exc}")
 
-    if not isinstance(pack, dict):
-        raise import_rejected("材料包格式不正确：顶层必须是对象")
-    version = pack.get("pack_version")
-    if version != PACK_VERSION:
-        raise import_rejected(f"包版本不兼容：期望 {PACK_VERSION}，实际 {version}")
+    if isinstance(pack, list):
+        if not pack:
+            raise import_rejected("未找到材料条目：顶层数组为空")
+        pack = _auto_wrap_pack(pack, "原始 JSON 导入（服务端自动补校验和）")
+    elif isinstance(pack, dict):
+        materials = pack.get("materials")
+        if not isinstance(materials, list):
+            raise import_rejected("材料包缺少 materials 数组")
+        expected = pack.get("checksum")
+        if expected:
+            # 正式包（E1 导出 / make_pack 产物）：走严格校验（版本 / 校验和）
+            version = pack.get("pack_version")
+            if version != PACK_VERSION:
+                raise import_rejected(f"包版本不兼容：期望 {PACK_VERSION}，实际 {version}")
+            actual = pack_checksum(materials)
+            if expected != actual:
+                # PRD E2「失败处理」：校验和不符 → 明确报错并拒绝写入，不产生半截数据。
+                # 这里必须在 parse 阶段就拒绝，否则用户可以越过校验直接 commit。
+                raise import_rejected(
+                    "材料包校验和不符（文件可能已损坏或被修改），已拒绝导入且未写入任何数据"
+                )
+        else:
+            # 缺 checksum 的对象：视为原始 JSON，自动补校验和（pack_version 是否
+            # 存在不影响该判定——大模型输出常带 pack_version 却算不出 sha256）。
+            # 带 checksum 但不符的情形不会被走到这里（上面已拒绝），保证不会
+            # 用重算校验和「洗白」一个可能被篡改过的正式包。
+            if not materials:
+                raise import_rejected("未找到材料条目：materials 数组为空")
+            pack = _auto_wrap_pack(materials, "原始 JSON 导入（服务端自动补校验和）")
+    else:
+        raise import_rejected("材料包格式不正确：顶层必须是对象或数组")
 
     materials = pack.get("materials")
     if not isinstance(materials, list):
         raise import_rejected("材料包缺少 materials 数组")
-
-    expected = pack.get("checksum")
-    actual = pack_checksum(materials)
-    if not expected:
-        raise import_rejected("材料包缺少校验和字段，无法验证完整性")
-    if expected != actual:
-        # PRD E2「失败处理」：校验和不符 → 明确报错并拒绝写入，不产生半截数据。
-        # 这里必须在 parse 阶段就拒绝，否则用户可以越过校验直接 commit。
-        raise import_rejected(
-            "材料包校验和不符（文件可能已损坏或被修改），已拒绝导入且未写入任何数据"
-        )
 
     counters, details = _classify(materials)
 
@@ -318,7 +366,7 @@ def import_parse(raw: bytes) -> dict:
 
     return {
         "token": token,
-        "pack_version": int(version),
+        "pack_version": int(pack.get("pack_version") or PACK_VERSION),
         "exported_by": pack.get("exported_by") or "",
         "exported_at": pack.get("exported_at") or "",
         "checksum_ok": True,
