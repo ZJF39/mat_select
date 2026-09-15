@@ -120,21 +120,27 @@
   padding-left: var(--sp-9);                     /* 与列间距同宽，竖线两侧留白对称 */
 }
 .ms-param-group__title { font-size: var(--fs-small); font-weight: var(--fw-medium); color: var(--text-3); }
-.ms-param-list { display: flex; flex-direction: column; }
 
-/* 行改写：名称列取组内最宽物理量（max-content），数值列紧随其后 —— 数值贴近物理量，
- * 组内数值列起点一致；单位缀于数值后，弱化为浅色小字。 */
-.ms-param-list .ms-param-row {
+/* 关键：网格容器是**整组列表**而不是单行 —— 之前每行各自 grid 时，max-content 按行计算，
+ * 数字只贴着本行物理量，纵向不齐。让 .ms-param-row 以 display:contents 透传两个单元格，
+ * 名称列宽度即「组内最宽物理量」，各行数值列起点一致（等效于制表位），数字纵向对齐。 */
+.ms-param-list {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  column-gap: var(--sp-6);
   align-items: baseline;
-  height: auto;
-  min-height: 26px;
-  padding: var(--sp-2) 0;                        /* 上下 4px，行间细线自然形成节奏 */
+}
+.ms-param-list .ms-param-row { display: contents; }
+
+/* 上下 4px 的节奏与浅色分隔线放在单元格上；不设 column-gap，
+ * 让分隔线横贯整行而不断开（数值与名称的间距改用 value 的 padding-left）。 */
+.ms-param-list .ms-param-row__label,
+.ms-param-list .ms-param-row__value {
+  padding: var(--sp-2) 0;
   border-bottom: 1px solid var(--border-row);    /* 条目之间的短而浅的分割线 */
 }
-.ms-param-list .ms-param-row:last-child { border-bottom: none; }
+.ms-param-list .ms-param-row__value { padding-left: var(--sp-6); }
+.ms-param-list .ms-param-row:last-child .ms-param-row__label,
+.ms-param-list .ms-param-row:last-child .ms-param-row__value { border-bottom: none; }
 .ms-param-row__unit {
   margin-left: var(--sp-2);
   font-family: var(--font-sans);
