@@ -384,6 +384,186 @@
       "standard": "吸水率",
       "synonym": "吸湿率",
       "type": "参数"
+    },
+    {
+      "standard": "拉挤",
+      "synonym": "拉挤成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "拉挤",
+      "synonym": "pultrusion",
+      "type": "工艺"
+    },
+    {
+      "standard": "烧结",
+      "synonym": "烧结成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "浇注",
+      "synonym": "浇注成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "吹塑",
+      "synonym": "blow molding",
+      "type": "工艺"
+    },
+    {
+      "standard": "缠绕",
+      "synonym": "缠绕成型",
+      "type": "工艺"
+    },
+    {
+      "standard": "保险杠",
+      "synonym": "bumper",
+      "type": "零件类型"
+    },
+    {
+      "standard": "保险杠",
+      "synonym": "保险杠蒙皮",
+      "type": "零件类型"
+    },
+    {
+      "standard": "软管",
+      "synonym": "管路",
+      "type": "零件类型"
+    },
+    {
+      "standard": "软管",
+      "synonym": "hose",
+      "type": "零件类型"
+    },
+    {
+      "standard": "母排",
+      "synonym": "铜排",
+      "type": "零件类型"
+    },
+    {
+      "standard": "母排",
+      "synonym": "busbar",
+      "type": "零件类型"
+    },
+    {
+      "standard": "散热件",
+      "synonym": "散热片",
+      "type": "零件类型"
+    },
+    {
+      "standard": "散热件",
+      "synonym": "heat sink",
+      "type": "零件类型"
+    },
+    {
+      "standard": "导热垫",
+      "synonym": "导热垫片",
+      "type": "零件类型"
+    },
+    {
+      "standard": "导热垫",
+      "synonym": "thermal pad",
+      "type": "零件类型"
+    },
+    {
+      "standard": "密封垫",
+      "synonym": "垫片",
+      "type": "零件类型"
+    },
+    {
+      "standard": "密封垫",
+      "synonym": "gasket",
+      "type": "零件类型"
+    },
+    {
+      "standard": "防尘罩",
+      "synonym": "dust cover",
+      "type": "零件类型"
+    },
+    {
+      "standard": "燃油管",
+      "synonym": "fuel line",
+      "type": "零件类型"
+    },
+    {
+      "standard": "铁芯",
+      "synonym": "定子铁芯",
+      "type": "零件类型"
+    },
+    {
+      "standard": "铁芯",
+      "synonym": "电机铁芯",
+      "type": "零件类型"
+    },
+    {
+      "standard": "电池托盘",
+      "synonym": "battery tray",
+      "type": "零件类型"
+    },
+    {
+      "standard": "门把手",
+      "synonym": "door handle",
+      "type": "零件类型"
+    },
+    {
+      "standard": "扰流板",
+      "synonym": "spoiler",
+      "type": "零件类型"
+    },
+    {
+      "standard": "格栅",
+      "synonym": "前格栅",
+      "type": "零件类型"
+    },
+    {
+      "standard": "翼子板",
+      "synonym": "fender",
+      "type": "零件类型"
+    },
+    {
+      "standard": "链条张紧器",
+      "synonym": "张紧器",
+      "type": "零件类型"
+    },
+    {
+      "standard": "减震件",
+      "synonym": "减震垫",
+      "type": "零件类型"
+    },
+    {
+      "standard": "卡箍",
+      "synonym": "管卡",
+      "type": "零件类型"
+    },
+    {
+      "standard": "内胎",
+      "synonym": "气密层",
+      "type": "零件类型"
+    },
+    {
+      "standard": "绝缘件",
+      "synonym": "绝缘结构件",
+      "type": "零件类型"
+    },
+    {
+      "standard": "触点",
+      "synonym": "弹性触点",
+      "type": "零件类型"
+    },
+    {
+      "standard": "导热系数",
+      "synonym": "导热率",
+      "type": "参数"
+    },
+    {
+      "standard": "导热系数",
+      "synonym": "thermal conductivity",
+      "type": "参数"
+    },
+    {
+      "standard": "低温脆性",
+      "synonym": "低温韧性",
+      "type": "参数"
     }
   ]
 }

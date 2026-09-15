@@ -45,7 +45,7 @@ export function NavRail() {
         })}
       </div>
       {/* 版本号：需与 backend/app/core/config.py 的 APP_VERSION、里程碑 tag 三处保持一致 */}
-      <div className="ms-rail__version">v1.2.0</div>
+      <div className="ms-rail__version">v1.2.1</div>
     </nav>
   )
 }
