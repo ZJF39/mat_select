@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { api, downloadExport, type MaterialQuery } from '../api/client'
 import { SidePanel } from '../layout/SidePanel'
 import { CategoryTree } from '../components/CategoryTree'
@@ -104,10 +104,13 @@ export default function MaterialsLibraryPage() {
     [q, cats, procs, feats, flame, tempMin, priceMax, activeSort, pageSize],
   )
 
+  /** placeholderData: 加载更多时 queryKey 变化（size 变大），保留上一份数据渲染，
+   *  已有卡片（uid 作 key）不卸载、新卡片在下方追加，避免骨架屏闪烁导致滚动跳回顶部。 */
   const materials = useQuery({
     queryKey: ['materials', params],
     queryFn: () => api.listMaterials(params),
     staleTime: 30_000,
+    placeholderData: keepPreviousData,
   })
 
   const categories = useQuery({
@@ -121,6 +124,8 @@ export default function MaterialsLibraryPage() {
 
   const items = materials.data?.items ?? []
   const total = materials.data?.total ?? 0
+  /** 加载更多请求在途（placeholder 数据展示期间或后台刷新中） */
+  const loadingMore = materials.isPlaceholderData || materials.isFetching
 
   const catOptions: FilterOption[] = useMemo(() => {
     const roots = categories.data?.items ?? []
@@ -325,7 +330,7 @@ export default function MaterialsLibraryPage() {
               </button>
             </div>
           </Notice>
-        ) : materials.isLoading ? (
+        ) : materials.data === undefined ? (
           view === 'card' ? (
             <div className="ms-card-grid">
               {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -366,8 +371,12 @@ export default function MaterialsLibraryPage() {
             </div>
             {items.length < total && (
               <div className="ms-row" style={{ justifyContent: 'center' }}>
-                <button className="ms-btn ms-btn--secondary" onClick={() => patch({ size: String(pageSize + PAGE_STEP) })}>
-                  加载更多（已显示 {items.length} / {total} 条）
+                <button
+                  className="ms-btn ms-btn--secondary"
+                  disabled={loadingMore}
+                  onClick={() => patch({ size: String(pageSize + PAGE_STEP) })}
+                >
+                  {loadingMore ? '加载中…' : `加载更多（已显示 ${items.length} / ${total} 条）`}
                 </button>
               </div>
             )}
